@@ -6,15 +6,9 @@ namespace Collecto.BE.Models
 {
     public class User : IdentityUser
     {
-        [NotMapped]
-        public override string UserName { get; set; }
         public string? FullName { get; set; }
 
         public DateTime CreatedAt { get; set; }
-
-        public int RoleId { get; set; }
-
-        public Role? Role { get; set; }
 
         public ICollection<Item>? Items { get; set; }
 

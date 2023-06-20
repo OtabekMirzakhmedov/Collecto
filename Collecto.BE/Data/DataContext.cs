@@ -34,13 +34,6 @@ namespace Collecto.BE.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().Ignore(t => t.UserName);
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithOne()
-                .HasForeignKey<User>(u => u.RoleId);
-
             modelBuilder.Entity<ItemTag>()
                 .HasKey(it => new { it.ItemId, it.TagId });
 
@@ -57,6 +50,10 @@ namespace Collecto.BE.Data
             modelBuilder.Entity<CustomFieldValue>()
                 .HasOne(cfv => cfv.CustomField)
                 .WithOne(cf => cf.CustomFieldValue);
+
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(new IdentityRole { Name = "User", NormalizedName = "USER" },
+                        new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
         }  
     }
 }
