@@ -34,5 +34,20 @@ namespace Collecto.BE.Controllers
             }
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            _logger.LogInformation("Login is executing ....");
+            try
+            {
+                var authData = await _authService.Login(loginDto);
+                return Ok(authData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
