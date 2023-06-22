@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="navbar-expand  shadow-sm d-flex">
+    <nav className="navbar-expand  shadow-sm d-flex" >
       <div className="container container-fluid">
         <div className="d-flex justify-content-between align-content-center p-3">
           <span className="align-content-center d-none d-sm-inline-block me-lg-5 pe-lg-5">
