@@ -18,7 +18,7 @@ const Navbar = () => {
           <div className="col-12 col-sm-8 col-lg-4">
             <div className="input-group">
               <input
-                className="form-control border-end-0 border rounded-start-pill focus-ring focus-ring-light shadow"
+                className="form-control border-end-0 border rounded-start-pill focus-ring focus-ring-success shadow"
                 type="text"
                 placeholder="search..."
               />
@@ -30,8 +30,8 @@ const Navbar = () => {
             </div>
           </div>
           
-            <button className="btn border border-1 rounded-pill shadow d-none d-sm-inline-block p-0 hover" data-bs-toggle="dropdown">
-              <i className="bi bi-list fs-3 px-2"></i>
+            <button className="btn border border-1 rounded-pill  d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm" data-bs-toggle="dropdown">
+              <i className="bi bi-list fs-4 px-2"></i>
               <i className="bi bi-person-circle fs-3 px-2"></i>
             </button>
             <ul className="dropdown-menu">
