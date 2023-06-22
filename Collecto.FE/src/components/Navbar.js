@@ -3,20 +3,22 @@ import React from "react";
 const Navbar = () => {
   return (
     <nav className="navbar-expand  shadow-sm d-flex">
-      <div className="container">
+      <div className="container container-fluid">
         <div className="d-flex justify-content-between align-content-center p-3">
-          <span className="align-content-center">
+          <span className="align-content-center d-none d-sm-inline-block me-lg-5 pe-lg-5">
             <a className="navbar-brand" href="/">
               <i className="bi bi-flower1 fs-3  my-1 text-danger"></i>
             </a>
-            <a className="navbar-brand " href="/">
-              <p className="fs-2 d-inline text-danger  ">collecto </p>
-            </a>
+            <span className="d-none d-xl-inline-block">
+              <a className="navbar-brand  " href="/">
+                <p className="fs-2 d-inline text-danger  ">collecto </p>
+              </a>
+            </span>
           </span>
-          <div className="">
+          <div className="col-12 col-sm-8 col-lg-4">
             <div className="input-group">
               <input
-                className="form-control border-end-0 border rounded-start-pill focus-ring focus-ring-light shadow "
+                className="form-control border-end-0 border rounded-start-pill focus-ring focus-ring-light shadow"
                 type="text"
                 placeholder="search..."
               />
@@ -27,11 +29,30 @@ const Navbar = () => {
               </span>
             </div>
           </div>
-          <div className="border border-1 rounded-pill shadow">
-            <i class="bi bi-list fs-3 px-2"></i>
-            <i className="bi bi-person-circle fs-3 px-2"></i>
+          
+            <button className="btn border border-1 rounded-pill shadow d-none d-sm-inline-block p-0 hover" data-bs-toggle="dropdown">
+              <i className="bi bi-list fs-3 px-2"></i>
+              <i className="bi bi-person-circle fs-3 px-2"></i>
+            </button>
+            <ul className="dropdown-menu">
+              <li>
+                <button className="dropdown-item" href="/">
+                  Log in
+                </button>
+              </li>
+              <li>
+                <button className="dropdown-item" href="/</li>">
+                  Sign up
+                </button>
+              </li>
+              <li>
+                <button className="dropdown-item" href="/">
+                  Something else here
+                </button>
+              </li>
+            </ul>
           </div>
-        </div>
+       
       </div>
     </nav>
   );
