@@ -1,0 +1,36 @@
+.prev,
+.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px; /* Adjust the width as needed */
+  height: 30px; /* Adjust the height as needed */
+  background-color: #ffffff; /* Set the background color */
+  border: none;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  box-shadow: 1px 2px 10px -1px rgb(0 0 0 / 30%);
+
+  cursor: pointer;
+}
+
+.prev {
+  left: -20px; /* Adjust the left positioning */
+}
+
+.next {
+  right: -40px; /* Adjust the right positioning */
+}
+
+.prev i,
+.next i {
+  font-weight: bold; /* Make the icon more bold */
+}
+
+.prev:hover,
+.next:hover {
+  background-color: gray;
+}
