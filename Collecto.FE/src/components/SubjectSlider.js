@@ -46,8 +46,8 @@ const SubjectSlider = () => {
     speed: 500,
     prevArrow: isBeginning ? null : <ArrowLeft />,
     nextArrow: isEnd ? null : <ArrowRight />,
-    slidesToShow: slidesToShow,
-    slidesToScroll: slidesToShow,
+    slidesToShow: 10,
+    slidesToScroll: 10,
     responsive: [
       {
         breakpoint: 768,

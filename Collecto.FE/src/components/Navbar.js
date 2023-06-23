@@ -1,6 +1,7 @@
 import React from "react";
 
 const Navbar = () => {
+  
   return (
     <nav className="navbar-expand  shadow-sm d-flex" >
       <div className="container container-fluid">
@@ -16,9 +17,9 @@ const Navbar = () => {
             </span>
           </span>
           <div className="col-12 col-sm-8 col-lg-4">
-            <div className="input-group">
+            <div className="input-group ">
               <input
-                className="form-control border-end-0 border rounded-start-pill focus-ring focus-ring-success shadow"
+                className="form-control border-end-0 border rounded-start-pill  focus-ring-info shadow"
                 type="text"
                 placeholder="search..."
               />
