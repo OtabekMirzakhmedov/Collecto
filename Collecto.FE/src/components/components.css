@@ -7,7 +7,6 @@
   height: 30px; /* Adjust the height as needed */
   background-color: #ffffff; /* Set the background color */
   border: none;
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,3 +33,8 @@
 .next:hover {
   background-color: gray;
 }
+
+
+input:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Adjust the values as per your preference */
+  }
