@@ -16,7 +16,7 @@ const SignupPage = () => {
 
         <div className="d-flex justify-content-around mt-5">
           <div className="m-auto col-lg-4 col-md-6 col-sm-8 col-11 ">
-            <h1 className="text-bold text-center">Sign Up</h1>
+            <h1 className="text-bold text-center">Sign Up form</h1>
             <form>
               <div className="form-floating mt-5">
                 <input
