@@ -95,9 +95,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 1;
+    options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
-    options.User.AllowedUserNameCharacters += " ";
 })
         .AddEntityFrameworkStores<DataContext>()
         .AddDefaultTokenProviders();
@@ -113,17 +112,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.Use(async (context, next) =>
-{
-    var authResult = await context.AuthenticateAsync();
-    if (authResult?.Failure != null)
-    {
-        context.Response.StatusCode = 401;
-        await context.Response.WriteAsJsonAsync(new { Error = "Unauthorized" });
-        return;
-    }
-    await next();
-});
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 
 app.UseHttpsRedirection();
 app.UseRouting();
