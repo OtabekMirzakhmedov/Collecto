@@ -34,7 +34,3 @@
   background-color: gray;
 }
 
-
-input:focus {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Adjust the values as per your preference */
-  }
