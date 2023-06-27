@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 const Navbar = () => {
 
   const navigate = useNavigate()
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  console.log(isLoggedIn);
   return (
     <nav className="navbar-expand  shadow-sm d-flex" >
       <div className="container-fluid px-lg-5">
@@ -48,11 +50,11 @@ const Navbar = () => {
                   Sign up
                 </button>
               </li>
-              <li>
-                <button className="dropdown-item" href="/">
-                  Something else here
+              {isLoggedIn && (<li>
+             <button className="btn btn-danger dropdown-item btn btn-danger" onClick={() => navigate("/")}>
+                  Sign Out
                 </button>
-              </li>
+              </li>)}
             </ul>
             </div>
           </div>

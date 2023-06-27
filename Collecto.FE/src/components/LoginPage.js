@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import API_BASE_URL from "../apiConfig";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginSuccess } from "../slices/authSlice";
+import authService from "../services/authService";
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -13,28 +17,23 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    setIsLoading(true); 
-    axios
-      .post(`${API_BASE_URL}/Auth/login`, data)
-      .then((response) => {
-        console.log(response.data); 
-      })
-      .catch((error) => {
-        console.log(error.response);
-        console.log(error.toJSON());
-        if (error.response && error.response.data) {
-          const loginError = error.response.data;
-          console.log(loginError);
-          setErrorMessage("No user found for this email/password"); // Update the error message state with the data property
-        } else {
-          console.log("Unexpected error occurred.");
-          setErrorMessage("Unexpected error occurred.");
-        }
-      })
-      .finally(() => {
-        setIsLoading(false); // Set isLoading to false after request completion
-      });
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    console.log('I am here on submit')
+    try {
+      const { id, jwtToken, role } = await authService.login(data);
+      dispatch(loginSuccess({ user: id, token: jwtToken }));
+      navigate("/"); // Redirect to the home page after successful login
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const loginError = error.response.data;
+        setErrorMessage(loginError);
+      } else {
+        setErrorMessage("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 
