@@ -2,7 +2,6 @@
 using Collecto.BE.Interfaces.Services;
 using Collecto.BE.Models;
 using Microsoft.AspNetCore.Identity;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Collecto.BE.Services
 {
@@ -14,32 +13,27 @@ namespace Collecto.BE.Services
         {
             _userManager = userManager;
         }
-        public async Task<UserDataDto> GetUserData(AuthDataDto authDataDto)
+
+        public async Task<UserDataDto> GetUserData(string userId)
         {
-            var userId = GetUserIdFromJwtToken(authDataDto.JwtToken);
+            // Retrieve the user from the UserManager using the user ID
+            var user = await _userManager.FindByIdAsync(userId);
 
-            User user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
 
-            return new UserDataDto
+            // Map the user data to the UserDataDto object and return it
+            var userData = new UserDataDto
             {
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email
+                // Add other properties as needed
             };
 
-
-
+            return userData;
         }
-
-        private string GetUserIdFromJwtToken(string jwtToken)
-        {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var token = jwtTokenHandler.ReadJwtToken(jwtToken);
-
-            var userId = token.Claims.FirstOrDefault(claim => claim.Type == "Id")?.Value;
-
-            return userId;
-        }
-
     }
 }
