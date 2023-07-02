@@ -22,7 +22,7 @@ const LoginPage = () => {
     console.log('I am here on submit')
     try {
       const { id, jwtToken, role } = await authService.login(data);
-      dispatch(loginSuccess({ user: id, token: jwtToken }));
+      dispatch(loginSuccess({ token: jwtToken }));
       navigate("/"); // Redirect to the home page after successful login
     } catch (error) {
       if (error.response && error.response.data) {
@@ -63,7 +63,7 @@ const LoginPage = () => {
                   errors.email ? "is-invalid" : ""
                 }`}
                 id="floatingInput"
-                type="text"
+                type="email"
                 placeholder="Enter your Email"
                 {...register("email", {
                   required: "Email is required",
@@ -133,8 +133,8 @@ const LoginPage = () => {
             </button>
 
             <div className="center">
-              <span className="m-0 p-0">No account yet?</span>
-              <button className="btn btn-link d-inline p-1 m-0">Sign Up</button>
+              <span className="mx-2 p-0">No account yet?</span>
+              <a href="/signup">Sign Up</a>
             </div>
           </form>
         </div>

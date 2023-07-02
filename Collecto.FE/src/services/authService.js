@@ -4,27 +4,29 @@ import API_BASE_URL from "../apiConfig";
 const authService = {
   login: async (credentials) => {
     try {
-
-        console.log(credentials);
-
       const response = await axios.post(`${API_BASE_URL}/Auth/login`, credentials);
-
       console.log(response);
-      const { id, jwtToken, role} = response.data;
-      console.log(id, jwtToken, role);
+      const jwtToken = response.data;
+      console.log(jwtToken);
+      localStorage.setItem("jwtToken", jwtToken);
       console.log('I am here in login');
       // Return an object containing the user details and additional data
-      return {
-        id,
-        jwtToken,
-        role,
-      };
+      return jwtToken;
     } catch (error) {
       throw error;
     }
   },
-  
-  // Add other authentication-related API functions here (e.g., register, logout, etc.)
+
+  signup: async (userData) => {
+    console.log(userData);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/Auth/register`, userData);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

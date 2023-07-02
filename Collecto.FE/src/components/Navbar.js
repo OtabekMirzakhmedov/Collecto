@@ -5,6 +5,7 @@ const Navbar = () => {
 
   const navigate = useNavigate()
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  
   console.log(isLoggedIn);
   return (
     <nav className="navbar-expand  shadow-sm d-flex" >
@@ -40,16 +41,26 @@ const Navbar = () => {
               <i className="bi bi-person-circle fs-3 px-2"></i>
             </button>
             <ul className="dropdown-menu">
-              <li>
+              {!isLoggedIn && (<li>
                 <button className="dropdown-item" onClick={() => navigate("/login")}>
                   Log in
                 </button>
-              </li>
-              <li>
+              </li>)}
+              {!isLoggedIn && (<li>
                 <button className="dropdown-item" onClick={() => navigate("/signup")}>
                   Sign up
                 </button>
-              </li>
+              </li>)}
+              {isLoggedIn && (<li>
+             <button className="btn btn-danger dropdown-item btn btn-danger" onClick={() => navigate("/")}>
+                  Profile
+                </button>
+              </li>)}
+              {isLoggedIn && (<li>
+             <button className="btn btn-danger dropdown-item btn btn-danger" onClick={() => navigate("/")}>
+                 Collections
+                </button>
+              </li>)}
               {isLoggedIn && (<li>
              <button className="btn btn-danger dropdown-item btn btn-danger" onClick={() => navigate("/")}>
                   Sign Out

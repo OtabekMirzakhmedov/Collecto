@@ -57,9 +57,7 @@ namespace Collecto.BE.Services
 
             var authData = new AuthDataDto
             {
-                Id = user.Id,
-                JwtToken = jwtToken,
-                Role = roles.FirstOrDefault()
+                JwtToken = jwtToken
             };
 
             _logger.LogInformation(jwtToken.ToString());

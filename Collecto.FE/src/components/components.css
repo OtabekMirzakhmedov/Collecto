@@ -34,3 +34,11 @@
   background-color: gray;
 }
 
+.Toastify__toast--error .Toastify__toast-body:before {
+  font-size: 16px;
+}
+
+.toast-message{
+  font-size: small;
+}
+
