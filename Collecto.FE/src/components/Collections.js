@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Tooltip } from "bootstrap";
 import { useSelector } from "react-redux";
+import CollectionCard from "./CollectionCard";
 
 const Collections = () => {
   const tooltipRef = useRef();
@@ -20,10 +21,11 @@ const Collections = () => {
     }
   }, [isLoggedIn]);
 
-  
+
 
   return (
-    <div className="container">
+    <div className="container-fluid">
+        <CollectionCard />
       {isLoggedIn && (
         <button
           ref={tooltipRef}
