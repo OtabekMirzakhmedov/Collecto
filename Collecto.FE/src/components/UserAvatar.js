@@ -1,22 +1,22 @@
 import React from "react";
+import "./components.css";
 
-const UserAvatar = ({ fullName, photoUrl }) => {
-  const getInitials = (name) => {
-    const names = name.split(" ");
-    const initials = names
-      .map((name) => name.charAt(0).toUpperCase())
-      .join("");
-    return initials;
+const UserAvatar = ({ userData }) => {
+  const getInitials = (fullName) => {
+    const names = fullName.split(" ");
+    return names.map((name) => name[0]).join("");
   };
 
   return (
-    <div className="user-avatar">
-      {photoUrl ? (
-        <img src={photoUrl} alt="User Avatar" className="avatar-img" />
+    <span className="avatar-circle fs-3">
+      {userData && userData.photo ? (
+        <img src={userData.photo} alt="User Avatar" className="avatar-image" />
+      ) : userData && userData.fullName ? (
+        <span className="avatar-initials fs-6">{getInitials(userData.fullName)}</span>
       ) : (
-        <div className="avatar-initials">{getInitials(fullName)}</div>
+        <i className="bi bi-person-circle fs-3 "></i>
       )}
-    </div>
+    </span>
   );
 };
 

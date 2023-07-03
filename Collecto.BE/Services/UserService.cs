@@ -30,7 +30,6 @@ namespace Collecto.BE.Services
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email
-                // Add other properties as needed
             };
 
             return userData;

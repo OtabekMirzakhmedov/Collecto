@@ -31,9 +31,10 @@ namespace Collecto.BE.Controllers
             try
             {
                 // Retrieve the user ID from the authenticated user principal
-                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                string? userId = User.FindFirst("Id")?.Value;
+                _logger.LogInformation(userId);
 
-                // Use the user ID to fetch the user data
+
                 var user = await _userService.GetUserData(userId);
 
                 // Check if user data exists

@@ -102,6 +102,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
         .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

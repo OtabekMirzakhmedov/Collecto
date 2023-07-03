@@ -1,12 +1,38 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { logout } from "../slices/authSlice";
+import userService from "../services/userService";
+import UserAvatar from "./UserAvatar";
 const Navbar = () => {
-
-  const navigate = useNavigate()
+  console.log('navbar');
+  const [userData, setUserData] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  const signOut = () => {
+    localStorage.removeItem("jwtToken");
+    dispatch(logout());
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const requestId = Date.now();
+      userService
+        .getUserData()
+        .then((data) => {
+          setUserData(data);
+          console.log(`[${requestId}] User data:`, data);
+        })
+        .catch((error) => {
+          console.error(`[${requestId}] Error fetching user data:`, error);
+        });
+    }
+  }, [isLoggedIn]);
   
-  console.log(isLoggedIn);
+
   return (
     <nav className="navbar-expand  shadow-sm d-flex" >
       <div className="container-fluid px-lg-5">
@@ -36,10 +62,16 @@ const Navbar = () => {
             </div>
           </div>
           <div className="dropdown">
-            <button className="btn border border-1 rounded-pill  d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm" data-bs-toggle="dropdown">
-              <i className="bi bi-list fs-4 px-2"></i>
+          {!isLoggedIn && (<button className="btn border border-1 rounded-pill  d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center" data-bs-toggle="dropdown">
+              <i className="bi bi-list fs-4 px-2 py-0"></i>
               <i className="bi bi-person-circle fs-3 px-2"></i>
-            </button>
+              </button>)}
+              {isLoggedIn && (<button className="btn border border-1 rounded-pill  d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center" data-bs-toggle="dropdown">
+              <i className="bi bi-list fs-4 px-2 py-auto"></i>
+              {isLoggedIn && <UserAvatar className="fs-1 px-2"  userData={userData} />}
+              </button>)}
+              
+            
             <ul className="dropdown-menu">
               {!isLoggedIn && (<li>
                 <button className="dropdown-item" onClick={() => navigate("/login")}>
@@ -62,7 +94,7 @@ const Navbar = () => {
                 </button>
               </li>)}
               {isLoggedIn && (<li>
-             <button className="btn btn-danger dropdown-item btn btn-danger" onClick={() => navigate("/")}>
+             <button className="btn btn-danger dropdown-item btn btn-danger" onClick={signOut}>
                   Sign Out
                 </button>
               </li>)}

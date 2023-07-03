@@ -21,7 +21,7 @@ const LoginPage = () => {
     setIsLoading(true);
     console.log('I am here on submit')
     try {
-      const { id, jwtToken, role } = await authService.login(data);
+      const jwtToken  = await authService.login(data);
       dispatch(loginSuccess({ token: jwtToken }));
       navigate("/"); // Redirect to the home page after successful login
     } catch (error) {
