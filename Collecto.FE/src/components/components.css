@@ -45,13 +45,13 @@
 .avatar-circle {
   display: inline-flex;
   border-radius: 50%;
-  background-color: green; /* You can change this to any color you like */
+
   justify-content: center;
   align-items: center;
   font-weight: bold;
   color: #ffffff;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
 }
 
 .avatar-initials {

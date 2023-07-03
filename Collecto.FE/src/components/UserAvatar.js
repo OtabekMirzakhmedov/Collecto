@@ -8,7 +8,7 @@ const UserAvatar = ({ userData }) => {
   };
 
   return (
-    <span className="avatar-circle fs-3">
+    <span className="avatar-circle bg-danger">
       {userData && userData.photo ? (
         <img src={userData.photo} alt="User Avatar" className="avatar-image" />
       ) : userData && userData.fullName ? (

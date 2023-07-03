@@ -67,7 +67,7 @@ const Navbar = () => {
               <i className="bi bi-person-circle fs-3 px-2"></i>
               </button>)}
               {isLoggedIn && (<button className="btn border border-1 rounded-pill  d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center" data-bs-toggle="dropdown">
-              <i className="bi bi-list fs-4 px-2 py-auto"></i>
+              <i className="bi bi-list fs-5 px-2 py-auto"></i>
               {isLoggedIn && <UserAvatar className="fs-1 px-2"  userData={userData} />}
               </button>)}
               
