@@ -1,30 +1,37 @@
 import React, { useRef, useEffect } from "react";
-import { Tooltip } from 'bootstrap';
+import { Tooltip } from "bootstrap";
+import { useSelector } from "react-redux";
 
 const Collections = () => {
   const tooltipRef = useRef();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
-    var tooltip = new Tooltip(tooltipRef.current, {
-      title: "create your collection!",
-      placement: "top",
-      trigger: "hover",
-    });
-    return () => {
+    if (isLoggedIn) {
+      const tooltip = new Tooltip(tooltipRef.current, {
+        title: "Create your collection!",
+        placement: "top",
+        trigger: "hover",
+      });
+
+      return () => {
         tooltip.dispose();
       };
-    }, []);
+    }
+  }, [isLoggedIn]);
 
+  
 
   return (
     <div className="container">
-      <button
-        ref={tooltipRef}
-        className="btn btn-success rounded-pill position-absolute z-1 start-50 bottom-0 mb-5 fs-5 shadow-lg"
-      >
-
-        <i className="bi bi-plus-circle"></i> collection
-      </button>
+      {isLoggedIn && (
+        <button
+          ref={tooltipRef}
+          className="btn btn-success rounded-pill position-absolute z-1 start-50 bottom-0 mb-5 fs-5 shadow-lg"
+        >
+          <i className="bi bi-plus-circle"></i> Collection
+        </button>
+      )}
     </div>
   );
 };
