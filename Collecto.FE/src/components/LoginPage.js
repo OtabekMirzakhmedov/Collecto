@@ -134,7 +134,7 @@ const LoginPage = () => {
 
             <div className="center">
               <span className="mx-2 p-0">No account yet?</span>
-              <a href="/signup" onClick={() => navigate('/signup')} >Sign Up</a>
+              <a href onClick={() => navigate('/signup')} >Sign Up</a>
             </div>
           </form>
         </div>
