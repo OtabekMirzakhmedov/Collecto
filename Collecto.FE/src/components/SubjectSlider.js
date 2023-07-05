@@ -39,7 +39,7 @@ const SubjectSlider = () => {
     };
   }, []);
 
-  const categories = Array.from({ length: 30 }, (_, index) => `Category ${index + 1}`);
+  const categories = ["coins", "football", "cars", "sneakers"];
   const settings = {
     dots: false,
     arrows: true,
