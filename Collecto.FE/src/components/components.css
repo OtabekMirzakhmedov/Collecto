@@ -12,7 +12,6 @@
   justify-content: center;
   z-index: 1;
   box-shadow: 1px 2px 10px -1px rgb(0 0 0 / 30%);
-
   cursor: pointer;
 }
 
@@ -26,7 +25,7 @@
 
 .prev i,
 .next i {
-  font-weight: bold; /* Make the icon more bold */
+  font-weight: bold;
 }
 
 .prev:hover,
@@ -34,7 +33,44 @@
   background-color: gray;
 }
 
+.Toastify__toast--error .Toastify__toast-body:before {
+  font-size: 16px;
+}
 
-input:focus {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Adjust the values as per your preference */
-  }
+.toast-message{
+  font-size: small;
+}
+
+.avatar-circle {
+  display: inline-flex;
+  border-radius: 50%;
+
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #ffffff;
+  width: 35px;
+  height: 35px;
+}
+
+.avatar-initials {
+  text-transform: uppercase;
+}
+
+.card:hover{
+    
+  background-color: #E8F0FE;
+  
+}
+
+
+.author:hover{
+  background-color: beige;
+}
+
+.collection-input:focus{
+  outline: 2px;
+  border: 1px solid gray;
+  background-color: whitesmoke;
+}
+

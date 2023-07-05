@@ -41,14 +41,14 @@ namespace Collecto.BE.Services
 
             if (user == null)
             {
-                throw new Exception("Invalid email or password");
+                throw new Exception("No user found for this email/password");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (!result.Succeeded)
             {
-                throw new Exception("Invalid email or password");
+                throw new Exception("No user found for this email/password");
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -57,9 +57,7 @@ namespace Collecto.BE.Services
 
             var authData = new AuthDataDto
             {
-                Id = user.Id,
-                JwtToken = jwtToken,
-                Role = roles.FirstOrDefault()
+                JwtToken = jwtToken
             };
 
             _logger.LogInformation(jwtToken.ToString());
