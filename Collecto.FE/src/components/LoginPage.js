@@ -133,8 +133,8 @@ const LoginPage = () => {
             </button>
 
             <div className="center">
-              <span className="mx-2 p-0">No account yet?</span>
-              <a href onClick={() => navigate('/signup')} >Sign Up</a>
+              <span className="m-0 p-0">No account yet?</span>
+              <button className="btn btn-link m-0" onClick={() => navigate('/signup')} >Sign Up</button>
             </div>
           </form>
         </div>

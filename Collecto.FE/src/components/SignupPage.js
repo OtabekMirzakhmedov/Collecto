@@ -166,9 +166,9 @@ const SignupPage = () => {
                 Sign up
               </button>
 
-              <div >
-              <span className="mx-2 p-0">Already have an account?</span>
-              <a  href="/login">Log In</a>
+              <div className="align-content-baseline" >
+              <span className="m-0 p-0">Already have an account?</span>
+              <button className="btn btn-link m-0 p-1" onClick={() => navigate('/login')}>Log In</button>
             </div>
 
             </form>
