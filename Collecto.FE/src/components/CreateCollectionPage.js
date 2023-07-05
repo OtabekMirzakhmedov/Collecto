@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm , Controller} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
 import "./components.css";
@@ -8,8 +8,6 @@ const animatedComponents = makeAnimated();
 
 const CreateCollectionPage = () => {
   const [customFields, setCustomFields] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState(null);
-  const [inputTopic, setInputTopic] = useState("");
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
@@ -22,21 +20,20 @@ const CreateCollectionPage = () => {
   const {
     register,
     handleSubmit,
-
-    formState: { errors},
+    formState: { errors },
     control,
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-  };
-
-  const handleTopicChange = (selectedOption) => {
-    setSelectedTopic(selectedOption);
-
-  };
-  const handleTopicInputChange = (inputValue) => {
-    setInputTopic(inputValue);
+    const transformedData = {
+      title: data.title,
+      topic: data.topic.value,
+      description: data.description,
+      customFields: data.customFields.map((field) => ({
+        fieldName: field.fieldName,
+        fieldType: field.fieldType,
+      }))}
+    console.log(transformedData);
   };
 
   const handleClick = () => {
@@ -73,49 +70,43 @@ const CreateCollectionPage = () => {
               type="text"
               className="border-0 w-100 p-1  collection-input"
               placeholder="Empty"
-            
-            {...register("title", { required: true })}
+              {...register("title", { required: true })}
             />
             {errors.title && (
-            <span className="text-danger">Title is required</span> // Display error message if validation fails
-          )}
+              <span className="text-danger">Title is required</span> // Display error message if validation fails
+            )}
           </div>
-          
         </div>
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
             Topic
           </div>
           <div className="col-8 p-0">
-          <Controller
-  control={control}
-  name="topic"
-  defaultValue=""
-  rules={{ required: true }}
-  render={({ field }) => (
-    <CreatableSelect
-      className="border-0 w-100 p-1 collection-input"
-      isClearable
-      isSearchable
-      value={field.value}
-      onChange={(selectedOption) => {
-        field.onChange(selectedOption);
-        
-      }}
-  
-      placeholder="Empty"
-      components={animatedComponents}
-      options={options}
-    />
-  )}
-/>
+            <Controller
+              control={control}
+              name="topic"
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CreatableSelect
+                  className="border-0 w-100 p-1 collection-input"
+                  isClearable
+                  isSearchable
+                  value={field.value}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption);
+                  }}
+                  placeholder="Empty"
+                  components={animatedComponents}
+                  options={options}
+                />
+              )}
+            />
 
-      {errors.topic && (
-        <span className="text-danger">Topic is required</span>
-      )}
-        
+            {errors.topic && (
+              <span className="text-danger">Topic is required</span>
+            )}
           </div>
-          
         </div>
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
@@ -138,21 +129,34 @@ const CreateCollectionPage = () => {
               <input
                 type="text"
                 className="w-100 border-0 p-1 collection-input"
-                placeholder="Property Name"
+                placeholder="Property Name..."
+                {...register(`customFields[${i}].fieldName`, {
+                  required: true,
+                })}
               />
+              {errors.customFields && errors.customFields[i]?.fieldName && (
+                <span className="text-danger">Field Name is required</span>
+              )}
             </div>
             <div className="col-8 p-0 d-flex justify-content-between">
               <select
                 className="border-0 col-8 p-1 collection-input"
                 aria-label="Default select example"
+                placeholder="Empty"
+                {...register(`customFields[${i}].fieldType`, {
+                  required: true,
+                })}
               >
-                <option defaultValue>Select property type</option>
+                <option value="">Select property type</option>
                 <option value="Number">Number</option>
                 <option value="Date">Date</option>
                 <option value="SingleLineText">Single line Text</option>
                 <option value="MultiLineText">Multi line Text</option>
                 <option value="Checkbox">Checkbox</option>
               </select>
+              {errors.customFields && errors.customFields[i]?.fieldType && (
+                <div className="text-danger">Field Type is required</div>
+              )}
               <button
                 type="button"
                 className="btn-close"
