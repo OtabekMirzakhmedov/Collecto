@@ -5,7 +5,7 @@ const CollectionCard = ({ collection }) => {
   const { title, images, author, numOfItems, numOfLikes } = collection;
 
   return (
-    <div className="card col-md-6 p-3 col-xl-3 col-xxl-2 col-lg-4 border-0">
+    <div className="card col-md-6 p-2 col-xl-3 col-xxl-2 col-lg-4 border-0">
       <div className="card-img-top">
       <div
         id={`carouselExample${collection.id}`}
@@ -41,9 +41,9 @@ const CollectionCard = ({ collection }) => {
         </button>
       </div>
       </div>
-      <div className="card-body mt-1 p-0">
-        <h2 className="card-title">{title}</h2>
-        <p className="author">{author}</p>
+      <div className="card-body mt-0 p-2">
+        <div className="card-title text-dark fs-6 fw-bold text-truncated mb-0">{title}</div>
+        <div className="author text-secondary">{author}</div>
       </div>
       <div className="d-flex justify-content-between fs-6 p-0">
         <div className="flex fw-bold">{numOfItems} items</div>
