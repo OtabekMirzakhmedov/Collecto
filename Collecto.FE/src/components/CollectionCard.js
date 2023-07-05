@@ -1,10 +1,11 @@
 import React from "react";
+import './components.css'
 
 const CollectionCard = () => {
   return (
-    <div className="card col-lg-2 border-black p-3">
+    <div className="card col-md-6 p-3 col-xl-3 col-xxl-2 col-lg-4 border-0"  >
       <div id="carouselExample" className="carousel slide">
-        <div className="carousel-inner">
+        <div className="carousel-inner rounded-5" role="button" onClick={() => console.log('card is clicked')}>
           <div className="carousel-item active">
             <img
               src="https://m.media-amazon.com/images/I/41lpG5mNGVL._AC_UY1000_.jpg"
@@ -52,12 +53,17 @@ const CollectionCard = () => {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
-      <div class="card-body">
-        <h6 class="card-title">Nike sneakers</h6>
-        <span className="rounded-pill border border-1 px-1 bg-warning">
+      <div className="card-body mt-1 p-0" >
+        {/* <span className=" text-sm text-black border border-1  bg-light rounded-pill px-1">
           sneakers
-        </span>
-        <p>Otabek Mirzakhmedov</p>
+        </span> */}
+        <h2 className="card-title" role="button" onClick={() => console.log('card is clicked')}>Nike sneakers</h2>
+        <p  className="author" onClick={() => console.log('author is clicked')}> Otabek Mirzakhmedov</p>
+
+      </div>
+      <div className="d-flex justify-content-between  fs-6 p-0" role="button" onClick={() => console.log('card is clicked')}>
+        <div className="flex fw-bold">7 items</div>
+        <div className="flex">200 likes</div>
 
       </div>
     </div>

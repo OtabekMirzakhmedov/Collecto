@@ -57,3 +57,20 @@
   text-transform: uppercase;
 }
 
+.card:hover{
+    
+  background-color: #E8F0FE;
+  
+}
+
+
+.author:hover{
+  background-color: beige;
+}
+
+.collection-input:focus{
+  outline: 2px;
+  border: 1px solid gray;
+  background-color: whitesmoke;
+}
+
