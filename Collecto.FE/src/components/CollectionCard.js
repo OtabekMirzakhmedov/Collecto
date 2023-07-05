@@ -1,10 +1,12 @@
 import React from "react";
+import './components.css'
 
 const CollectionCard = ({ collection }) => {
   const { title, images, author, numOfItems, numOfLikes } = collection;
 
   return (
-    <div className="card col-md-6 p-3 col-xl-3 col-xxl-2 col-lg-4 border-0 h-100">
+    <div className="card col-md-6 p-3 col-xl-3 col-xxl-2 col-lg-4 border-0">
+      <div className="card-img-top">
       <div
         id={`carouselExample${collection.id}`}
         className="carousel slide"
@@ -15,7 +17,7 @@ const CollectionCard = ({ collection }) => {
               key={index}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
-              <img src={image} style={{ objectFit: "cover", height: "100%", width: "100%" }} className="d-block w-100 " alt={`Slide ${index + 1}`} />
+              <img src={image} className="d-block w-100 card-img-top " alt={`Slide ${index + 1}`} />
             </div>
           ))}
         </div>
@@ -37,6 +39,7 @@ const CollectionCard = ({ collection }) => {
           <span className="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
           <span className="visually-hidden bg-black">Next</span>
         </button>
+      </div>
       </div>
       <div className="card-body mt-1 p-0">
         <h2 className="card-title">{title}</h2>
