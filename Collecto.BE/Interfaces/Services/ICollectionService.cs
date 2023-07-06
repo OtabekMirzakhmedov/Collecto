@@ -4,6 +4,6 @@ namespace Collecto.BE.Interfaces.Services
 {
     public interface ICollectionService
     {
-        Task CreateCollection(CollectionDto collectionDto);
+        Task<int> CreateCollection(string userId, CollectionDto collectionDto);
     }
 }

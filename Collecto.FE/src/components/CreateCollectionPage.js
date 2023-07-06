@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
+import collectionService from "../services/collectionService";
 import "./components.css";
 
 const animatedComponents = makeAnimated();
@@ -24,17 +25,33 @@ const CreateCollectionPage = () => {
     control,
   } = useForm();
 
-  const onSubmit = (data) => {
-    const transformedData = {
-      title: data.title,
-      topic: data.topic.value,
-      description: data.description,
-      customFields: data.customFields.map((field) => ({
-        fieldName: field.fieldName,
-        fieldType: field.fieldType,
-      }))}
-    console.log(transformedData);
+  const onSubmit = async (data) => {
+    try {
+      const transformedData = {
+        title: data.title,
+        topicName: data.topic.value,
+        description: data.description,
+        customFields: data.customFields.map((field) => ({
+          fieldName: field.fieldName,
+          fieldType: field.fieldType,
+        })),
+      };
+
+      const token = localStorage.getItem('jwtToken');
+
+      const collectionId = await collectionService.createCollection(
+        transformedData,
+        token
+      );
+
+      console.log("Collection created:", collectionId);
+      // Handle the successful creation of the collection
+    } catch (error) {
+      console.error("Error creating collection:", error);
+      // Handle the error during collection creation
+    }
   };
+  
 
   const handleClick = () => {
     setCustomFields([...customFields, { fieldName: "", fieldType: "" }]);

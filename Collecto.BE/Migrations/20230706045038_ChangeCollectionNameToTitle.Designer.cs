@@ -4,6 +4,7 @@ using Collecto.BE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collecto.BE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230706045038_ChangeCollectionNameToTitle")]
+    partial class ChangeCollectionNameToTitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,15 +348,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "febc9de5-b7bf-4038-b95a-eb3f98b9229a",
-                            ConcurrencyStamp = "93ae0d0c-df02-41aa-942f-1065c339afa9",
+                            Id = "0ef2a463-3fd8-43bf-97b0-5aab4ecc3e8a",
+                            ConcurrencyStamp = "05a866fc-e2ba-410c-9aed-a265ac8fc70f",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "8dbc0f32-500d-453c-848a-70dc3083f0f5",
-                            ConcurrencyStamp = "81f21398-9472-468c-ac09-49c1cd19dafa",
+                            Id = "545babd3-7c46-44d7-96f7-c9092374c754",
+                            ConcurrencyStamp = "ed30e993-d9e0-4caa-abe2-52341f1035ce",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

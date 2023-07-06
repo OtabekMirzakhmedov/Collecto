@@ -9,7 +9,7 @@ namespace Collecto.BE.Models
 
         [Required]
         [MaxLength(255)]
-        public string? Name { get; set; }
+        public string? Title { get; set; }
 
         [Required]
         [MaxLength(2000)]
@@ -17,9 +17,11 @@ namespace Collecto.BE.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [Required]
-        public Subject Subject { get; set; }
+        public int TopicId { get; set; }
 
+        [Required]
+        public Topic Topic { get; set; }
+        public string UserId { get; set; }
         public User? User { get; set; }
 
         public ICollection<Item>? Items { get; set; }

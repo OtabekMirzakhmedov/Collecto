@@ -4,6 +4,7 @@ using Collecto.BE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collecto.BE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230706044543_ChangeSubjectToTopic")]
+    partial class ChangeSubjectToTopic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace Collecto.BE.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -346,15 +348,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "febc9de5-b7bf-4038-b95a-eb3f98b9229a",
-                            ConcurrencyStamp = "93ae0d0c-df02-41aa-942f-1065c339afa9",
+                            Id = "8ed38683-e512-4053-b767-42b8cf24739e",
+                            ConcurrencyStamp = "7d691626-f83e-4592-bd63-5ccac8af1247",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "8dbc0f32-500d-453c-848a-70dc3083f0f5",
-                            ConcurrencyStamp = "81f21398-9472-468c-ac09-49c1cd19dafa",
+                            Id = "7e41664b-b932-491f-a55b-d9de8c4c1a48",
+                            ConcurrencyStamp = "4ca8a7a1-0596-4e4c-b94d-a0bd14af5f26",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

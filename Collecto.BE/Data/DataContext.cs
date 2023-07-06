@@ -25,7 +25,7 @@ namespace Collecto.BE.Data
 
         public DbSet<Tag> Tags { get; set; }
 
-        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Topic> Topics { get; set; }
 
         public DbSet<Like> Likes { get; set; }
 
@@ -54,6 +54,10 @@ namespace Collecto.BE.Data
             modelBuilder.Entity<IdentityRole>()
                 .HasData(new IdentityRole { Name = "User", NormalizedName = "USER" },
                         new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
+            modelBuilder.Entity<Collection>()
+                .HasOne(c => c.Topic)
+                .WithMany(t => t.Collections)
+                .HasForeignKey(c => c.TopicId);
         }  
     }
 }
