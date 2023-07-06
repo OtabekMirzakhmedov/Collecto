@@ -26,7 +26,7 @@ namespace Collecto.BE.Helper
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FieldName))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.FieldType));
 
-            CreateMap<TopicDto, Topic>();
+            CreateMap<TopicDto, Topic>().ReverseMap();
         }
     }
 }
