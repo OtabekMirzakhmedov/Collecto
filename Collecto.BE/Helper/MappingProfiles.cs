@@ -20,11 +20,16 @@ namespace Collecto.BE.Helper
                 .ForMember(dest => dest.Topic, opt => opt.MapFrom<TopicResolver>())
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.CustomFields, opt => opt.MapFrom(src => src.CustomFields))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now.Date));
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<Collection, CollectionDto>()
+            .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName));
 
             CreateMap<CustomFieldDto, CustomField>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CustomFieldId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FieldName))
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.FieldType));
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.FieldType))
+                .ReverseMap();
 
             CreateMap<TopicDto, Topic>().ReverseMap();
         }

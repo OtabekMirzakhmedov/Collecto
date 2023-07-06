@@ -33,6 +33,18 @@ namespace Collecto.BE.Controllers
             return Ok(collectionID);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCollectionById(int id)
+        {
+            var collection = await _collectionService.GetCollectionById(id);
+            if (collection == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(collection);
+        }
+
 
 
     }

@@ -8,6 +8,8 @@
 
         public string Description { get; init; }
 
+        public string UserId { get; init; }
+
         public ICollection<CustomFieldDto> CustomFields { get; init; }
 
         public DateTime CreatedAt { get; init; }

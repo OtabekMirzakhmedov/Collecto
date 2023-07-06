@@ -15,6 +15,15 @@ const collectionService = {
     }
   },
 
+  getCollectionById: async (collectionId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Collection/${collectionId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   fetchTopics: async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/Topic/topics`);
