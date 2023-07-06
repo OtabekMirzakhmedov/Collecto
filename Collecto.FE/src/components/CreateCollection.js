@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
 import ReactMarkdown from "react-markdown";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import makeAnimated from "react-select/animated";
 import collectionService from "../services/collectionService";
 import "./components.css";
 
 const animatedComponents = makeAnimated();
 
-const CreateCollectionPage = () => {
+const CreateCollection = () => {
   const [customFields, setCustomFields] = useState([]);
   const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setOptions([
-      { value: "topic1", label: "Topic 1" },
-      { value: "topic2", label: "Topic 2" },
-      { value: "topic3", label: "Topic 3" },
-    ]);
+    const fetchTopics = async () => {
+      try {
+        const topics = await collectionService.fetchTopics();
+        const topicOptions = topics.map((topic) => ({
+          value: topic,
+          label: topic,
+        }));
+        setOptions(topicOptions);
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+      }
+    };
+
+    fetchTopics();
   }, []);
+
   const {
     register,
     handleSubmit,
@@ -36,31 +52,36 @@ const CreateCollectionPage = () => {
     return true;
   };
 
-
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const transformedData = {
         title: data.title,
         topicName: data.topic.value,
         description: data.description,
-        customFields: data.customFields.map((field) => ({
-          fieldName: field.fieldName,
-          fieldType: field.fieldType,
-        })),
+        customFields: data.customFields
+          ? data.customFields.map((field) => ({
+              fieldName: field.fieldName,
+              fieldType: field.fieldType,
+            }))
+          : [],
       };
-
+  
       const token = localStorage.getItem("jwtToken");
-
+  
       const collectionId = await collectionService.createCollection(
         transformedData,
         token
       );
-
+  
       console.log("Collection created:", collectionId);
-      // Handle the successful creation of the collection
+      navigate(`/collections/${collectionId}`);
+      toast.success("Collection created");
     } catch (error) {
       console.error("Error creating collection:", error);
-      // Handle the error during collection creation
+      toast.error("Failed to create collection");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,22 +95,16 @@ const CreateCollectionPage = () => {
     setCustomFields(updatedFields);
   };
   return (
-    <div className="container">
-      <div className="align-content-center pt-3">
-        <a href="/">
-          <i className="bi bi-flower1 fs-1 my-1 text-danger"></i>
-        </a>
-        <a className="navbar-brand" href="/">
-          <p className="fs-2 d-inline text-danger mx-2">collecto </p>
-        </a>
-      </div>
+    <div className="container mt-5">
       <form
         className="m-auto border border-0 col-lg-6 col-xl-6 col-12 p-1"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="fs-4 text-center">Collection creation form</div>
+        <div className="display-6 text-center mb-5 ">
+          Collection creation form
+        </div>
         <div className="row border-top">
-          <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
+          <div className="col-4 text-secondary border-end fs-6 fw-medium p-1 mt-2">
             Title
           </div>
           <div className="col-8 p-0">
@@ -104,6 +119,7 @@ const CreateCollectionPage = () => {
             )}
           </div>
         </div>
+      
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
             Topic
@@ -141,7 +157,7 @@ const CreateCollectionPage = () => {
           </div>
         </div>
         <div className="col-12 ">
-        <Tabs>
+          <Tabs>
             <TabList>
               <Tab>Edit</Tab>
               <Tab>md Preview</Tab>
@@ -151,9 +167,11 @@ const CreateCollectionPage = () => {
               <textarea
                 className="border-0 w-100 p-1 collection-input "
                 placeholder="Supports Markdown"
-                {...register("description", { required: true, validate: validateDescription, })}
+                {...register("description", {
+                  required: true,
+                  validate: validateDescription,
+                })}
               />
-             
             </TabPanel>
 
             <TabPanel>
@@ -218,12 +236,29 @@ const CreateCollectionPage = () => {
           </button>
         </div>
 
-        <button type="submit" className="btn btn-primary p-1 m-0">
-          Create
-        </button>
+        
+        <button
+              type="submit"
+              className="btn btn-success rounded-0 p-1 m-0"
+              disabled={loading} // Disable the button when isLoading is true
+            >
+              {loading ? ( // Render the spinner when isLoading is true
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>{" "}
+                  Creating...
+                </>
+              ) : (
+                "Create" 
+              )}
+            </button>
       </form>
+      <ToastContainer position="top-center" />
     </div>
   );
 };
 
-export default CreateCollectionPage;
+export default CreateCollection;

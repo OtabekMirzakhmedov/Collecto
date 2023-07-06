@@ -18,6 +18,7 @@ const Navbar = () => {
   const signOut = () => {
     localStorage.removeItem("jwtToken");
     dispatch(logout());
+    navigate('/');
   };
 
   useEffect(() => {
