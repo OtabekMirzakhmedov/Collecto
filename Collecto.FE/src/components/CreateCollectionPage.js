@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
+import ReactMarkdown from "react-markdown";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 import makeAnimated from "react-select/animated";
 import collectionService from "../services/collectionService";
 import "./components.css";
@@ -21,9 +24,18 @@ const CreateCollectionPage = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     control,
   } = useForm();
+
+  const validateDescription = (value) => {
+    if (!value.trim()) {
+      return "Description is required";
+    }
+    return true;
+  };
+
 
   const onSubmit = async (data) => {
     try {
@@ -37,7 +49,7 @@ const CreateCollectionPage = () => {
         })),
       };
 
-      const token = localStorage.getItem('jwtToken');
+      const token = localStorage.getItem("jwtToken");
 
       const collectionId = await collectionService.createCollection(
         transformedData,
@@ -51,7 +63,6 @@ const CreateCollectionPage = () => {
       // Handle the error during collection creation
     }
   };
-  
 
   const handleClick = () => {
     setCustomFields([...customFields, { fieldName: "", fieldType: "" }]);
@@ -72,7 +83,6 @@ const CreateCollectionPage = () => {
           <p className="fs-2 d-inline text-danger mx-2">collecto </p>
         </a>
       </div>
-
       <form
         className="m-auto border border-0 col-lg-6 col-xl-6 col-12 p-1"
         onSubmit={handleSubmit(onSubmit)}
@@ -126,19 +136,33 @@ const CreateCollectionPage = () => {
           </div>
         </div>
         <div className="row border-top">
-          <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
+          <div className="col-12 text-secondary  fs-6 fw-medium p-1">
             Description
           </div>
-          <div className="col-8 p-0">
-            <textarea
-              className="border-0 w-100 p-1 collection-input"
-              placeholder="Empty"
-              {...register("description", { required: true })}
-            />
-            {errors.description && (
-              <span className="text-danger">Description is required</span> // Display error message if validation fails
-            )}
-          </div>
+        </div>
+        <div className="col-12 ">
+        <Tabs>
+            <TabList>
+              <Tab>Edit</Tab>
+              <Tab>md Preview</Tab>
+            </TabList>
+
+            <TabPanel>
+              <textarea
+                className="border-0 w-100 p-1 collection-input "
+                placeholder="Supports Markdown"
+                {...register("description", { required: true, validate: validateDescription, })}
+              />
+             
+            </TabPanel>
+
+            <TabPanel>
+              <ReactMarkdown>{watch("description")}</ReactMarkdown>
+            </TabPanel>
+          </Tabs>
+          {errors.description && (
+            <span className="text-danger">Description is required</span> // Display error message if validation fails
+          )}
         </div>
         {customFields.map((field, i) => (
           <div className="row border-top" key={i}>
