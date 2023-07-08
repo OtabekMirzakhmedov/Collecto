@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collecto.BE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230706044543_ChangeSubjectToTopic")]
-    partial class ChangeSubjectToTopic
+    [Migration("20230708084746_initialcreate")]
+    partial class initialcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,7 +40,7 @@ namespace Collecto.BE.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -49,6 +49,7 @@ namespace Collecto.BE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -157,22 +158,13 @@ namespace Collecto.BE.Migrations
                     b.Property<int?>("CollectionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CollectionId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Items");
                 });
@@ -348,15 +340,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8ed38683-e512-4053-b767-42b8cf24739e",
-                            ConcurrencyStamp = "7d691626-f83e-4592-bd63-5ccac8af1247",
+                            Id = "d20138fc-6b5e-4add-92a1-74f489027bba",
+                            ConcurrencyStamp = "d1f0ec82-77bf-4f80-8d96-ae5ba13ae0dc",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "7e41664b-b932-491f-a55b-d9de8c4c1a48",
-                            ConcurrencyStamp = "4ca8a7a1-0596-4e4c-b94d-a0bd14af5f26",
+                            Id = "222b1c55-89c6-4ae7-af08-1f6cfe89e9b8",
+                            ConcurrencyStamp = "8a63ba27-c408-46eb-b3ad-f15ad064dc13",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -478,7 +470,9 @@ namespace Collecto.BE.Migrations
 
                     b.HasOne("Collecto.BE.Models.User", "User")
                         .WithMany("Collections")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Topic");
 
@@ -532,13 +526,7 @@ namespace Collecto.BE.Migrations
                         .WithMany("Items")
                         .HasForeignKey("CollectionId");
 
-                    b.HasOne("Collecto.BE.Models.User", "User")
-                        .WithMany("Items")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Collection");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Collecto.BE.Models.ItemTag", b =>
@@ -663,8 +651,6 @@ namespace Collecto.BE.Migrations
                     b.Navigation("Collections");
 
                     b.Navigation("Comments");
-
-                    b.Navigation("Items");
 
                     b.Navigation("Likes");
                 });

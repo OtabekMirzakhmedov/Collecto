@@ -14,6 +14,7 @@ const Collection = () => {
           collectionId
         );
         setCollection(response);
+        
       } catch (error) {
         console.error("Error fetching collection:", error);
       }
@@ -25,14 +26,28 @@ const Collection = () => {
   if (!collection) {
     return <p>Loading collection...</p>;
   }
-
+  console.log(collection);
   return (
-    <div className="container">
-      <div className="d-flex align-items-center border-bottom border-bottom-1 mt-4">
-        <div className="display-6">{collection.title}</div>
-        <button className="btn rounded-pill btn-auto-fit btn-success btn-auto p-0">
-          {collection.topicName}
+    <div className="container mt-2">
+      <div className="d-flex align-items-center justify-content-end">
+        <button className="btn btn-light d-flex align-items-center object-fit-contain mx-2 p-1 ">
+          <i className="bi bi-trash3 fs-5 text-danger"></i>
         </button>
+        <button className="btn btn-light p-1 ">
+          <i className="bi bi-pencil fs-5 border-black"></i>
+        </button>
+        <button className="btn btn-primary m-0 p-0 align-center mx-2">
+          <i className="bi bi-plus fs-5 p-0 m-0 "></i>item
+        </button>
+      </div>
+      <div className="d-flex align-items-center border-bottom border-bottom-1  justify-content-between ">
+        <div className="d-flex align-items-center">
+          <div className="display-6">{collection.title}</div>
+          <button className="btn rounded-pill btn-auto-fit btn-success btn-auto p-0">
+            {collection.topicName}
+          </button>
+        </div>
+   
       </div>
       <div className="border rounded-2 mt-2 p-2">
         <div className="fs-6 fw-bold">Description</div>

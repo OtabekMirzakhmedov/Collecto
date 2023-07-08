@@ -10,12 +10,7 @@ namespace Collecto.BE.Models
         public string? Name { get; set; }
 
         [Required]
-        public string? Description { get; set; }
-
-        [Required]
         public ICollection<ItemTag> ItemTags { get; set; }
-
-        public User User { get; set; }
 
         public Collection? Collection { get; set; }
 

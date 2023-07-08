@@ -21,11 +21,14 @@ namespace Collecto.BE.Models
 
         [Required]
         public Topic Topic { get; set; }
+
         public string UserId { get; set; }
-        public User? User { get; set; }
 
-        public ICollection<Item>? Items { get; set; }
+        [Required]
+        public User User { get; set; }
 
-        public ICollection<CustomField>? CustomFields { get; set; }
+        public ICollection<Item> Items { get; set; }
+
+        public ICollection<CustomField> CustomFields { get; set; }
     }
 }

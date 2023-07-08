@@ -47,6 +47,7 @@ namespace Collecto.BE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -155,22 +156,13 @@ namespace Collecto.BE.Migrations
                     b.Property<int?>("CollectionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CollectionId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Items");
                 });
@@ -346,15 +338,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "febc9de5-b7bf-4038-b95a-eb3f98b9229a",
-                            ConcurrencyStamp = "93ae0d0c-df02-41aa-942f-1065c339afa9",
+                            Id = "d20138fc-6b5e-4add-92a1-74f489027bba",
+                            ConcurrencyStamp = "d1f0ec82-77bf-4f80-8d96-ae5ba13ae0dc",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "8dbc0f32-500d-453c-848a-70dc3083f0f5",
-                            ConcurrencyStamp = "81f21398-9472-468c-ac09-49c1cd19dafa",
+                            Id = "222b1c55-89c6-4ae7-af08-1f6cfe89e9b8",
+                            ConcurrencyStamp = "8a63ba27-c408-46eb-b3ad-f15ad064dc13",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -476,7 +468,9 @@ namespace Collecto.BE.Migrations
 
                     b.HasOne("Collecto.BE.Models.User", "User")
                         .WithMany("Collections")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Topic");
 
@@ -530,13 +524,7 @@ namespace Collecto.BE.Migrations
                         .WithMany("Items")
                         .HasForeignKey("CollectionId");
 
-                    b.HasOne("Collecto.BE.Models.User", "User")
-                        .WithMany("Items")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Collection");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Collecto.BE.Models.ItemTag", b =>
@@ -661,8 +649,6 @@ namespace Collecto.BE.Migrations
                     b.Navigation("Collections");
 
                     b.Navigation("Comments");
-
-                    b.Navigation("Items");
 
                     b.Navigation("Likes");
                 });

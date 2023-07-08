@@ -22,15 +22,17 @@ namespace Collecto.BE.Controllers
         [HttpPost("create-collection")]
         public async Task<IActionResult> CreateCollection([FromBody] CollectionDto collectionDto)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            string? userId = User.FindFirst("Id")?.Value;
 
+
+            var userId = User.FindFirst("Id")?.Value;
             int collectionID = await _collectionService.CreateCollection(userId, collectionDto);
-
             return Ok(collectionID);
+    
         }
 
         [HttpGet("{id}")]

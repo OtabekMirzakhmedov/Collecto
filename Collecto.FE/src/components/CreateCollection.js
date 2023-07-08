@@ -61,11 +61,14 @@ const CreateCollection = () => {
         description: data.description,
         customFields: data.customFields
           ? data.customFields.map((field) => ({
+            customFieldId: 0,
               fieldName: field.fieldName,
               fieldType: field.fieldType,
             }))
           : [],
       };
+
+      console.log(transformedData);
   
       const token = localStorage.getItem("jwtToken");
   

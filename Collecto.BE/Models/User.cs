@@ -10,8 +10,6 @@ namespace Collecto.BE.Models
 
         public DateTime CreatedAt { get; set; }
 
-        public ICollection<Item>? Items { get; set; }
-
         public ICollection<Collection>? Collections { get; set; }
 
         public ICollection<Comment>? Comments { get; set; }

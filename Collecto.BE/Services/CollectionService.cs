@@ -18,11 +18,10 @@ namespace Collecto.BE.Services
             _mapper = mapper;
         }
 
-        public async Task<int> CreateCollection(string userId, CollectionDto collectionCreateDto)
+        public async Task<int> CreateCollection(string userId, CollectionDto collectionDto)
         {
-            var collection = _mapper.Map<Collection>(collectionCreateDto);
+            var collection = _mapper.Map<Collection>(collectionDto);
             collection.UserId = userId;
-            collection.CreatedAt = DateTime.Now;
             _dataContext.Collections.Add(collection);
             await _dataContext.SaveChangesAsync();
             return collection.Id;
