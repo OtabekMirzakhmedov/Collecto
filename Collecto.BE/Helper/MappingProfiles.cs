@@ -32,6 +32,10 @@ namespace Collecto.BE.Helper
                 .ReverseMap();
 
             CreateMap<TopicDto, Topic>().ReverseMap();
+
+            CreateMap<ItemDto, Item>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ItemTags, opt => opt.Ignore());
         }
     }
 }

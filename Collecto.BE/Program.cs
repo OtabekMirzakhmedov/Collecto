@@ -105,6 +105,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICollectionService, CollectionService>();
 builder.Services.AddScoped<ITopicService, TopicService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

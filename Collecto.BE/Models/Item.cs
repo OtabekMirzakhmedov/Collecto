@@ -9,8 +9,7 @@ namespace Collecto.BE.Models
         [Required]
         public string? Name { get; set; }
 
-        [Required]
-        public ICollection<ItemTag> ItemTags { get; set; }
+        public ICollection<ItemTag>? ItemTags { get; set; }
 
         public Collection? Collection { get; set; }
 
