@@ -12,7 +12,7 @@
 
         public ICollection<CustomFieldDto>? CustomFields { get; init; }
 
-        public ICollection<ItemDto> Items { get; set; }
+        public ICollection<ItemDto>? Items { get; set; }
 
         public DateTime CreatedAt { get; init; }
 

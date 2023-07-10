@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Button, Container, Row, Col, Offcanvas, Stack } from "react-bootstrap";
 import collectionService from "../services/collectionService";
 import ReactMarkdown from "react-markdown";
-import './components.css';
+import "./components.css";
+import ItemCreation from "./ItemCreation";
 
 const Collection = () => {
   const { collectionId } = useParams();
   const [collection, setCollection] = useState(null);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     const fetchCollection = async () => {
@@ -27,65 +33,50 @@ const Collection = () => {
     return <p>Loading collection...</p>;
   }
   console.log(collection);
+
   return (
-    <div className="container mt-2">
-      <div className="d-flex align-items-center justify-content-end">
-        <button className="btn btn-light d-flex align-items-center mx-2 p-1 ">
+    <Container className="mt-2">
+      <Stack direction="horizontal" className="d-flex justify-content-end">
+        <Button className="btn-light d-flex align-items-center mx-2 p-1">
           <i className="bi bi-trash3 fs-5 text-danger"></i>
-        </button>
-        <button className="btn btn-light p-1 ">
+        </Button>
+        <Button className="btn-light p-1">
           <i className="bi bi-pencil fs-5 border-black"></i>
-        </button>
-        <button
-          className="btn btn-primary m-0 p-0 align-center mx-2"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-backdrop="true"
-          data-bs-target="#offcanvasScrolling"
-          aria-controls="offcanvasScrolling"
+        </Button>
+        <Button
+          className="btn-primary m-0 p-0 align-center mx-2"
+          onClick={handleShow}
         >
           <i className="bi bi-plus fs-5 p-0 m-0 "></i>item
-        </button>
-      </div>
-      <div className="d-flex align-items-center border-bottom border-bottom-1  justify-content-between ">
-        <div className="d-flex align-items-center">
-          <div className="display-6">{collection.title}</div>
-          <button className="btn rounded-pill btn-auto-fit btn-success btn-auto p-0">
+        </Button>
+      </Stack>
+      <Row className="d-flex align-items-center border-bottom border-bottom-1  justify-content-between">
+        <Col className="d-flex align-items-center">
+          <h1>{collection.title}</h1>
+          <Button className="rounded-pill btn-auto-fit btn-success btn-auto p-0">
             {collection.topicName}
-          </button>
-        </div>
-      </div>
-      <div className="border rounded-2 mt-2 p-2">
-        <div className="fs-6 fw-bold">Description</div>
+          </Button>
+        </Col>
+      </Row>
+      <Row className="border rounded-2 mt-2 p-2">
+        <Col className="fs-6 fw-bold">Description</Col>
 
         <ReactMarkdown className="p-2">{collection.description}</ReactMarkdown>
-      </div>
+      </Row>
 
-      <div
-        className="offcanvas offcanvas-start offcanvas-backdrop"
-        data-bs-scroll="true"
-        tabIndex="-1"
-        id="offcanvasScrolling"
-        aria-labelledby="offcanvasScrollingLabel"
+      <Offcanvas
+        placement="end"
+        show={show}
+        onHide={handleClose}
+        scroll
       >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasScrollingLabel">
-            Offcanvas with body scrolling
-          </h5>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"W
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <p>
-            Try scrolling the rest of the page to see this option in action.
-          </p>
-        </div>
-      </div>
-    </div>
+        <Offcanvas.Header closeButton />
+
+        <Offcanvas.Body>
+          <ItemCreation  collectionId={collectionId} customFields={collection.customFields}/>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </Container>
   );
 };
 
