@@ -5,6 +5,7 @@ import collectionService from "../services/collectionService";
 import ReactMarkdown from "react-markdown";
 import "./components.css";
 import ItemCreation from "./ItemCreation";
+import ItemTable from "./ItemTable";
 
 const Collection = () => {
   const { collectionId } = useParams();
@@ -63,6 +64,8 @@ const Collection = () => {
 
         <ReactMarkdown className="p-2">{collection.description}</ReactMarkdown>
       </Row>
+
+      <ItemTable collectionId={collectionId} customFields = {collection.customFields}/>
 
       <Offcanvas
         placement="end"

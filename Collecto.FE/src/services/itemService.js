@@ -24,6 +24,17 @@ const itemService = {
     }
   },
 
+  getItemsByCollectionId: async (collectionId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Item/get-items?collectionId=${collectionId}`);
+      console.log(collectionId);
+      console.log('response data', response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 
 };
 
