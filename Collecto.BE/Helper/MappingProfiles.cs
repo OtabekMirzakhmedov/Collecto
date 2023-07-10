@@ -33,9 +33,14 @@ namespace Collecto.BE.Helper
 
             CreateMap<TopicDto, Topic>().ReverseMap();
 
+            CreateMap<CustomFieldValue, CustomFieldValueDto>();
+
             CreateMap<ItemDto, Item>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ItemTags, opt => opt.Ignore());
+            CreateMap<Item, ItemDto>()
+                .ForMember(dest => dest.ItemTags, opt => opt.MapFrom(src => src.ItemTags.Select(it => it.Tag.TagName)))
+                .ForMember(dest => dest.CustomFieldValues, opt => opt.MapFrom(src => src.CustomFieldValues));
         }
     }
 }

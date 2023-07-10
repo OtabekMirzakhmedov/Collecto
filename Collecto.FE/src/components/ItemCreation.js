@@ -1,17 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
+import itemService from "../services/itemService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ItemCreation = ({ collectionId, customFields }) => {
-  const { register, handleSubmit, setValue} = useForm();
+const ItemCreation = ({ collectionId, customFields, onClose }) => {
+  const { register, handleSubmit, setValue } = useForm();
+  const [tagOptions, setTagOptions] = useState([]);
+  const [isAddingItem, setIsAddingItem] = useState(false);
 
+  const token = localStorage.getItem("jwtToken");
 
-  const onSubmit = (data) => {
-    // Process the form data
-    console.log(data);
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tags = await itemService.fetchTags();
+        const options = tags.map((tag) => ({
+          value: tag,
+          label: tag,
+        }));
+        setTagOptions(options);
+      } catch (error) {
+        console.error("Failed to fetch tags:", error);
+      }
+    };
 
-    // Reset the form
-    // ...
+    fetchTags();
+  }, []);
+
+  const onSubmit = async (data) => {
+    // Extract the values from the form data
+    const { itemName, tags, ...customFields } = data;
+
+    // Create an array of custom field values
+    const customFieldValues = Object.entries(customFields).map(
+      ([key, value]) => {
+        const customFieldId = key.replace("customField_", "");
+
+        // Stringify boolean values
+        const processedValue =
+          typeof value === "boolean" ? JSON.stringify(value) : value || "";
+
+        return {
+          customFieldId,
+          value: processedValue,
+        };
+      }
+    );
+
+    // Construct the final data object
+    const itemData = {
+      name: itemName,
+      itemTags: tags || [],
+      customFieldValues,
+    };
+
+    setIsAddingItem(true);
+
+    try {
+      const itemId = await itemService.createItem(itemData, collectionId, token);
+      setIsAddingItem(false);
+
+      toast.success("Item added successfully");
+
+      onClose();
+      // Process the item data as needed (e.g., send it to an API, update the state, etc.)
+
+      // Reset the form
+      // ...
+    } catch (error) {
+      setIsAddingItem(false);
+      toast.error("Failed to add item");
+    }
   };
 
   const handleTagsChange = (selectedOptions) => {
@@ -39,6 +100,7 @@ const ItemCreation = ({ collectionId, customFields }) => {
           <label className="form-label">Tags</label>
           <CreatableSelect
             isMulti
+            options={tagOptions}
             onChange={handleTagsChange}
           />
         </div>
@@ -46,7 +108,8 @@ const ItemCreation = ({ collectionId, customFields }) => {
         {customFields.map((field) => (
           <div className="mb-3" key={field.customFieldId}>
             <label className="form-label">{field.fieldName}</label>
-            {field.fieldType === "SingleLineText" || field.fieldType === "Number" ? (
+            {field.fieldType === "SingleLineText" ||
+            field.fieldType === "Number" ? (
               <input
                 type={field.fieldType === "Number" ? "number" : "text"}
                 className="form-control"
@@ -79,10 +142,12 @@ const ItemCreation = ({ collectionId, customFields }) => {
           </div>
         ))}
 
-        <button type="submit" className="btn btn-primary">
-          Submit
+        <button type="submit" className="btn btn-primary" disabled={isAddingItem}>
+          {isAddingItem ? "Adding..." : "Add Item"}
         </button>
       </form>
+
+      
     </div>
   );
 };

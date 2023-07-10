@@ -16,5 +16,7 @@ namespace Collecto.BE.Models
         public ICollection<Comment>? Comments { get; set; }
 
         public ICollection<Like>? Likes { get; set; }
+
+        public ICollection<CustomFieldValue>? CustomFieldValues { get; set; }
     }
 }

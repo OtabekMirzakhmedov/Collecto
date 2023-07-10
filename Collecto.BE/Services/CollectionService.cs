@@ -30,8 +30,9 @@ namespace Collecto.BE.Services
         public async Task<CollectionDto> GetCollectionById(int id)
         {
             var collection = await _dataContext.Collections
-                .Include(c => c.Topic) 
+                .Include(c => c.Topic)
                 .Include(c => c.CustomFields)
+                .Include(c => c.Items)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (collection == null)

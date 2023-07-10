@@ -3,6 +3,7 @@ using Collecto.BE.Data;
 using Collecto.BE.DTO;
 using Collecto.BE.Interfaces.Services;
 using Collecto.BE.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Collecto.BE.Services
 {
@@ -29,6 +30,19 @@ namespace Collecto.BE.Services
             return item.Id;
         }
 
+        public async Task<ICollection<ItemDto>> GetItemsByCollectionId(int collectionId)
+        {
+            var items = await _dataContext.Items
+                .Include(i => i.ItemTags)
+                .ThenInclude(it => it.Tag)
+                .Include(i => i.CustomFieldValues)
+                .Where(i => i.Collection.Id == collectionId)
+                .ToListAsync();
+
+            var itemDtos = _mapper.Map<ICollection<ItemDto>>(items);
+            return itemDtos;
+        }
+
         private void CreateOrUpdateTags(Item item, IEnumerable<string> tagNames)
         {
             foreach (var tagName in tagNames)
@@ -51,15 +65,16 @@ namespace Collecto.BE.Services
             {
                 var customFieldValue = new CustomFieldValue
                 {
-                    Item = _dataContext.Items.FirstOrDefault(i => i.Id == itemId),
+                    ItemId = itemId,
                     CustomFieldId = customFieldValueDto.CustomFieldId,
                     Value = customFieldValueDto.Value
                 };
 
                 _dataContext.CustomFieldValues.Add(customFieldValue);
+                
             }
-
             await _dataContext.SaveChangesAsync();
+
         }
 
     }

@@ -24,8 +24,10 @@ namespace Collecto.BE.Controllers
         {
             var itemId = await _itemService.CreateItem(collectionId, itemDto);
             return Ok(itemId);
-
         }
+
+        [HttpGet("get-items")]
+        public async Task<IActionResult> GetItemsByCollectionId(int collectionId) => Ok(await _itemService.GetItemsByCollectionId(collectionId));
     }
 
 }

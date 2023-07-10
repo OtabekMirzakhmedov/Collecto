@@ -73,7 +73,7 @@ const Collection = () => {
         <Offcanvas.Header closeButton />
 
         <Offcanvas.Body>
-          <ItemCreation  collectionId={collectionId} customFields={collection.customFields}/>
+          <ItemCreation  collectionId={collectionId} customFields={collection.customFields} onClose={handleClose}/>
         </Offcanvas.Body>
       </Offcanvas>
     </Container>

@@ -16,6 +16,6 @@ namespace Collecto.BE.Models
         [MaxLength(100)]
         public string? Type { get; set; }
 
-        public CustomFieldValue CustomFieldValue { get; set; }
+        public ICollection<CustomFieldValue>? CustomFieldValues { get; set; }
     }
 }

@@ -47,9 +47,10 @@ namespace Collecto.BE.Data
                 .WithMany(t => t.ItemTags)
                 .HasForeignKey(it => it.TagId);
 
-            modelBuilder.Entity<CustomFieldValue>()
-                .HasOne(cfv => cfv.CustomField)
-                .WithOne(cf => cf.CustomFieldValue);
+            modelBuilder.Entity<CustomField>()
+    .HasMany(cf => cf.CustomFieldValues)
+    .WithOne(cfv => cfv.CustomField)
+    .HasForeignKey(cfv => cfv.CustomFieldId);
 
             modelBuilder.Entity<IdentityRole>()
                 .HasData(new IdentityRole { Name = "User", NormalizedName = "USER" },

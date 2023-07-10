@@ -4,6 +4,7 @@ using Collecto.BE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collecto.BE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230710114003_CustomFieldChanged")]
+    partial class CustomFieldChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,15 +339,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fcc44068-f354-4d5e-8a79-137bed3b3537",
-                            ConcurrencyStamp = "8b524e19-4ef3-43fc-88ed-2331825f2c7f",
+                            Id = "ecacab62-3d59-4fdf-9e49-731c22692571",
+                            ConcurrencyStamp = "51c10082-24d1-46cd-8886-99546f645240",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "af86d99a-b4f6-424b-a560-b25c3b4f2401",
-                            ConcurrencyStamp = "ba813fd8-0b4b-4e3e-b71f-e629d69ddf4e",
+                            Id = "114668a7-1a76-49c1-90be-c0646f2c8065",
+                            ConcurrencyStamp = "b0402440-da36-49e3-8c5f-c6c7e0d126d6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -509,7 +511,7 @@ namespace Collecto.BE.Migrations
                         .IsRequired();
 
                     b.HasOne("Collecto.BE.Models.Item", "Item")
-                        .WithMany("CustomFieldValues")
+                        .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -628,8 +630,6 @@ namespace Collecto.BE.Migrations
             modelBuilder.Entity("Collecto.BE.Models.Item", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("CustomFieldValues");
 
                     b.Navigation("ItemTags");
 
