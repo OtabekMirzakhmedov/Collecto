@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Container, Row, Col, Offcanvas, Stack } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Offcanvas,
+  Stack,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import collectionService from "../services/collectionService";
 import ReactMarkdown from "react-markdown";
 import "./components.css";
@@ -63,19 +72,39 @@ const Collection = () => {
   return (
     <Container className="mt-2">
       <Stack direction="horizontal" className="d-flex justify-content-end">
-        <Button className="btn-light d-flex align-items-center mx-2 p-1"
-        onClick={onDeleteCollection}>
-          <i className="bi bi-trash3 fs-5 text-danger"></i>
-        </Button>
-        <Button className="btn-light p-1">
-          <i className="bi bi-pencil fs-5 border-black"></i>
-        </Button>
-        <Button
-          className="btn-primary m-0 p-0 align-center mx-2"
-          onClick={handleShow}
+        <OverlayTrigger
+          key="collection-delete"
+          placement="top"
+          overlay={<Tooltip> Delete collection </Tooltip>}
         >
-          <i className="bi bi-plus fs-5 p-0 m-0 "></i>item
-        </Button>
+          <Button
+            className="btn-light d-flex align-items-center mx-2 p-1"
+            onClick={onDeleteCollection}
+          >
+            <i className="bi bi-trash3 fs-5 text-danger"></i>
+          </Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key="collection-edit"
+          placement="top"
+          overlay={<Tooltip> Edit collection </Tooltip>}
+        >
+          <Button className="btn-light p-1">
+            <i className="bi bi-pencil fs-5 border-black"></i>
+          </Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key="item-edit"
+          placement="top"
+          overlay={<Tooltip> Add Item </Tooltip>}
+        >
+          <Button
+            className="btn-primary m-0 p-0 align-center mx-2"
+            onClick={handleShow}
+          >
+            <i className="bi bi-plus fs-5 p-0 m-0 "></i>item
+          </Button>
+        </OverlayTrigger>
       </Stack>
       <Row className="d-flex align-items-center border-bottom border-bottom-1  justify-content-between">
         <Col className="d-flex align-items-center">

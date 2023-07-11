@@ -1,7 +1,20 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useTable, useExpanded, useRowSelect } from "react-table";
+import {
+  useTable,
+  useExpanded,
+  useRowSelect,
+  useSortBy,
+  useGlobalFilter,
+} from "react-table";
 import { formatDistanceToNow } from "date-fns";
-import { Button, Badge } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  Badge,
+  Stack,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import itemService from "../services/itemService";
 
 const ItemTable = ({ collectionId, customFields }) => {
@@ -12,6 +25,7 @@ const ItemTable = ({ collectionId, customFields }) => {
       {
         Header: "",
         accessor: "id",
+
         Cell: ({ row }) => (
           <Button
             variant="link"
@@ -54,33 +68,55 @@ const ItemTable = ({ collectionId, customFields }) => {
           </Badge>
         ),
       },
+      ...customFields.map((field) => ({
+        Header: field.fieldName,
+        accessor: (row) => {
+          const customFieldValue = row.customFieldValues.find(
+            (value) => value.fieldName === field.fieldName
+          );
+          return customFieldValue ? customFieldValue.value : "";
+        },
+      })),
     ],
-    []
+    [customFields]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data: items,
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    allColumns,
+    prepareRow,
+    setGlobalFilter,
+    state: { globalFilter },
+  } = useTable(
+    {
+      columns,
+      data: items,
+      initialState: {
+        hiddenColumns: customFields.map((field) => field.fieldName),
       },
-      useExpanded,
-      useRowSelect,
-      (hooks) => {
-        hooks.visibleColumns.push((columns) => [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-            ),
-            Cell: ({ row }) => (
-              <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-            ),
-          },
-          ...columns,
-        ]);
-      }
-    );
+    },
+    useGlobalFilter,
+    useSortBy,
+    useExpanded,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "selection",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+          ),
+          Cell: ({ row }) => (
+            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -97,16 +133,75 @@ const ItemTable = ({ collectionId, customFields }) => {
     fetchItems();
   }, [collectionId]);
 
-  return (
-    <div>
-      <h1>Item List</h1>
+  const generateSortingIndicator = (column) => {
+    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+  };
 
-      <table {...getTableProps()} className="table table-striped">
+  return (
+    <div className="mt-3">
+      <h3>Item List</h3>
+
+      {allColumns.slice(2).map((column) => (
+        <div className="form-check-inline fs-6 mb-2">
+          <label>
+            <input
+              className=""
+              type="checkbox"
+              {...column.getToggleHiddenProps()}
+            />{" "}
+            <span>{column.Header}</span>
+          </label>
+        </div>
+      ))}
+      <Stack direction="horizontal" className="position-sticky">
+        <Form.Control
+          type="text"
+          value={globalFilter || ""}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          placeholder="Search..."
+        />
+        <OverlayTrigger
+          key="item-delete"
+          placement="top"
+          overlay={<Tooltip> Delete Item </Tooltip>}
+        >
+          <Button className="btn-light d-flex align-items-center mx-2 p-1">
+            <i className="bi bi-file-x fs-5 text-danger"></i>
+          </Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key="item-edit"
+          placement="top"
+          overlay={<Tooltip> Edit Item </Tooltip>}
+        >
+          <Button className="btn-light p-1 mx-2">
+          <i className="bi bi-pencil-square fs-5 border-black"></i>
+        </Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key="item-view"
+          placement="top"
+          overlay={<Tooltip> View item</Tooltip>}
+        >
+           <Button className="btn-light p-1">
+          <i className="bi bi-eye fs-4 border-black fw-bolder"></i>
+        </Button>
+        </OverlayTrigger>
+        
+      </Stack>
+
+      <table
+        {...getTableProps()}
+        className="table table-striped border border-1"
+      >
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render("Header")}
+                  {generateSortingIndicator(column)}
+                </th>
               ))}
             </tr>
           ))}
