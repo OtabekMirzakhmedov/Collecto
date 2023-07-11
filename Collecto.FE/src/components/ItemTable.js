@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useTable, useExpanded, useRowSelect } from 'react-table';
-import { formatDistanceToNow } from 'date-fns';
-import { Button, Form, Badge } from 'react-bootstrap';
-import itemService from '../services/itemService';
+import React, { useState, useEffect, useMemo } from "react";
+import { useTable, useExpanded, useRowSelect } from "react-table";
+import { formatDistanceToNow } from "date-fns";
+import { Button, Badge } from "react-bootstrap";
+import itemService from "../services/itemService";
 
 const ItemTable = ({ collectionId, customFields }) => {
   const [items, setItems] = useState([]);
@@ -10,8 +10,8 @@ const ItemTable = ({ collectionId, customFields }) => {
   const columns = useMemo(
     () => [
       {
-        Header: '',
-        accessor: 'id',
+        Header: "",
+        accessor: "id",
         Cell: ({ row }) => (
           <Button
             variant="link"
@@ -27,17 +27,17 @@ const ItemTable = ({ collectionId, customFields }) => {
         ),
       },
       {
-        Header: 'Item Name',
-        accessor: 'name',
+        Header: "Item Name",
+        accessor: "name",
       },
       {
-        Header: 'Tags',
-        accessor: 'itemTags',
-        Cell: ({ value }) => value.join(', '),
+        Header: "Tags",
+        accessor: "itemTags",
+        Cell: ({ value }) => value.join(", "),
       },
       {
-        Header: 'Created Time',
-        accessor: 'createdAt',
+        Header: "Created Time",
+        accessor: "createdAt",
         Cell: ({ value }) => {
           const date = new Date(value);
           const formattedTime = formatDistanceToNow(date, { addSuffix: true });
@@ -46,8 +46,8 @@ const ItemTable = ({ collectionId, customFields }) => {
       },
 
       {
-        Header: 'Likes',
-        accessor: 'numberOfLikes',
+        Header: "Likes",
+        accessor: "numberOfLikes",
         Cell: ({ value }) => (
           <Badge bg="primary" pill>
             {value}
@@ -58,45 +58,39 @@ const ItemTable = ({ collectionId, customFields }) => {
     []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data: items,
-    },
-    useExpanded,
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: 'selection',
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <input
-              type="checkbox"
-              {...getToggleAllRowsSelectedProps()}
-            />
-          ),
-          Cell: ({ row }) => (
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          ),
-        },
-        ...columns,
-      ]);
-    }
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data: items,
+      },
+      useExpanded,
+      useRowSelect,
+      (hooks) => {
+        hooks.visibleColumns.push((columns) => [
+          {
+            id: "selection",
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+            ),
+            Cell: ({ row }) => (
+              <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+            ),
+          },
+          ...columns,
+        ]);
+      }
+    );
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
+        const fetchedItems = await itemService.getItemsByCollectionId(
+          collectionId
+        );
         setItems(fetchedItems);
       } catch (error) {
-        console.error('Failed to fetch items:', error);
+        console.error("Failed to fetch items:", error);
       }
     };
 
@@ -112,7 +106,7 @@ const ItemTable = ({ collectionId, customFields }) => {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
               ))}
             </tr>
           ))}
@@ -124,17 +118,20 @@ const ItemTable = ({ collectionId, customFields }) => {
               <>
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   ))}
                 </tr>
                 {row.isExpanded && (
                   <tr>
                     <td colSpan={columns.length}>
-                      {customFields.map((field) => (
-                        <p key={field.customFieldId}>
-                          {field.fieldName}: {row.values[field.customFieldId]}
-                        </p>
-                      ))}
+                      {row.original.customFieldValues.map(
+                        (customFieldValue) => (
+                          <p key={customFieldValue.id}>
+                            {customFieldValue.fieldName}:{" "}
+                            {customFieldValue.value}
+                          </p>
+                        )
+                      )}
                     </td>
                   </tr>
                 )}

@@ -33,7 +33,18 @@ namespace Collecto.BE.Helper
 
             CreateMap<TopicDto, Topic>().ReverseMap();
 
-            CreateMap<CustomFieldValue, CustomFieldValueDto>();
+            CreateMap<CustomFieldValue, CustomFieldValueDto>()
+                .ForMember(dest => dest.CustomFieldId, opt => opt.MapFrom(src => src.CustomFieldId))
+                .ForMember(dest => dest.FieldName, opt => opt.MapFrom(src => src.CustomField.Name))
+                .ForMember(dest => dest.FieldType, opt => opt.MapFrom(src => src.CustomField.Type))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId));
+
+            CreateMap<CustomFieldValueDto, CustomFieldValue>()
+                .ForMember(dest => dest.CustomFieldId, opt => opt.MapFrom(src => src.CustomFieldId))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId));
+
 
             CreateMap<ItemDto, Item>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

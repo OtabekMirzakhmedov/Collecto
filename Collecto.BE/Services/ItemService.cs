@@ -47,6 +47,7 @@ namespace Collecto.BE.Services
                 .Include(i => i.ItemTags)
                 .ThenInclude(it => it.Tag)
                 .Include(i => i.CustomFieldValues)
+                .ThenInclude(cfv => cfv.CustomField)
                 .Where(i => i.Collection.Id == collectionId)
                 .ToListAsync();
 
