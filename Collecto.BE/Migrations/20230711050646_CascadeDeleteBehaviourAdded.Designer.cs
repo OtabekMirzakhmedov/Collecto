@@ -4,6 +4,7 @@ using Collecto.BE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collecto.BE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230711050646_CascadeDeleteBehaviourAdded")]
+    partial class CascadeDeleteBehaviourAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +99,7 @@ namespace Collecto.BE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CollectionId")
+                    b.Property<int?>("CollectionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -154,9 +156,6 @@ namespace Collecto.BE.Migrations
 
                     b.Property<int?>("CollectionId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -340,15 +339,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d8c26448-243e-4374-9de5-90f2d461904f",
-                            ConcurrencyStamp = "4f37e7b4-9b19-4311-b9e0-913509f0bc1d",
+                            Id = "3f8600b8-f2e2-409e-968d-1a105327ebfe",
+                            ConcurrencyStamp = "a9fb9a50-6636-4732-a354-a3a224b8ca1c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "470d26bd-09f4-4de1-b1ae-469e5a5576b8",
-                            ConcurrencyStamp = "991f7467-4802-4dba-a632-3010405cb0a6",
+                            Id = "c7577e5f-3ce6-4d33-8572-52bd25d8ff8e",
+                            ConcurrencyStamp = "a2c55e35-a344-407c-91b1-9dc19f38e863",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -498,9 +497,7 @@ namespace Collecto.BE.Migrations
                 {
                     b.HasOne("Collecto.BE.Models.Collection", "Collection")
                         .WithMany("CustomFields")
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("CollectionId");
 
                     b.Navigation("Collection");
                 });

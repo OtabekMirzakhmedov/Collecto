@@ -48,9 +48,16 @@ namespace Collecto.BE.Data
                 .HasForeignKey(it => it.TagId);
 
             modelBuilder.Entity<CustomField>()
-    .HasMany(cf => cf.CustomFieldValues)
-    .WithOne(cfv => cfv.CustomField)
-    .HasForeignKey(cfv => cfv.CustomFieldId);
+                .HasMany(cf => cf.CustomFieldValues)
+                .WithOne(cfv => cfv.CustomField)
+                .HasForeignKey(cfv => cfv.CustomFieldId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Collection>()
+                .HasMany(cl => cl.CustomFields)
+                .WithOne(cf => cf.Collection)
+                .HasForeignKey(cf => cf.CollectionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<IdentityRole>()
                 .HasData(new IdentityRole { Name = "User", NormalizedName = "USER" },
@@ -60,6 +67,16 @@ namespace Collecto.BE.Data
                 .HasOne(c => c.Topic)
                 .WithMany(t => t.Collections)
                 .HasForeignKey(c => c.TopicId);
+
+            modelBuilder.Entity<Collection>()
+                .HasMany(c => c.Items)
+                .WithOne(i => i.Collection)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Item>()
+                .HasMany(i => i.ItemTags)
+                .WithOne(it => it.Item)
+                .OnDelete(DeleteBehavior.Cascade);
         }  
     }
 }

@@ -27,12 +27,9 @@ namespace Collecto.BE.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-
             var userId = User.FindFirst("Id")?.Value;
             int collectionID = await _collectionService.CreateCollection(userId, collectionDto);
             return Ok(collectionID);
-    
         }
 
         [HttpGet("{id}")]
@@ -43,11 +40,14 @@ namespace Collecto.BE.Controllers
             {
                 return NotFound();
             }
-
             return Ok(collection);
         }
 
-
-
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCollectionById(int id)
+        {
+            await _collectionService.DeleteCollectionById(id);
+            return Ok("Deleted");
+        }
     }
 }

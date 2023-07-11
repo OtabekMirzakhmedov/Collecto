@@ -59,7 +59,8 @@ const ItemCreation = ({ collectionId, customFields, onClose }) => {
     setIsAddingItem(true);
 
     try {
-      const itemId = await itemService.createItem(itemData, collectionId, token);
+      const itemCreated = await itemService.createItem(itemData, collectionId, token);
+      console.log(itemCreated);
       setIsAddingItem(false);
 
       toast.success("Item added successfully");

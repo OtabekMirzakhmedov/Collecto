@@ -17,17 +17,28 @@ namespace Collecto.BE.Services
             _dataContext = dataContext;
             _mapper = mapper;
         }
-        public async Task<int> CreateItem(int collectionId, ItemDto itemDto)
+        public async Task<ItemDto> CreateItem(int collectionId, ItemDto itemDto)
         {
             var item = _mapper.Map<Item>(itemDto);
 
             item.Collection = await _dataContext.Collections.FindAsync(collectionId);
+            item.CreatedAt = DateTime.Now;
             _dataContext.Items.Add(item);
             CreateOrUpdateTags(item, itemDto.ItemTags);
             await _dataContext.SaveChangesAsync();
             await HandleCustomFieldValues(item.Id, itemDto.CustomFieldValues);
 
-            return item.Id;
+            return _mapper.Map<ItemDto>(item);
+        }
+
+        public async Task DeleteItemById(int id)
+        {
+            var item = _dataContext.Items
+                .Include(i => i.CustomFieldValues)
+                .Include(i => i.ItemTags)
+                .FirstOrDefault(i => i.Id == id);
+            _dataContext.Items.Remove(item);
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task<ICollection<ItemDto>> GetItemsByCollectionId(int collectionId)

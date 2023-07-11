@@ -9,6 +9,8 @@ namespace Collecto.BE.Models
         [Required]
         public string? Name { get; set; }
 
+        public DateTime CreatedAt { get; set; }
+
         public ICollection<ItemTag>? ItemTags { get; set; }
 
         public Collection? Collection { get; set; }

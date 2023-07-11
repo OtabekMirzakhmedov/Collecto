@@ -20,7 +20,7 @@ namespace Collecto.BE.Helper
                 .ForMember(dest => dest.Topic, opt => opt.MapFrom<TopicResolver>())
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.CustomFields, opt => opt.MapFrom(src => src.CustomFields))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
 
             CreateMap<Collection, CollectionDto>()
             .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName));
@@ -37,9 +37,13 @@ namespace Collecto.BE.Helper
 
             CreateMap<ItemDto, Item>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.CustomFieldValues, opt => opt.Ignore())
                 .ForMember(dest => dest.ItemTags, opt => opt.Ignore());
+
             CreateMap<Item, ItemDto>()
                 .ForMember(dest => dest.ItemTags, opt => opt.MapFrom(src => src.ItemTags.Select(it => it.Tag.TagName)))
+                .ForMember(dest => dest.NumberOfLikes, opt => opt.MapFrom(src => src.Likes.Count))
                 .ForMember(dest => dest.CustomFieldValues, opt => opt.MapFrom(src => src.CustomFieldValues));
         }
     }

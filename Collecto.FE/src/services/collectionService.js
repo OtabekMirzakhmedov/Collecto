@@ -24,6 +24,19 @@ const collectionService = {
     }
   },
 
+  deleteCollectionById: async (collectionId, token) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/Collection/${collectionId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   fetchTopics: async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/Topic/topics`);

@@ -1,5 +1,6 @@
 ﻿using Collecto.BE.DTO;
 using Collecto.BE.Interfaces.Services;
+using Collecto.BE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,12 +23,19 @@ namespace Collecto.BE.Controllers
         [HttpPost("create-item")]
         public async Task<IActionResult> CreateItem(int collectionId,[FromBody] ItemDto itemDto)
         {
-            var itemId = await _itemService.CreateItem(collectionId, itemDto);
-            return Ok(itemId);
+            var item = await _itemService.CreateItem(collectionId, itemDto);
+            return Ok(item);
         }
 
         [HttpGet("get-items")]
         public async Task<IActionResult> GetItemsByCollectionId(int collectionId) => Ok(await _itemService.GetItemsByCollectionId(collectionId));
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteItemById(int id)
+        {
+            await _itemService.DeleteItemById(id);
+            return Ok("Deleted");
+        }
     }
 
 }

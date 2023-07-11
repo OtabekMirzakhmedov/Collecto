@@ -1,72 +1,113 @@
-import React, {useState, useEffect, useMemo } from 'react';
-import { useTable } from 'react-table';
-import { Badge } from 'react-bootstrap';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useTable, useExpanded, useRowSelect } from 'react-table';
+import { formatDistanceToNow } from 'date-fns';
+import { Button, Form, Badge } from 'react-bootstrap';
 import itemService from '../services/itemService';
 
 const ItemTable = ({ collectionId, customFields }) => {
-    const [items, setItems] = useState([]);
-  
-    const columns = React.useMemo(
-        () => [
-          {
-            Header: 'Item Name',
-            accessor: 'name',
-          },
-          {
-            Header: 'Tags',
-            accessor: 'itemTags',
-            Cell: ({ value }) => value.join(', '),
-          },
-          ...customFields.map((field) => ({
-            Header: field.fieldName,
-            accessor: (row) => {
-              const customFieldValue = row.customFieldValues.find(
-                (value) => value.customFieldId === field.customFieldId
-              );
-              if (customFieldValue) {
-                if (field.fieldType === 'Checkbox') {
-                  return customFieldValue.value ? 'Checked' : 'Unchecked';
-                } else {
-                  return customFieldValue.value;
-                }
-              }
-              return '';
-            },
-          })),
-        ],
-        [customFields]
-      );
-      
-  
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable({
+  const [items, setItems] = useState([]);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: '',
+        accessor: 'id',
+        Cell: ({ row }) => (
+          <Button
+            variant="link"
+            className="p-0"
+            onClick={() => row.toggleRowExpanded()}
+          >
+            {row.isExpanded ? (
+              <i className="bi bi-chevron-up"></i>
+            ) : (
+              <i className="bi bi-chevron-down"></i>
+            )}
+          </Button>
+        ),
+      },
+      {
+        Header: 'Item Name',
+        accessor: 'name',
+      },
+      {
+        Header: 'Tags',
+        accessor: 'itemTags',
+        Cell: ({ value }) => value.join(', '),
+      },
+      {
+        Header: 'Created Time',
+        accessor: 'createdAt',
+        Cell: ({ value }) => {
+          const date = new Date(value);
+          const formattedTime = formatDistanceToNow(date, { addSuffix: true });
+          return <span>{formattedTime}</span>;
+        },
+      },
+
+      {
+        Header: 'Likes',
+        accessor: 'numberOfLikes',
+        Cell: ({ value }) => (
+          <Badge bg="primary" pill>
+            {value}
+          </Badge>
+        ),
+      },
+    ],
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
+    {
       columns,
-      data: items, // Pass the items to the data property
-    });
-  
-    useEffect(() => {
-      const fetchItems = async () => {
-        try {
-          const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
-          setItems(fetchedItems);
-        } catch (error) {
-          console.error('Failed to fetch items:', error);
-        }
-      };
-  
-      fetchItems();
-    }, [collectionId]);
-  
-    return (
-      <div>
-        <h1>Item List</h1>
-  
-        <table {...getTableProps()} className="table table-striped">
+      data: items,
+    },
+    useExpanded,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <input
+              type="checkbox"
+              {...getToggleAllRowsSelectedProps()}
+            />
+          ),
+          Cell: ({ row }) => (
+            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
+        setItems(fetchedItems);
+      } catch (error) {
+        console.error('Failed to fetch items:', error);
+      }
+    };
+
+    fetchItems();
+  }, [collectionId]);
+
+  return (
+    <div>
+      <h1>Item List</h1>
+
+      <table {...getTableProps()} className="table table-striped">
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -80,19 +121,30 @@ const ItemTable = ({ collectionId, customFields }) => {
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-              </tr>
+              <>
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  ))}
+                </tr>
+                {row.isExpanded && (
+                  <tr>
+                    <td colSpan={columns.length}>
+                      {customFields.map((field) => (
+                        <p key={field.customFieldId}>
+                          {field.fieldName}: {row.values[field.customFieldId]}
+                        </p>
+                      ))}
+                    </td>
+                  </tr>
+                )}
+              </>
             );
           })}
         </tbody>
       </table>
-      </div>
-    );
-  };
-  
-  export default ItemTable;
-  
+    </div>
+  );
+};
 
+export default ItemTable;

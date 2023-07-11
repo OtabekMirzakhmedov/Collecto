@@ -22,9 +22,22 @@ namespace Collecto.BE.Services
         {
             var collection = _mapper.Map<Collection>(collectionDto);
             collection.UserId = userId;
+            collection.CreatedAt =  DateTime.Now;
             _dataContext.Collections.Add(collection);
             await _dataContext.SaveChangesAsync();
             return collection.Id;
+        }
+
+        public async Task DeleteCollectionById(int id)
+        {
+            var collection = _dataContext.Collections
+                .Include(c => c.CustomFields)
+                .ThenInclude(c => c.CustomFieldValues)
+                .Include(c => c.Items)
+                .ThenInclude(i => i.ItemTags)
+                .FirstOrDefault(i => i.Id == id);
+            _dataContext.Collections.Remove(collection);
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task<CollectionDto> GetCollectionById(int id)

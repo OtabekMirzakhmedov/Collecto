@@ -16,12 +16,10 @@ namespace Collecto.BE.Helper.Resolvers
 
         public Topic Resolve(CollectionDto source, Collection destination, Topic destMember, ResolutionContext context)
         {
-            // Check if the topic already exists in the database
             var topic = _dataContext.Topics.FirstOrDefault(t => t.TopicName == source.TopicName);
 
             if (topic == null)
             {
-                // Topic doesn't exist, create a new one
                 topic = new Topic { TopicName = source.TopicName };
                 _dataContext.Topics.Add(topic);
             }

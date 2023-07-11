@@ -6,10 +6,35 @@ import ReactMarkdown from "react-markdown";
 import "./components.css";
 import ItemCreation from "./ItemCreation";
 import ItemTable from "./ItemTable";
+import { Modal } from "react-bootstrap";
 
 const Collection = () => {
   const { collectionId } = useParams();
   const [collection, setCollection] = useState(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const showDeleteConfirmationModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const hideDeleteConfirmationModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const onDeleteCollection = () => {
+    showDeleteConfirmationModal();
+  };
+
+  const performDelete = async () => {
+    try {
+      await collectionService.deleteCollectionById(collectionId);
+      hideDeleteConfirmationModal();
+    } catch (error) {
+      console.error("Error deleting collection:", error);
+    }
+  };
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -38,7 +63,8 @@ const Collection = () => {
   return (
     <Container className="mt-2">
       <Stack direction="horizontal" className="d-flex justify-content-end">
-        <Button className="btn-light d-flex align-items-center mx-2 p-1">
+        <Button className="btn-light d-flex align-items-center mx-2 p-1"
+        onClick={onDeleteCollection}>
           <i className="bi bi-trash3 fs-5 text-danger"></i>
         </Button>
         <Button className="btn-light p-1">
@@ -65,20 +91,36 @@ const Collection = () => {
         <ReactMarkdown className="p-2">{collection.description}</ReactMarkdown>
       </Row>
 
-      <ItemTable collectionId={collectionId} customFields = {collection.customFields}/>
+      <ItemTable
+        collectionId={collectionId}
+        customFields={collection.customFields}
+      />
 
-      <Offcanvas
-        placement="end"
-        show={show}
-        onHide={handleClose}
-        scroll
-      >
+      <Offcanvas placement="end" show={show} onHide={handleClose} scroll>
         <Offcanvas.Header closeButton />
-
         <Offcanvas.Body>
-          <ItemCreation  collectionId={collectionId} customFields={collection.customFields} onClose={handleClose}/>
+          <ItemCreation
+            collectionId={collectionId}
+            customFields={collection.customFields}
+            onClose={handleClose}
+          />
         </Offcanvas.Body>
       </Offcanvas>
+
+      <Modal show={showDeleteModal} onHide={hideDeleteConfirmationModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Do you want to delete the collection?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={hideDeleteConfirmationModal}>
+            No
+          </Button>
+          <Button variant="danger" onClick={performDelete}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
