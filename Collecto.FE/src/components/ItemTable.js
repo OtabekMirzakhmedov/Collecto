@@ -14,11 +14,14 @@ import {
   Stack,
   OverlayTrigger,
   Tooltip,
+  Offcanvas,
 } from "react-bootstrap";
 import itemService from "../services/itemService";
 
 const ItemTable = ({ collectionId, customFields }) => {
   const [items, setItems] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const columns = useMemo(
     () => [
@@ -89,15 +92,15 @@ const ItemTable = ({ collectionId, customFields }) => {
     allColumns,
     prepareRow,
     setGlobalFilter,
-    state: { globalFilter},
-
+    state: { globalFilter, selectedRowIds },
   } = useTable(
     {
       columns,
       data: items,
       initialState: {
         hiddenColumns: customFields.map((field) => field.fieldName),
-      }
+        selectedRowIds: {},
+      },
     },
     useGlobalFilter,
     useSortBy,
@@ -108,17 +111,33 @@ const ItemTable = ({ collectionId, customFields }) => {
         {
           id: "selection",
           Header: ({ getToggleAllRowsSelectedProps }) => (
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+            <input
+              type="checkbox"
+              {...getToggleAllRowsSelectedProps()}
+              id="header-checkbox"
+            />
           ),
           Cell: ({ row }) => (
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+            <input
+              type="checkbox"
+              {...row.getToggleRowSelectedProps()}
+              id={`checkbox-${row.id}`}
+            />
           ),
         },
         ...columns,
       ]);
     }
   );
-console.log(rows)
+  
+  const handleEditItem = () => {
+    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
+    if (selectedRow) {
+      setSelectedItemId(selectedRow.original.id);
+      setShowEditModal(true);
+    }
+  };
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -136,6 +155,13 @@ console.log(rows)
 
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+  };
+
+
+
+  const handleEditModalClose = () => {
+    setSelectedItemId(null);
+    setShowEditModal(false);
   };
 
   return (
@@ -175,18 +201,23 @@ console.log(rows)
           placement="top"
           overlay={<Tooltip> Edit Item </Tooltip>}
         >
-          <Button className="btn-light p-1 mx-2">
-          <i className="bi bi-pencil-square fs-5 border-black"></i>
-        </Button>
+          <Button
+            className="btn-light p-1 mx-2"
+            onClick={handleEditItem}
+            disabled={Object.keys(selectedRowIds).length !== 1}
+          >
+            <i className="bi bi-pencil-square fs-5 border-black"></i>
+          </Button>
         </OverlayTrigger>
         <OverlayTrigger
           key="item-view"
           placement="top"
           overlay={<Tooltip> View item</Tooltip>}
         >
-           <Button className="btn-light p-1">
-          <i className="bi bi-eye fs-4 border-black fw-bolder"></i>
-        </Button>
+          <Button className="btn-light p-1"
+          disabled={Object.keys(selectedRowIds).length !== 1}>
+            <i className="bi bi-eye fs-4 border-black fw-bolder"></i>
+          </Button>
         </OverlayTrigger>
       </Stack>
 
@@ -235,6 +266,15 @@ console.log(rows)
           })}
         </tbody>
       </table>
+
+      <Offcanvas show={showEditModal} onHide={handleEditModalClose} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Edit Item (ID: {selectedItemId})</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          {/* Render your edit item form here */}
+        </Offcanvas.Body>
+      </Offcanvas>
     </div>
   );
 };
