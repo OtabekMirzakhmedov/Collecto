@@ -89,14 +89,12 @@ const ItemTable = ({ collectionId, customFields }) => {
     allColumns,
     prepareRow,
     setGlobalFilter,
-    state: { globalFilter },
+    state: { globalFilter},
   } = useTable(
     {
       columns,
       data: items,
-      initialState: {
-        hiddenColumns: customFields.map((field) => field.fieldName),
-      },
+     
     },
     useGlobalFilter,
     useSortBy,
@@ -117,7 +115,7 @@ const ItemTable = ({ collectionId, customFields }) => {
       ]);
     }
   );
-
+console.log(rows)
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -187,7 +185,6 @@ const ItemTable = ({ collectionId, customFields }) => {
           <i className="bi bi-eye fs-4 border-black fw-bolder"></i>
         </Button>
         </OverlayTrigger>
-        
       </Stack>
 
       <table
