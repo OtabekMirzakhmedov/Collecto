@@ -23,7 +23,8 @@ namespace Collecto.BE.Helper
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
 
             CreateMap<Collection, CollectionDto>()
-            .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName));
+            .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName))
+            .ForMember(dest => dest.CollectionId, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<CustomFieldDto, CustomField>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CustomFieldId))

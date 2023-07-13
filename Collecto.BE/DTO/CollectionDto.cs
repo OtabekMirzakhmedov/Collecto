@@ -2,6 +2,7 @@
 {
     public record CollectionDto
     {
+        public int CollectionId { get; set; }
         public string Title { get; init; }
 
         public string TopicName { get; init; }

@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import collectionService from "../services/collectionService";
+import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import "./components.css";
 import ItemCreation from "./ItemCreation";
@@ -18,10 +19,15 @@ import ItemTable from "./ItemTable";
 import { Modal } from "react-bootstrap";
 
 const Collection = () => {
+  const navigate = useNavigate();
   const { collectionId } = useParams();
   const [collection, setCollection] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleEditCollection = () => {
+    navigate("/edit-collection", { state: { collection } });
+  };
 
   const showDeleteConfirmationModal = () => {
     setShowDeleteModal(true);
@@ -48,6 +54,7 @@ const Collection = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
 
   useEffect(() => {
     const fetchCollection = async () => {
@@ -89,7 +96,7 @@ const Collection = () => {
           placement="top"
           overlay={<Tooltip> Edit collection </Tooltip>}
         >
-          <Button className="btn-light p-1">
+          <Button className="btn-light p-1" onClick={handleEditCollection}>
             <i className="bi bi-pencil fs-5 border-black"></i>
           </Button>
         </OverlayTrigger>
@@ -116,7 +123,6 @@ const Collection = () => {
       </Row>
       <Row className="border rounded-2 mt-2 p-2">
         <Col className="fs-6 fw-bold">Description</Col>
-
         <ReactMarkdown className="p-2">{collection.description}</ReactMarkdown>
       </Row>
 

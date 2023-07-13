@@ -43,11 +43,28 @@ namespace Collecto.BE.Controllers
             return Ok(collection);
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCollectionById(int id)
         {
             await _collectionService.DeleteCollectionById(id);
             return Ok("Deleted");
+        }
+
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditCollection(int id, [FromBody] CollectionDto updatedCollectionDto)
+        {
+          
+            try
+            {
+                await _collectionService.EditCollection(id, updatedCollectionDto);
+                return Ok("Updated");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

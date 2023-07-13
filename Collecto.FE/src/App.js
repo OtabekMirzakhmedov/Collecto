@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import MainLayout from './layouts/MainLayout';
 import CreateCollectionLayout from './layouts/CreateCollectionLayout';
 import CollectionLayout from './layouts/CollectionLayout';
+import EditCollectionLayout from './layouts/EditCollectionLayout';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/create-collection" element={<CreateCollectionLayout/>} />
         <Route path="/collections/:collectionId" element={<CollectionLayout/>} />
+        <Route path="/edit-collection" element={<EditCollectionLayout />} />
       </Routes>
       <ToastContainer position="top-center" />
     </Router>

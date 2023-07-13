@@ -9,5 +9,7 @@ namespace Collecto.BE.Interfaces.Services
         Task<CollectionDto> GetCollectionById(int id);
 
         Task DeleteCollectionById(int id);
+
+        Task EditCollection(int id, CollectionDto updatedCollectionDto);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Collecto.BE.Data;
 using Collecto.BE.DTO;
+using Collecto.BE.Helper.Resolvers;
 using Collecto.BE.Interfaces.Services;
 using Collecto.BE.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,13 @@ namespace Collecto.BE.Services
     {
         private readonly DataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly TopicResolver _topicResolver;
 
-        public CollectionService(DataContext dataContext, IMapper mapper)
+        public CollectionService(DataContext dataContext, IMapper mapper, TopicResolver topicResolver)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _topicResolver = topicResolver;
         }
 
         public async Task<int> CreateCollection(string userId, CollectionDto collectionDto)
@@ -38,6 +41,64 @@ namespace Collecto.BE.Services
                 .FirstOrDefault(i => i.Id == id);
             _dataContext.Collections.Remove(collection);
             await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task EditCollection(int id, CollectionDto updatedCollectionDto)
+        {
+            var collection = await _dataContext.Collections
+                .Include(c => c.Topic)
+                .Include(c => c.CustomFields)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (collection == null)
+            {
+                throw new Exception("Collection not found");
+            }
+
+            if (collection.Topic.TopicName != updatedCollectionDto.TopicName)
+            {
+                collection.Topic = _topicResolver.Resolve(updatedCollectionDto, collection, null, null);
+            }
+
+            collection.Title = updatedCollectionDto.Title;
+            collection.Description = updatedCollectionDto.Description;
+
+            await UpdateCustomFields(collection, updatedCollectionDto);
+
+            await _dataContext.SaveChangesAsync();
+        }
+
+        private async Task UpdateCustomFields(Collection collection, CollectionDto updatedCollectionDto)
+        {
+            if (updatedCollectionDto.CustomFields != null)
+            {
+                foreach (var updatedCustomFieldDto in updatedCollectionDto.CustomFields)
+                {
+                    var existingCustomField = collection.CustomFields
+                        .FirstOrDefault(cf => cf.Id == updatedCustomFieldDto.CustomFieldId);
+
+                    if (existingCustomField != null)
+                    {
+                        existingCustomField.Name = updatedCustomFieldDto.FieldName;
+                        existingCustomField.Type = updatedCustomFieldDto.FieldType;
+                    }
+                    else
+                    {
+                        var newCustomField = _mapper.Map<CustomField>(updatedCustomFieldDto);
+                        collection.CustomFields.Add(newCustomField);
+                    }
+                }
+
+                var customFieldsToDelete = collection.CustomFields
+                    .Where(cf => !updatedCollectionDto.CustomFields
+                        .Any(updatedCustomFieldDto => updatedCustomFieldDto.CustomFieldId == cf.Id))
+                    .ToList();
+
+                foreach (var customFieldToDelete in customFieldsToDelete)
+                {
+                    collection.CustomFields.Remove(customFieldToDelete);
+                }
+            }
         }
 
         public async Task<CollectionDto> GetCollectionById(int id)

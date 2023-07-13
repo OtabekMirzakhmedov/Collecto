@@ -90,11 +90,14 @@ const ItemTable = ({ collectionId, customFields }) => {
     prepareRow,
     setGlobalFilter,
     state: { globalFilter},
+
   } = useTable(
     {
       columns,
       data: items,
-     
+      initialState: {
+        hiddenColumns: customFields.map((field) => field.fieldName),
+      }
     },
     useGlobalFilter,
     useSortBy,
@@ -143,10 +146,10 @@ console.log(rows)
         <div className="form-check-inline fs-6 mb-2">
           <label>
             <input
-              className=""
+              className="form-check-input"
               type="checkbox"
               {...column.getToggleHiddenProps()}
-            />{" "}
+            />
             <span>{column.Header}</span>
           </label>
         </div>

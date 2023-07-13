@@ -13,7 +13,7 @@ import "./components.css";
 
 const animatedComponents = makeAnimated();
 
-const CreateCollection = () => {
+const CreateEditCollection = ({ collection }) => {
   const [customFields, setCustomFields] = useState([]);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,6 +43,7 @@ const CreateCollection = () => {
     watch,
     formState: { errors },
     control,
+    setValue,
   } = useForm();
 
   const validateDescription = (value) => {
@@ -61,28 +62,37 @@ const CreateCollection = () => {
         description: data.description,
         customFields: data.customFields
           ? data.customFields.map((field) => ({
-            customFieldId: 0,
+              customFieldId: 0,
               fieldName: field.fieldName,
               fieldType: field.fieldType,
             }))
           : [],
       };
 
-      console.log(transformedData);
-  
       const token = localStorage.getItem("jwtToken");
-  
-      const collectionId = await collectionService.createCollection(
-        transformedData,
-        token
-      );
-  
-      console.log("Collection created:", collectionId);
-      navigate(`/collections/${collectionId}`);
-      toast.success("Collection created");
+
+      if (collection) {
+        console.log(collection);
+        console.log("editing ", collection.collectionId);
+        await collectionService.editCollection(
+          collection.collectionId,
+          transformedData,
+          token
+        );
+
+        toast.success("Collection updated");
+        navigate(`/collections/${collection.collectionId}`);
+      } else {
+        const collectionId = await collectionService.createCollection(
+          transformedData,
+          token
+        );
+        navigate(`/collections/${collectionId}`);
+        toast.success("Collection created");
+      }
     } catch (error) {
-      console.error("Error creating collection:", error);
-      toast.error("Failed to create collection");
+      console.error("Error saving collection:", error);
+      toast.error("Failed to save collection");
     } finally {
       setLoading(false);
     }
@@ -93,10 +103,32 @@ const CreateCollection = () => {
   };
 
   const handleRemoveProperty = (index) => {
+    console.log(index);
     const updatedFields = [...customFields];
+    console.log(updatedFields);
     updatedFields.splice(index, 1);
     setCustomFields(updatedFields);
   };
+
+  useEffect(() => {
+    if (collection) {
+      setValue("title", collection.title);
+      setValue("topic", {
+        value: collection.topicName,
+        label: collection.topicName,
+      });
+      setValue("description", collection.description);
+
+      if (collection.customFields) {
+        setCustomFields(collection.customFields);
+        collection.customFields.forEach((field, index) => {
+          setValue(`customFields[${index}].fieldName`, field.fieldName);
+          setValue(`customFields[${index}].fieldType`, field.fieldType);
+        });
+      }
+    }
+  }, [collection, setValue]);
+
   return (
     <div className="container mt-5">
       <form
@@ -104,7 +136,7 @@ const CreateCollection = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="display-6 text-center mb-5 ">
-          Collection creation form
+          {collection ? "Edit Collection" : "Create Collection"}
         </div>
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1 mt-2">
@@ -118,11 +150,11 @@ const CreateCollection = () => {
               {...register("title", { required: true })}
             />
             {errors.title && (
-              <span className="text-danger">Title is required</span> // Display error message if validation fails
+              <span className="text-danger">Title is required</span>
             )}
           </div>
         </div>
-      
+
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
             Topic
@@ -182,7 +214,7 @@ const CreateCollection = () => {
             </TabPanel>
           </Tabs>
           {errors.description && (
-            <span className="text-danger">Description is required</span> // Display error message if validation fails
+            <span className="text-danger">Description is required</span>
           )}
         </div>
         {customFields.map((field, i) => (
@@ -239,29 +271,30 @@ const CreateCollection = () => {
           </button>
         </div>
 
-        
         <button
-              type="submit"
-              className="btn btn-success rounded-0 p-1 m-0"
-              disabled={loading} // Disable the button when isLoading is true
-            >
-              {loading ? ( // Render the spinner when isLoading is true
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>{" "}
-                  Creating...
-                </>
-              ) : (
-                "Create" 
-              )}
-            </button>
+          type="submit"
+          className="btn btn-success rounded-0 p-1 m-0"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>{" "}
+              {collection ? "Updating..." : "Creating..."}
+            </>
+          ) : collection ? (
+            "Update"
+          ) : (
+            "Create"
+          )}
+        </button>
       </form>
       <ToastContainer position="top-center" />
     </div>
   );
 };
 
-export default CreateCollection;
+export default CreateEditCollection;

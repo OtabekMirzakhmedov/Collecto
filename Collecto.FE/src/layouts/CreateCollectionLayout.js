@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import CreateCollection from "../components/CreateCollection";
+import CreateEditCollection from "../components/CreateEditCollection";
 
 const CreateCollectionLayout = () => {
   return (
     <>
       <Navbar />
-      <CreateCollection/>
+      <CreateEditCollection/>
     </>
   );
 };
