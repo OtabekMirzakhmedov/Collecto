@@ -132,7 +132,9 @@ const Collection = () => {
       />
 
       <Offcanvas placement="end" show={show} onHide={handleClose} scroll>
-        <Offcanvas.Header closeButton />
+        <Offcanvas.Header closeButton >
+        <Offcanvas.Title>Item Creation</Offcanvas.Title>
+        </Offcanvas.Header>
         <Offcanvas.Body>
           <ItemCreation
             collectionId={collectionId}

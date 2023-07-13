@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
 import ReactMarkdown from "react-markdown";
@@ -17,6 +16,9 @@ const CreateEditCollection = ({ collection }) => {
   const [customFields, setCustomFields] = useState([]);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState("");
+  const [topic, setTopic] = useState(null);
+  const [description, setDescription] = useState("");
 
   const navigate = useNavigate();
 
@@ -37,36 +39,37 @@ const CreateEditCollection = ({ collection }) => {
     fetchTopics();
   }, []);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    control,
-    setValue,
-  } = useForm();
+  const onSubmit = async (e) => {
+    e.preventDefault();
 
-  const validateDescription = (value) => {
-    if (!value.trim()) {
-      return "Description is required";
+    if (!title.trim()) {
+      toast.error("Title is required");
+      return;
     }
-    return true;
-  };
+    if (!topic) {
+      toast.error("Topic is required");
+      return;
+    }
+    if (!description.trim()) {
+      toast.error("Description is required");
+      return;
+    }
+    if (customFields.some((field) => !field.fieldName || !field.fieldType)) {
+      toast.error("All custom fields are required");
+      return;
+    }
 
-  const onSubmit = async (data) => {
     try {
       setLoading(true);
       const transformedData = {
-        title: data.title,
-        topicName: data.topic.value,
-        description: data.description,
-        customFields: data.customFields
-          ? data.customFields.map((field) => ({
-              customFieldId: 0,
-              fieldName: field.fieldName,
-              fieldType: field.fieldType,
-            }))
-          : [],
+        title,
+        topicName: topic.value,
+        description,
+        customFields: customFields.map((field) => ({
+          customFieldId: 0,
+          fieldName: field.fieldName,
+          fieldType: field.fieldType,
+        })),
       };
 
       const token = localStorage.getItem("jwtToken");
@@ -98,42 +101,32 @@ const CreateEditCollection = ({ collection }) => {
     }
   };
 
-  const handleClick = () => {
+  const handleAddProperty = () => {
     setCustomFields([...customFields, { fieldName: "", fieldType: "" }]);
-  };
-
-  const handleRemoveProperty = (index) => {
-    console.log(index);
-    const updatedFields = [...customFields];
-    console.log(updatedFields);
-    updatedFields.splice(index, 1);
-    setCustomFields(updatedFields);
   };
 
   useEffect(() => {
     if (collection) {
-      setValue("title", collection.title);
-      setValue("topic", {
-        value: collection.topicName,
-        label: collection.topicName,
-      });
-      setValue("description", collection.description);
-
-      if (collection.customFields) {
-        setCustomFields(collection.customFields);
-        collection.customFields.forEach((field, index) => {
-          setValue(`customFields[${index}].fieldName`, field.fieldName);
-          setValue(`customFields[${index}].fieldType`, field.fieldType);
-        });
-      }
+      setTitle(collection.title);
+      setTopic({ value: collection.topicName, label: collection.topicName });
+      setDescription(collection.description);
+      setCustomFields(collection.customFields || []);
     }
-  }, [collection, setValue]);
+  }, [collection]);
+
+  const handleRemoveProperty = (index) => {
+    setCustomFields((prevFields) => {
+      const updatedFields = [...prevFields];
+      updatedFields.splice(index, 1);
+      return updatedFields;
+    });
+  };
 
   return (
     <div className="container mt-5">
       <form
         className="m-auto border border-0 col-lg-6 col-xl-6 col-12 p-1"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={onSubmit}
       >
         <div className="display-6 text-center mb-5 ">
           {collection ? "Edit Collection" : "Create Collection"}
@@ -147,11 +140,9 @@ const CreateEditCollection = ({ collection }) => {
               type="text"
               className="border-0 w-100 p-1  collection-input"
               placeholder="Empty"
-              {...register("title", { required: true })}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
-            {errors.title && (
-              <span className="text-danger">Title is required</span>
-            )}
           </div>
         </div>
 
@@ -160,38 +151,25 @@ const CreateEditCollection = ({ collection }) => {
             Topic
           </div>
           <div className="col-8 p-0">
-            <Controller
-              control={control}
-              name="topic"
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <CreatableSelect
-                  className="border-0 w-100 p-1 collection-input"
-                  isClearable
-                  isSearchable
-                  value={field.value}
-                  onChange={(selectedOption) => {
-                    field.onChange(selectedOption);
-                  }}
-                  placeholder="Empty"
-                  components={animatedComponents}
-                  options={options}
-                />
-              )}
+            <CreatableSelect
+              className="border-0 w-100 p-1 collection-input"
+              isClearable
+              isSearchable
+              value={topic}
+              onChange={(selectedOption) => setTopic(selectedOption)}
+              placeholder="Empty"
+              components={animatedComponents}
+              options={options}
             />
-
-            {errors.topic && (
-              <span className="text-danger">Topic is required</span>
-            )}
           </div>
         </div>
+
         <div className="row border-top">
           <div className="col-12 text-secondary  fs-6 fw-medium p-1">
             Description
           </div>
         </div>
-        <div className="col-12 ">
+        <div className="col-12">
           <Tabs>
             <TabList>
               <Tab>Edit</Tab>
@@ -200,46 +178,44 @@ const CreateEditCollection = ({ collection }) => {
 
             <TabPanel>
               <textarea
-                className="border-0 w-100 p-1 collection-input "
+                className="border-0 w-100 p-1 collection-input"
                 placeholder="Supports Markdown"
-                {...register("description", {
-                  required: true,
-                  validate: validateDescription,
-                })}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </TabPanel>
 
             <TabPanel>
-              <ReactMarkdown>{watch("description")}</ReactMarkdown>
+              <ReactMarkdown>{description}</ReactMarkdown>
             </TabPanel>
           </Tabs>
-          {errors.description && (
-            <span className="text-danger">Description is required</span>
-          )}
         </div>
+
         {customFields.map((field, i) => (
           <div className="row border-top" key={i}>
             <div className="col-4 text-secondary border-end fs-6 fw-medium p-0">
               <input
                 type="text"
-                className="w-100 border-0 p-1 collection-input"
+                className="w-100 border-0 p-2 collection-input"
                 placeholder="Property Name..."
-                {...register(`customFields[${i}].fieldName`, {
-                  required: true,
-                })}
+                value={field.fieldName}
+                onChange={(e) => {
+                  const updatedFields = [...customFields];
+                  updatedFields[i].fieldName = e.target.value;
+                  setCustomFields(updatedFields);
+                }}
               />
-              {errors.customFields && errors.customFields[i]?.fieldName && (
-                <span className="text-danger">Field Name is required</span>
-              )}
             </div>
-            <div className="col-8 p-0 d-flex justify-content-between">
+            <div className="col-8 p-0 d-flex justify-content-between align-items-center">
               <select
                 className="border-0 col-8 p-1 collection-input"
                 aria-label="Default select example"
-                placeholder="Empty"
-                {...register(`customFields[${i}].fieldType`, {
-                  required: true,
-                })}
+                value={field.fieldType}
+                onChange={(e) => {
+                  const updatedFields = [...customFields];
+                  updatedFields[i].fieldType = e.target.value;
+                  setCustomFields(updatedFields);
+                }}
               >
                 <option value="">Select property type</option>
                 <option value="Number">Number</option>
@@ -248,15 +224,11 @@ const CreateEditCollection = ({ collection }) => {
                 <option value="MultiLineText">Multi line Text</option>
                 <option value="Checkbox">Checkbox</option>
               </select>
-              {errors.customFields && errors.customFields[i]?.fieldType && (
-                <div className="text-danger">Field Type is required</div>
-              )}
-              <button
-                type="button"
-                className="btn-close"
-                aria-label="Close"
+
+              <i
+                className="bi bi-x fs-3 text-danger p-0"
                 onClick={() => handleRemoveProperty(i)}
-              ></button>
+              ></i>
             </div>
           </div>
         ))}
@@ -265,32 +237,37 @@ const CreateEditCollection = ({ collection }) => {
           <button
             className="btn btn-outline-none"
             type="button"
-            onClick={handleClick}
+            onClick={handleAddProperty}
           >
-            <i className="bi bi-plus-circle"></i> Add Property
+            <i className="bi bi-plus-lg me-1"></i>
+            Add Property
           </button>
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-success rounded-0 p-1 m-0"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <span
-                className="spinner-border spinner-border-sm"
-                role="status"
-                aria-hidden="true"
-              ></span>{" "}
-              {collection ? "Updating..." : "Creating..."}
-            </>
-          ) : collection ? (
-            "Update"
-          ) : (
-            "Create"
-          )}
-        </button>
+        <div className="text-center my-4">
+          <button
+            type="submit"
+            className="btn btn-success rounded-0"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                <span className="ms-2">
+                  {collection ? "Updating..." : "Creating..."}
+                </span>
+              </>
+            ) : collection ? (
+              "Update"
+            ) : (
+              "Create"
+            )}
+          </button>
+        </div>
       </form>
       <ToastContainer position="top-center" />
     </div>
