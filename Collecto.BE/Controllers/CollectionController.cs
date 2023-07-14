@@ -44,6 +44,15 @@ namespace Collecto.BE.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("get-collections-by-user-id")]
+        public async Task<IActionResult> GetCollectionsByUserId()
+        {
+            var userId = User.FindFirst("Id")?.Value;
+            var collections = await _collectionService.GetCollectionsByUserId(userId);
+            return Ok(collections);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCollectionById(int id)
         {
@@ -66,5 +75,13 @@ namespace Collecto.BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("get-all-collections")]
+        public async Task<IActionResult> GetAllCollections()
+        {
+            var collections = await _collectionService.GetAllCollections();
+            return Ok(collections);
+        }
+
     }
 }

@@ -24,6 +24,28 @@ const collectionService = {
     }
   },
 
+  getCollectionsByUserId: async (token) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Collection/get-collections-by-user-id`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getAllCollections: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Collection/get-all-collections`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   deleteCollectionById: async (collectionId, token) => {
     try {
       const response = await axios.delete(`${API_BASE_URL}/Collection/${collectionId}`, {

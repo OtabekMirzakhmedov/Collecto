@@ -105,6 +105,7 @@ namespace Collecto.BE.Services
         {
             var collection = await _dataContext.Collections
                 .Include(c => c.Topic)
+                .Include(c => c.User)
                 .Include(c => c.CustomFields)
                 .Include(c => c.Items)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -116,6 +117,34 @@ namespace Collecto.BE.Services
 
             var collectionDto = _mapper.Map<CollectionDto>(collection);
             return collectionDto;
+        }
+
+        public async Task<ICollection<CollectionDto>> GetCollectionsByUserId(string userId)
+        {
+            var collections = await _dataContext.Collections
+                .Include(c => c.User)
+                .Include(c => c.Topic)
+                .Include(c => c.CustomFields)
+                .Include(c => c.Items)
+                .ThenInclude(i => i.Likes)
+                .Where(i => i.UserId == userId)
+                .Select(i => _mapper.Map<CollectionDto>(i))
+                .ToListAsync();
+            return collections;
+        }
+
+        public async Task<ICollection<CollectionDto>> GetAllCollections()
+        {
+            var collections = await _dataContext.Collections
+                .Include(c => c.User)
+                .Include(c => c.Topic)
+                .Include(c => c.CustomFields)
+                .Include(c => c.Items)
+                .ThenInclude(i => i.Likes)
+                .Select(i => _mapper.Map<CollectionDto>(i))
+                .ToListAsync();
+
+            return collections;
         }
     }
 }

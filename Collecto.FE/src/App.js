@@ -8,6 +8,7 @@ import MainLayout from './layouts/MainLayout';
 import CreateCollectionLayout from './layouts/CreateCollectionLayout';
 import CollectionLayout from './layouts/CollectionLayout';
 import EditCollectionLayout from './layouts/EditCollectionLayout';
+import MyCollectionLayout from './layouts/MyCollectionLayout';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/create-collection" element={<CreateCollectionLayout/>} />
         <Route path="/collections/:collectionId" element={<CollectionLayout/>} />
         <Route path="/edit-collection" element={<EditCollectionLayout />} />
+        <Route path="/my-collections" element={<MyCollectionLayout/>}/>
       </Routes>
       <ToastContainer position="top-center" />
     </Router>

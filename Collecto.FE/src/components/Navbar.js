@@ -127,7 +127,7 @@ const Navbar = () => {
                 <li>
                   <button
                     className="btn btn-danger dropdown-item btn btn-danger"
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/my-collections")}
                   >
                     Collections
                   </button>
