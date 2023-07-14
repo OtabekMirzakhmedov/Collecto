@@ -66,16 +66,18 @@ const CreateEditCollection = ({ collection }) => {
         topicName: topic.value,
         description,
         customFields: customFields.map((field) => ({
-          customFieldId: 0,
+          customFieldId: field.customFieldId || 0,
           fieldName: field.fieldName,
           fieldType: field.fieldType,
         })),
       };
 
       const token = localStorage.getItem("jwtToken");
+      console.log('transformedData', transformedData)
 
       if (collection) {
         console.log(collection);
+
         console.log("editing ", collection.collectionId);
         await collectionService.editCollection(
           collection.collectionId,
