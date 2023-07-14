@@ -72,7 +72,7 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
 
     try {
       if (selectedItem) {
-        // Edit item
+
         const updatedItem = await itemService.editItem(
           selectedItem.id,
           itemData,
@@ -81,7 +81,6 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
         console.log(updatedItem);
         toast.success("Item updated successfully");
       } else {
-        // Create item
         const createdItem = await itemService.createItem(
           itemData,
           collectionId,
@@ -117,7 +116,6 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
             {...register("itemName", { required: true })}
           />
         </div>
-
         <div className="mb-3">
           <label className="form-label">Tags</label>
           <CreatableSelect
@@ -127,7 +125,6 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
             value={selectedTags}
           />
         </div>
-
         {customFields.map((field) => (
           <div className="mb-3" key={field.customFieldId}>
             <label className="form-label">{field.fieldName}</label>
@@ -164,7 +161,6 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
             )}
           </div>
         ))}
-
         <button type="submit" className="btn btn-primary" disabled={isAddingItem}>
           {isAddingItem ? "Saving..." : "Save Item"}
         </button>

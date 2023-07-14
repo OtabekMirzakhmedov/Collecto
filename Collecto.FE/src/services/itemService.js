@@ -27,6 +27,35 @@ const itemService = {
     }
   },
 
+  deleteItem: async (itemId, token) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/Item/${itemId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteItemsByIds: async (itemIds, token) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/Item/delete-items`, {
+        data: itemIds,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   fetchTags: async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/Tag/tags`);

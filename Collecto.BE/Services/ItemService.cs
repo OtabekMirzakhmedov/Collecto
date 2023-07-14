@@ -91,14 +91,12 @@ namespace Collecto.BE.Services
                 .ToList();
             itemTagsToRemove.ForEach(it => item.ItemTags.Remove(it));
 
-            // Add item tags for existing or new tags
             foreach (var tagName in tagNamesToAdd)
             {
                 var existingTag = _dataContext.Tags.FirstOrDefault(t => t.TagName == tagName);
 
                 if (existingTag != null)
                 {
-                    // Tag already exists, add it to the item if not already associated
                     if (!item.ItemTags.Any(it => it.TagId == existingTag.Id))
                     {
                         item.ItemTags.Add(new ItemTag { Item = item, Tag = existingTag });
@@ -106,15 +104,12 @@ namespace Collecto.BE.Services
                 }
                 else
                 {
-                    // Tag doesn't exist, create a new tag and associate it with the item
                     var newTag = new Tag { TagName = tagName };
                     _dataContext.Tags.Add(newTag);
                     item.ItemTags.Add(new ItemTag { Item = item, Tag = newTag });
                 }
             }
         }
-
-
 
         private void CreateTagsForItem(Item item, IEnumerable<string> tagNames)
         {
@@ -132,7 +127,6 @@ namespace Collecto.BE.Services
                 _dataContext.ItemTags.Add(new ItemTag { Item = item, Tag = tag });
             }
         }
-
 
         private async Task HandleCustomFieldValues(int itemId, IEnumerable<CustomFieldValueDto>? customFieldValues)
         {
@@ -152,5 +146,16 @@ namespace Collecto.BE.Services
 
         }
 
+        public async Task DeleteGroupOfItemsById(int[] itemIds)
+        {
+            var items = _dataContext.Items
+                .Include(i => i.CustomFieldValues)
+                .Include(i => i.ItemTags)
+                .Where(i => itemIds.Contains(i.Id))
+                .ToList();
+
+            _dataContext.Items.RemoveRange(items);
+            await _dataContext.SaveChangesAsync();
+        }
     }
 }

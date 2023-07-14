@@ -37,6 +37,13 @@ namespace Collecto.BE.Controllers
             return Ok("Deleted");
         }
 
+        [HttpDelete("delete-items")]
+        public async Task<IActionResult> DeleteItemsByIds([FromBody] int[] ids)
+        {
+            await _itemService.DeleteGroupOfItemsById(ids);
+            return Ok("Deleted");
+        }
+
         [HttpPut("edit-item/{id}")]
         public async Task<IActionResult> EditItem(int id, [FromBody] ItemDto updatedItemDto)
         {
@@ -49,7 +56,6 @@ namespace Collecto.BE.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
         }
     }
 

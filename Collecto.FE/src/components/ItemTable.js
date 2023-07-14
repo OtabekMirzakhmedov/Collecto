@@ -15,158 +15,210 @@ import {
   OverlayTrigger,
   Tooltip,
   Offcanvas,
+  Modal,
 } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import itemService from "../services/itemService";
 import ItemCreation from "./ItemCreation";
 
 const ItemTable = ({ collectionId, customFields }) => {
+  const [items, setItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteSingleModal, setShowDeleteSingleModal] = useState(false);
+  const [showDeleteMultipleModal, setShowDeleteMultipleModal] = useState(false);
 
-    const [items, setItems] = useState([]);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [showEditModal, setShowEditModal] = useState(false);
-  
-    const columns = useMemo(
-      () => [
-        {
-          Header: "",
-          accessor: "id",
-  
-          Cell: ({ row }) => (
-            <Button
-              variant="link"
-              className="p-0"
-              onClick={() => row.toggleRowExpanded()}
-            >
-              {row.isExpanded ? (
-                <i className="bi bi-chevron-up"></i>
-              ) : (
-                <i className="bi bi-chevron-down"></i>
-              )}
-            </Button>
-          ),
-        },
-        {
-          Header: "Item Name",
-          accessor: "name",
-        },
-        {
-          Header: "Tags",
-          accessor: "itemTags",
-          Cell: ({ value }) => value.join(", "),
-        },
-        {
-          Header: "Created Time",
-          accessor: "createdAt",
-          Cell: ({ value }) => {
-            const date = new Date(value);
-            const formattedTime = formatDistanceToNow(date, { addSuffix: true });
-            return <span>{formattedTime}</span>;
-          },
-        },
-        {
-          Header: "Likes",
-          accessor: "numberOfLikes",
-          Cell: ({ value }) => (
-            <Badge bg="primary" pill>
-              {value}
-            </Badge>
-          ),
-        },
-        ...customFields.map((field) => ({
-          Header: field.fieldName,
-          accessor: (row) => {
-            const customFieldValue = row.customFieldValues.find(
-              (value) => value.fieldName === field.fieldName
-            );
-            return customFieldValue ? customFieldValue.value : "";
-          },
-        })),
-      ],
-      [customFields]
-    );
-  
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      allColumns,
-      prepareRow,
-      setGlobalFilter,
-      state: { globalFilter, selectedRowIds },
-    } = useTable(
+  const columns = useMemo(
+    () => [
       {
-        columns,
-        data: items,
-        initialState: {
-          hiddenColumns: customFields.map((field) => field.fieldName),
-          selectedRowIds: {},
+        Header: "",
+        accessor: "id",
+
+        Cell: ({ row }) => (
+          <Button
+            variant="link"
+            className="p-0"
+            onClick={() => row.toggleRowExpanded()}
+          >
+            {row.isExpanded ? (
+              <i className="bi bi-chevron-up"></i>
+            ) : (
+              <i className="bi bi-chevron-down"></i>
+            )}
+          </Button>
+        ),
+      },
+      {
+        Header: "Item Name",
+        accessor: "name",
+      },
+      {
+        Header: "Tags",
+        accessor: "itemTags",
+        Cell: ({ value }) => value.join(", "),
+      },
+      {
+        Header: "Created Time",
+        accessor: "createdAt",
+        Cell: ({ value }) => {
+          const date = new Date(value);
+          const formattedTime = formatDistanceToNow(date, { addSuffix: true });
+          return <span>{formattedTime}</span>;
         },
       },
-      useGlobalFilter,
-      useSortBy,
-      useExpanded,
-      useRowSelect,
-      (hooks) => {
-        hooks.visibleColumns.push((columns) => [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <input
-                type="checkbox"
-                {...getToggleAllRowsSelectedProps()}
-                id="header-checkbox"
-              />
-            ),
-            Cell: ({ row }) => (
-              <input
-                type="checkbox"
-                {...row.getToggleRowSelectedProps()}
-                id={`checkbox-${row.id}`}
-              />
-            ),
-          },
-          ...columns,
-        ]);
-      }
-    );
-  
-  
-  
-    useEffect(() => {
-      const fetchItems = async () => {
-        try {
-          const fetchedItems = await itemService.getItemsByCollectionId(
-            collectionId
+      {
+        Header: "Likes",
+        accessor: "numberOfLikes",
+        Cell: ({ value }) => (
+          <Badge bg="primary" pill>
+            {value}
+          </Badge>
+        ),
+      },
+      ...customFields.map((field) => ({
+        Header: field.fieldName,
+        accessor: (row) => {
+          const customFieldValue = row.customFieldValues.find(
+            (value) => value.fieldName === field.fieldName
           );
-          setItems(fetchedItems);
-        } catch (error) {
-          console.error("Failed to fetch items:", error);
-        }
-      };
-  
-      fetchItems();
-    }, [collectionId]);
-  
-    const generateSortingIndicator = (column) => {
-      return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
-    };
-  
-    const handleEditModalClose = () => {
-      setSelectedItem(null);
-      setShowEditModal(false);
+          return customFieldValue ? customFieldValue.value : "";
+        },
+      })),
+    ],
+    [customFields]
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    allColumns,
+    prepareRow,
+    setGlobalFilter,
+    state: { globalFilter, selectedRowIds },
+  } = useTable(
+    {
+      columns,
+      data: items,
+      initialState: {
+        hiddenColumns: customFields.map((field) => field.fieldName),
+        selectedRowIds: {},
+      },
+    },
+    useGlobalFilter,
+    useSortBy,
+    useExpanded,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "selection",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <input
+              type="checkbox"
+              {...getToggleAllRowsSelectedProps()}
+              id="header-checkbox"
+            />
+          ),
+          Cell: ({ row }) => (
+            <input
+              type="checkbox"
+              {...row.getToggleRowSelectedProps()}
+              id={`checkbox-${row.id}`}
+            />
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const fetchedItems = await itemService.getItemsByCollectionId(
+          collectionId
+        );
+        setItems(fetchedItems);
+      } catch (error) {
+        console.error("Failed to fetch items:", error);
+      }
     };
 
-  
-  
-    const handleEditItem = () => {
-      const selectedRow = rows.find((row) => selectedRowIds[row.id]);
-      if (selectedRow) {
-        setSelectedItem(selectedRow.original);
-        console.log("Selected Item:", selectedRow.original); // Console log the selected item
-        setShowEditModal(true);
-      }
-    };
+    fetchItems();
+  }, [collectionId]);
+
+  const generateSortingIndicator = (column) => {
+    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+  };
+
+  const handleEditModalClose = () => {
+    setSelectedItem(null);
+    setShowEditModal(false);
+  };
+
+  const handleEditItem = () => {
+    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
+    if (selectedRow) {
+      setSelectedItem(selectedRow.original);
+      console.log("Selected Item:", selectedRow.original); // Console log the selected item
+      setShowEditModal(true);
+    }
+  };
+
+  const handleDeleteItems = async () => {
+    const selectedRows = rows.filter((row) => selectedRowIds[row.id]);
+    const numSelectedItems = selectedRows.length;
+
+    if (numSelectedItems === 1) {
+      setShowDeleteSingleModal(true);
+    } else if (numSelectedItems > 1) {
+      setShowDeleteMultipleModal(true);
+    }
+  };
+
+  const handleConfirmDeleteSingle = async () => {
+    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
+    const itemId = selectedRow.original.id;
+
+    try {
+      await itemService.deleteItem(itemId);
+      toast.success("Item deleted successfully");
+
+      // Refresh the items after deletion
+      const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
+      setItems(fetchedItems);
+    } catch (error) {
+      toast.error("Failed to delete item");
+    }
+
+    setShowDeleteSingleModal(false);
+  };
+
+  const handleConfirmDeleteMultiple = async () => {
+    const selectedRows = rows.filter((row) => selectedRowIds[row.id]);
+    const itemIds = selectedRows.map((row) => row.original.id);
+
+    try {
+      await itemService.deleteItemsByIds(itemIds);
+      toast.success("Items deleted successfully");
+
+      // Refresh the items after deletion
+      const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
+      setItems(fetchedItems);
+    } catch (error) {
+      toast.error("Failed to delete items");
+    }
+
+    setShowDeleteMultipleModal(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteSingleModal(false);
+    setShowDeleteMultipleModal(false);
+  };
   return (
     <div className="mt-3">
       <h3>Item List</h3>
@@ -193,9 +245,13 @@ const ItemTable = ({ collectionId, customFields }) => {
         <OverlayTrigger
           key="item-delete"
           placement="top"
-          overlay={<Tooltip> Delete Item </Tooltip>}
+          overlay={<Tooltip>Delete Item(s)</Tooltip>}
         >
-          <Button className="btn-light d-flex align-items-center mx-2 p-1">
+          <Button
+            className="btn-light d-flex align-items-center mx-2 p-1"
+            onClick={handleDeleteItems}
+            disabled={Object.keys(selectedRowIds).length === 0}
+          >
             <i className="bi bi-file-x fs-5 text-danger"></i>
           </Button>
         </OverlayTrigger>
@@ -217,8 +273,10 @@ const ItemTable = ({ collectionId, customFields }) => {
           placement="top"
           overlay={<Tooltip> View item</Tooltip>}
         >
-          <Button className="btn-light p-1"
-          disabled={Object.keys(selectedRowIds).length !== 1}>
+          <Button
+            className="btn-light p-1"
+            disabled={Object.keys(selectedRowIds).length !== 1}
+          >
             <i className="bi bi-eye fs-4 border-black fw-bolder"></i>
           </Button>
         </OverlayTrigger>
@@ -270,7 +328,11 @@ const ItemTable = ({ collectionId, customFields }) => {
         </tbody>
       </table>
 
-      <Offcanvas show={showEditModal} onHide={handleEditModalClose} placement="end">
+      <Offcanvas
+        show={showEditModal}
+        onHide={handleEditModalClose}
+        placement="end"
+      >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Edit Item (ID: {})</Offcanvas.Title>
         </Offcanvas.Header>
@@ -286,6 +348,45 @@ const ItemTable = ({ collectionId, customFields }) => {
           )}
         </Offcanvas.Body>
       </Offcanvas>
+
+      <Modal show={showDeleteSingleModal} onHide={handleCancelDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Are you sure you want to <strong>delete</strong> the selected item? This action cannot be undone.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDeleteSingle}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Multiple Items Modal */}
+      <Modal show={showDeleteMultipleModal} onHide={handleCancelDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Are you sure you want to <strong>delete</strong> the selected items? This action cannot be undone.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDeleteMultiple}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
