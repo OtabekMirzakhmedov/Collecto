@@ -17,153 +17,156 @@ import {
   Offcanvas,
 } from "react-bootstrap";
 import itemService from "../services/itemService";
+import ItemCreation from "./ItemCreation";
 
 const ItemTable = ({ collectionId, customFields }) => {
-  const [items, setItems] = useState([]);
-  const [selectedItemId, setSelectedItemId] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: "",
-        accessor: "id",
-
-        Cell: ({ row }) => (
-          <Button
-            variant="link"
-            className="p-0"
-            onClick={() => row.toggleRowExpanded()}
-          >
-            {row.isExpanded ? (
-              <i className="bi bi-chevron-up"></i>
-            ) : (
-              <i className="bi bi-chevron-down"></i>
-            )}
-          </Button>
-        ),
-      },
-      {
-        Header: "Item Name",
-        accessor: "name",
-      },
-      {
-        Header: "Tags",
-        accessor: "itemTags",
-        Cell: ({ value }) => value.join(", "),
-      },
-      {
-        Header: "Created Time",
-        accessor: "createdAt",
-        Cell: ({ value }) => {
-          const date = new Date(value);
-          const formattedTime = formatDistanceToNow(date, { addSuffix: true });
-          return <span>{formattedTime}</span>;
-        },
-      },
-
-      {
-        Header: "Likes",
-        accessor: "numberOfLikes",
-        Cell: ({ value }) => (
-          <Badge bg="primary" pill>
-            {value}
-          </Badge>
-        ),
-      },
-      ...customFields.map((field) => ({
-        Header: field.fieldName,
-        accessor: (row) => {
-          const customFieldValue = row.customFieldValues.find(
-            (value) => value.fieldName === field.fieldName
-          );
-          return customFieldValue ? customFieldValue.value : "";
-        },
-      })),
-    ],
-    [customFields]
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    allColumns,
-    prepareRow,
-    setGlobalFilter,
-    state: { globalFilter, selectedRowIds },
-  } = useTable(
-    {
-      columns,
-      data: items,
-      initialState: {
-        hiddenColumns: customFields.map((field) => field.fieldName),
-        selectedRowIds: {},
-      },
-    },
-    useGlobalFilter,
-    useSortBy,
-    useExpanded,
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: "selection",
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <input
-              type="checkbox"
-              {...getToggleAllRowsSelectedProps()}
-              id="header-checkbox"
-            />
-          ),
-          Cell: ({ row }) => (
-            <input
-              type="checkbox"
-              {...row.getToggleRowSelectedProps()}
-              id={`checkbox-${row.id}`}
-            />
-          ),
-        },
-        ...columns,
-      ]);
-    }
-  );
+    const [items, setItems] = useState([]);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
   
-  const handleEditItem = () => {
-    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
-    if (selectedRow) {
-      setSelectedItemId(selectedRow.original.id);
-      setShowEditModal(true);
-    }
-  };
-
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const fetchedItems = await itemService.getItemsByCollectionId(
-          collectionId
-        );
-        setItems(fetchedItems);
-      } catch (error) {
-        console.error("Failed to fetch items:", error);
+    const columns = useMemo(
+      () => [
+        {
+          Header: "",
+          accessor: "id",
+  
+          Cell: ({ row }) => (
+            <Button
+              variant="link"
+              className="p-0"
+              onClick={() => row.toggleRowExpanded()}
+            >
+              {row.isExpanded ? (
+                <i className="bi bi-chevron-up"></i>
+              ) : (
+                <i className="bi bi-chevron-down"></i>
+              )}
+            </Button>
+          ),
+        },
+        {
+          Header: "Item Name",
+          accessor: "name",
+        },
+        {
+          Header: "Tags",
+          accessor: "itemTags",
+          Cell: ({ value }) => value.join(", "),
+        },
+        {
+          Header: "Created Time",
+          accessor: "createdAt",
+          Cell: ({ value }) => {
+            const date = new Date(value);
+            const formattedTime = formatDistanceToNow(date, { addSuffix: true });
+            return <span>{formattedTime}</span>;
+          },
+        },
+        {
+          Header: "Likes",
+          accessor: "numberOfLikes",
+          Cell: ({ value }) => (
+            <Badge bg="primary" pill>
+              {value}
+            </Badge>
+          ),
+        },
+        ...customFields.map((field) => ({
+          Header: field.fieldName,
+          accessor: (row) => {
+            const customFieldValue = row.customFieldValues.find(
+              (value) => value.fieldName === field.fieldName
+            );
+            return customFieldValue ? customFieldValue.value : "";
+          },
+        })),
+      ],
+      [customFields]
+    );
+  
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      allColumns,
+      prepareRow,
+      setGlobalFilter,
+      state: { globalFilter, selectedRowIds },
+    } = useTable(
+      {
+        columns,
+        data: items,
+        initialState: {
+          hiddenColumns: customFields.map((field) => field.fieldName),
+          selectedRowIds: {},
+        },
+      },
+      useGlobalFilter,
+      useSortBy,
+      useExpanded,
+      useRowSelect,
+      (hooks) => {
+        hooks.visibleColumns.push((columns) => [
+          {
+            id: "selection",
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <input
+                type="checkbox"
+                {...getToggleAllRowsSelectedProps()}
+                id="header-checkbox"
+              />
+            ),
+            Cell: ({ row }) => (
+              <input
+                type="checkbox"
+                {...row.getToggleRowSelectedProps()}
+                id={`checkbox-${row.id}`}
+              />
+            ),
+          },
+          ...columns,
+        ]);
       }
+    );
+  
+  
+  
+    useEffect(() => {
+      const fetchItems = async () => {
+        try {
+          const fetchedItems = await itemService.getItemsByCollectionId(
+            collectionId
+          );
+          setItems(fetchedItems);
+        } catch (error) {
+          console.error("Failed to fetch items:", error);
+        }
+      };
+  
+      fetchItems();
+    }, [collectionId]);
+  
+    const generateSortingIndicator = (column) => {
+      return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+    };
+  
+    const handleEditModalClose = () => {
+      setSelectedItem(null);
+      setShowEditModal(false);
     };
 
-    fetchItems();
-  }, [collectionId]);
-
-  const generateSortingIndicator = (column) => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
-  };
-
-
-
-  const handleEditModalClose = () => {
-    setSelectedItemId(null);
-    setShowEditModal(false);
-  };
-
+  
+  
+    const handleEditItem = () => {
+      const selectedRow = rows.find((row) => selectedRowIds[row.id]);
+      if (selectedRow) {
+        setSelectedItem(selectedRow.original);
+        console.log("Selected Item:", selectedRow.original); // Console log the selected item
+        setShowEditModal(true);
+      }
+    };
   return (
     <div className="mt-3">
       <h3>Item List</h3>
@@ -269,10 +272,18 @@ const ItemTable = ({ collectionId, customFields }) => {
 
       <Offcanvas show={showEditModal} onHide={handleEditModalClose} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Edit Item (ID: {selectedItemId})</Offcanvas.Title>
+          <Offcanvas.Title>Edit Item (ID: {})</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {/* Render your edit item form here */}
+          {selectedItem && (
+            <ItemCreation
+              collectionId={collectionId}
+              customFields={customFields}
+              onClose={handleEditModalClose}
+              selectedItem={selectedItem}
+              onItemEdit={handleEditItem}
+            />
+          )}
         </Offcanvas.Body>
       </Offcanvas>
     </div>

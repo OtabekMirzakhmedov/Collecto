@@ -24,7 +24,7 @@ namespace Collecto.BE.Services
             item.Collection = await _dataContext.Collections.FindAsync(collectionId);
             item.CreatedAt = DateTime.Now;
             _dataContext.Items.Add(item);
-            CreateOrUpdateTags(item, itemDto.ItemTags);
+            CreateTagsForItem(item, itemDto.ItemTags);
             await _dataContext.SaveChangesAsync();
             await HandleCustomFieldValues(item.Id, itemDto.CustomFieldValues);
 
@@ -41,6 +41,31 @@ namespace Collecto.BE.Services
             await _dataContext.SaveChangesAsync();
         }
 
+        public async Task<ItemDto> EditItem(int itemId, ItemDto updatedItemDto)
+        {
+            var item = await _dataContext.Items
+                .Include(i => i.ItemTags)
+                .ThenInclude(it => it.Tag)
+                .Include(i => i.CustomFieldValues)
+                .ThenInclude(cf => cf.CustomField)
+                .FirstOrDefaultAsync(i => i.Id == itemId );
+
+            if (item == null)
+            {
+                throw new Exception("Item not found");
+            }
+
+            item.Name = updatedItemDto.Name;
+            UpdateTagsForItem(item, updatedItemDto.ItemTags);
+            item.CustomFieldValues =  updatedItemDto.CustomFieldValues.Select(i => _mapper.Map<CustomFieldValue>(i)).ToList();
+
+            await _dataContext.SaveChangesAsync();
+
+            return _mapper.Map<ItemDto>(item);
+
+
+        }
+
         public async Task<ICollection<ItemDto>> GetItemsByCollectionId(int collectionId)
         {
             var items = await _dataContext.Items
@@ -55,8 +80,45 @@ namespace Collecto.BE.Services
             return itemDtos;
         }
 
-        private void CreateOrUpdateTags(Item item, IEnumerable<string> tagNames)
+        private void UpdateTagsForItem(Item item, IEnumerable<string> updatedTagNames)
         {
+            var currentTagNames = item.ItemTags.Select(it => it.Tag.TagName).ToList();
+            var tagNamesToRemove = currentTagNames.Except(updatedTagNames).ToList();
+            var tagNamesToAdd = updatedTagNames.Except(currentTagNames).ToList();
+
+            var itemTagsToRemove = item.ItemTags
+                .Where(it => tagNamesToRemove.Contains(it.Tag.TagName))
+                .ToList();
+            itemTagsToRemove.ForEach(it => item.ItemTags.Remove(it));
+
+            // Add item tags for existing or new tags
+            foreach (var tagName in tagNamesToAdd)
+            {
+                var existingTag = _dataContext.Tags.FirstOrDefault(t => t.TagName == tagName);
+
+                if (existingTag != null)
+                {
+                    // Tag already exists, add it to the item if not already associated
+                    if (!item.ItemTags.Any(it => it.TagId == existingTag.Id))
+                    {
+                        item.ItemTags.Add(new ItemTag { Item = item, Tag = existingTag });
+                    }
+                }
+                else
+                {
+                    // Tag doesn't exist, create a new tag and associate it with the item
+                    var newTag = new Tag { TagName = tagName };
+                    _dataContext.Tags.Add(newTag);
+                    item.ItemTags.Add(new ItemTag { Item = item, Tag = newTag });
+                }
+            }
+        }
+
+
+
+        private void CreateTagsForItem(Item item, IEnumerable<string> tagNames)
+        {
+
             foreach (var tagName in tagNames)
             {
                 var tag = _dataContext.Tags.FirstOrDefault(t => t.TagName == tagName);
@@ -70,6 +132,7 @@ namespace Collecto.BE.Services
                 _dataContext.ItemTags.Add(new ItemTag { Item = item, Tag = tag });
             }
         }
+
 
         private async Task HandleCustomFieldValues(int itemId, IEnumerable<CustomFieldValueDto>? customFieldValues)
         {

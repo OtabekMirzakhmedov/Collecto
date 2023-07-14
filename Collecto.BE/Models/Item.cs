@@ -4,6 +4,10 @@ namespace Collecto.BE.Models
 {
     public class Item
     {
+        public Item()
+        {
+            ItemTags = new List<ItemTag>();
+        }
         public int Id { get; set; }
 
         [Required]
@@ -11,7 +15,7 @@ namespace Collecto.BE.Models
 
         public DateTime CreatedAt { get; set; }
 
-        public ICollection<ItemTag>? ItemTags { get; set; }
+        public ICollection<ItemTag> ItemTags { get; set; }
 
         public Collection? Collection { get; set; }
 

@@ -13,6 +13,20 @@ const itemService = {
     }
   },
 
+  editItem: async (itemId, updatedItemDto, token) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/Item/edit-item/${itemId}`, updatedItemDto, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   fetchTags: async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/Tag/tags`);

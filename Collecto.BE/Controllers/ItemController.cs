@@ -36,6 +36,21 @@ namespace Collecto.BE.Controllers
             await _itemService.DeleteItemById(id);
             return Ok("Deleted");
         }
+
+        [HttpPut("edit-item/{id}")]
+        public async Task<IActionResult> EditItem(int id, [FromBody] ItemDto updatedItemDto)
+        {
+            try
+            {
+                var editedItem = await _itemService.EditItem(id, updatedItemDto);
+                return Ok(editedItem);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
     }
 
 }
