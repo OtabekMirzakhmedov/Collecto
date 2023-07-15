@@ -157,5 +157,21 @@ namespace Collecto.BE.Services
             _dataContext.Items.RemoveRange(items);
             await _dataContext.SaveChangesAsync();
         }
+
+        public async Task<ItemDto> GetItemById(int itemId)
+        {
+            var item = await _dataContext.Items
+                .Include(i => i.Likes)
+                .ThenInclude(l => l.User)
+                .Include(i => i.ItemTags)
+                .ThenInclude(it => it.Tag)
+                .Include(i => i.CustomFieldValues)
+                .ThenInclude(cfv => cfv.CustomField)
+                .FirstOrDefaultAsync(i => i.Id == itemId);
+
+            var itemDto = _mapper.Map<ItemDto>(item);
+
+            return itemDto;
+        }
     }
 }

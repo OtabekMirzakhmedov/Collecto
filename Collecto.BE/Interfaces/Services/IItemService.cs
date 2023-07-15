@@ -9,5 +9,6 @@ namespace Collecto.BE.Interfaces.Services
         Task DeleteItemById(int id);
         Task<ItemDto> EditItem(int itemId, ItemDto updatedItemDto);
         Task DeleteGroupOfItemsById(int[] itemIds);
+        Task<ItemDto> GetItemById(int itemId);
     }
 }

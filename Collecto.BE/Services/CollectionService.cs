@@ -108,6 +108,7 @@ namespace Collecto.BE.Services
                 .Include(c => c.User)
                 .Include(c => c.CustomFields)
                 .Include(c => c.Items)
+                .ThenInclude(i => i.Likes)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (collection == null)

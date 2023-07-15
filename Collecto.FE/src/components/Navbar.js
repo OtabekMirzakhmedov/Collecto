@@ -29,6 +29,7 @@ const Navbar = () => {
         .then((data) => {
           setUserData(data);
           console.log(`[${requestId}] User data:`, data);
+          sessionStorage.setItem('userId', data.id)
         })
         .catch((error) => {
           console.error(`[${requestId}] Error fetching user data:`, error);

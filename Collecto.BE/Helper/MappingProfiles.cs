@@ -59,7 +59,8 @@ namespace Collecto.BE.Helper
             CreateMap<Item, ItemDto>()
                 .ForMember(dest => dest.ItemTags, opt => opt.MapFrom(src => src.ItemTags.Select(it => it.Tag.TagName)))
                 .ForMember(dest => dest.NumberOfLikes, opt => opt.MapFrom(src => src.Likes.Count))
-                .ForMember(dest => dest.CustomFieldValues, opt => opt.MapFrom(src => src.CustomFieldValues));
+                .ForMember(dest => dest.CustomFieldValues, opt => opt.MapFrom(src => src.CustomFieldValues))
+                .ForMember(dest => dest.LikedUsers, opt => opt.MapFrom(src => src.Likes.Select(l => l.User.Id).ToList()));
         }
     }
 }

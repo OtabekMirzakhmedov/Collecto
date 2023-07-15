@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  Offcanvas,
-  Stack,
-  OverlayTrigger,
-  Tooltip,
-} from "react-bootstrap";
+import { useParams, useLocation } from "react-router-dom";
+import { Button, Container, Row, Col, Offcanvas, Stack, OverlayTrigger, Tooltip } from "react-bootstrap";
 import collectionService from "../services/collectionService";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -17,10 +8,12 @@ import "./components.css";
 import ItemCreation from "./ItemCreation";
 import ItemTable from "./ItemTable";
 import { Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Collection = () => {
   const navigate = useNavigate();
   const { collectionId } = useParams();
+  const location = useLocation();
   const [collection, setCollection] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -43,39 +36,44 @@ const Collection = () => {
 
   const performDelete = async () => {
     try {
-      await collectionService.deleteCollectionById(collectionId);
+      await collectionService.deleteCollectionById(collectionId, token);
       hideDeleteConfirmationModal();
+      navigate('/my-collections');
     } catch (error) {
       console.error("Error deleting collection:", error);
     }
   };
+
+  const token= localStorage.getItem("jwtToken");
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // Check if the collection exists in Redux
+  const collectionFromRedux = useSelector((state) => state.collection);
 
   useEffect(() => {
-    const fetchCollection = async () => {
-      try {
-        const response = await collectionService.getCollectionById(
-          collectionId
-        );
-        setCollection(response);
-      } catch (error) {
-        console.error("Error fetching collection:", error);
-      }
-    };
-
-    fetchCollection();
-  }, [collectionId]);
+    if (collectionFromRedux) {
+      setCollection(collectionFromRedux);
+    }else {
+      const fetchCollection = async () => {
+        try {
+          const response = await collectionService.getCollectionById(collectionId);
+          setCollection(response);
+        } catch (error) {
+          console.error("Error fetching collection:", error);
+        }
+      };
+      fetchCollection();
+    }
+  }, [collectionFromRedux, collectionId, location]);
 
   if (!collection) {
     return <p>Loading collection...</p>;
   }
   console.log(collection);
-
   return (
     <Container className="mt-2">
       <Stack direction="horizontal" className="d-flex justify-content-end">

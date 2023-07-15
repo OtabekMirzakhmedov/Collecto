@@ -57,6 +57,18 @@ namespace Collecto.BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("get-item-by-id/{id}")]
+        public async Task<IActionResult> GetItemById(int id) 
+        {
+            var item = await _itemService.GetItemById(id);
+            if(item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+        
     }
 
 }

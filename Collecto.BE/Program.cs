@@ -107,6 +107,7 @@ builder.Services.AddScoped<ICollectionService, CollectionService>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -73,6 +73,7 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
     try {
       if (selectedItem) {
 
+        
         const updatedItem = await itemService.editItem(
           selectedItem.id,
           itemData,
@@ -125,7 +126,7 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
             value={selectedTags}
           />
         </div>
-        {customFields.map((field) => (
+        {selectedItem.customFieldValues.map((field) => (
           <div className="mb-3" key={field.customFieldId}>
             <label className="form-label">{field.fieldName}</label>
             {field.fieldType === "SingleLineText" ||

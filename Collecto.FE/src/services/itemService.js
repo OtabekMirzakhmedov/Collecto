@@ -78,6 +78,52 @@ const itemService = {
     }
   },
 
+  getItemById: async (itemId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Item/get-item-by-id/${itemId}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log("Item not found");
+        throw new Error("Item not found");
+      }
+      throw error;
+    }
+  },
+
+  likeItem: async (itemId, userId, token) => {
+    try {
+      const likeData = { itemId, userId };
+      const response = await axios.post(`${API_BASE_URL}/Like/like`, likeData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  unlikeItem: async (itemId, userId, token) => {
+    try {
+      const likeData = { itemId, userId };
+      const response = await axios.delete(`${API_BASE_URL}/Like/like`, {
+        data: likeData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+
 
 };
 

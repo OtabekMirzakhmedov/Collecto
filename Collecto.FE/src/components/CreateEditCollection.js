@@ -58,6 +58,13 @@ const CreateEditCollection = ({ collection }) => {
       toast.error("All custom fields are required");
       return;
     }
+    const fieldNames = customFields.map((field) => field.fieldName);
+    const hasDuplicates = new Set(fieldNames).size !== fieldNames.length;
+
+    if (hasDuplicates) {
+      toast.error("Field names must be unique");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -73,7 +80,7 @@ const CreateEditCollection = ({ collection }) => {
       };
 
       const token = localStorage.getItem("jwtToken");
-      console.log('transformedData', transformedData)
+      console.log("transformedData", transformedData);
 
       if (collection) {
         console.log(collection);

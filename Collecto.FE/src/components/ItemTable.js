@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   useTable,
   useExpanded,
@@ -21,6 +22,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import itemService from "../services/itemService";
 import ItemCreation from "./ItemCreation";
+import { useDispatch } from "react-redux";
+import {setItem} from "../slices/itemSlice"
 
 const ItemTable = ({ collectionId, customFields }) => {
   const [items, setItems] = useState([]);
@@ -28,6 +31,8 @@ const ItemTable = ({ collectionId, customFields }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteSingleModal, setShowDeleteSingleModal] = useState(false);
   const [showDeleteMultipleModal, setShowDeleteMultipleModal] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const columns = useMemo(
     () => [
@@ -168,6 +173,8 @@ const ItemTable = ({ collectionId, customFields }) => {
     }
   };
 
+  
+
   const handleDeleteItems = async () => {
     const selectedRows = rows.filter((row) => selectedRowIds[row.id]);
     const numSelectedItems = selectedRows.length;
@@ -187,7 +194,6 @@ const ItemTable = ({ collectionId, customFields }) => {
       await itemService.deleteItem(itemId);
       toast.success("Item deleted successfully");
 
-      // Refresh the items after deletion
       const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
       setItems(fetchedItems);
     } catch (error) {
@@ -195,6 +201,15 @@ const ItemTable = ({ collectionId, customFields }) => {
     }
 
     setShowDeleteSingleModal(false);
+  };
+
+  const handleViewItem = () => {
+    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
+    if (selectedRow) {
+      const itemId = selectedRow.original.id;
+      dispatch(setItem(itemId)); // Dispatch the action to set the selected item in Redux state
+      navigate(`/collections/${collectionId}/${itemId}`);
+    }
   };
 
   const handleConfirmDeleteMultiple = async () => {
@@ -205,7 +220,6 @@ const ItemTable = ({ collectionId, customFields }) => {
       await itemService.deleteItemsByIds(itemIds);
       toast.success("Items deleted successfully");
 
-      // Refresh the items after deletion
       const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
       setItems(fetchedItems);
     } catch (error) {
@@ -275,6 +289,7 @@ const ItemTable = ({ collectionId, customFields }) => {
         >
           <Button
             className="btn-light p-1"
+            onClick={handleViewItem}
             disabled={Object.keys(selectedRowIds).length !== 1}
           >
             <i className="bi bi-eye fs-4 border-black fw-bolder"></i>
@@ -368,7 +383,6 @@ const ItemTable = ({ collectionId, customFields }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Delete Multiple Items Modal */}
       <Modal show={showDeleteMultipleModal} onHide={handleCancelDelete}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
