@@ -5,7 +5,7 @@ import itemService from "../services/itemService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => {
+const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEditItem, onCreateItem }) => {
   const { register, handleSubmit, setValue } = useForm();
   const [tagOptions, setTagOptions] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -43,8 +43,13 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
         const fieldName = `customField_${customFieldValue.customFieldId}`;
         setValue(fieldName, customFieldValue.value);
       });
+    } else if (customFields) {
+      customFields.forEach((field) => {
+        const fieldName = `customField_${field.customFieldId}`;
+        setValue(fieldName, field.value);
+      });
     }
-  }, [selectedItem, setValue]);
+  }, [selectedItem, customFields, setValue]);
 
   const onSubmit = async (data) => {
     const { itemName, ...customFields } = data;
@@ -68,17 +73,20 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
       customFieldValues,
     };
 
+    console.log('itemdata ', itemData);
+
     setIsAddingItem(true);
 
     try {
       if (selectedItem) {
-
-        
         const updatedItem = await itemService.editItem(
           selectedItem.id,
           itemData,
           token
         );
+
+        onEditItem(updatedItem);
+
         console.log(updatedItem);
         toast.success("Item updated successfully");
       } else {
@@ -87,14 +95,15 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
           collectionId,
           token
         );
-        console.log(createdItem);
         toast.success("Item added successfully");
+        onCreateItem(createdItem);
       }
 
       setIsAddingItem(false);
       onClose();
     } catch (error) {
       setIsAddingItem(false);
+      console.log(error);
       toast.error("Failed to save item");
     }
   };
@@ -126,7 +135,43 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem }) => 
             value={selectedTags}
           />
         </div>
-        {selectedItem.customFieldValues.map((field) => (
+        {selectedItem && selectedItem.customFieldValues.map((field) => (
+          <div className="mb-3" key={field.customFieldId}>
+            <label className="form-label">{field.fieldName}</label>
+            {field.fieldType === "SingleLineText" ||
+            field.fieldType === "Number" ? (
+              <input
+                type={field.fieldType === "Number" ? "number" : "text"}
+                className="form-control"
+                placeholder={`Enter ${field.fieldName}`}
+                {...register(`customField_${field.customFieldId}`)}
+              />
+            ) : field.fieldType === "Date" ? (
+              <input
+                type="date"
+                className="form-control"
+                {...register(`customField_${field.customFieldId}`)}
+              />
+            ) : field.fieldType === "Checkbox" ? (
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  {...register(`customField_${field.customFieldId}`)}
+                />
+                <label className="form-check-label">{`Check ${field.fieldName}`}</label>
+              </div>
+            ) : (
+              <textarea
+                className="form-control"
+                rows={3}
+                placeholder={`Enter ${field.fieldName}`}
+                {...register(`customField_${field.customFieldId}`)}
+              ></textarea>
+            )}
+          </div>
+        ))}
+        {customFields && customFields.map((field) => (
           <div className="mb-3" key={field.customFieldId}>
             <label className="form-label">{field.fieldName}</label>
             {field.fieldType === "SingleLineText" ||

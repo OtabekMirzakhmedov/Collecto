@@ -25,14 +25,19 @@ import ItemCreation from "./ItemCreation";
 import { useDispatch } from "react-redux";
 import {setItem} from "../slices/itemSlice"
 
-const ItemTable = ({ collectionId, customFields }) => {
-  const [items, setItems] = useState([]);
+const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
+
+  const [items, setItems] = useState(itemsfromcollection);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteSingleModal, setShowDeleteSingleModal] = useState(false);
   const [showDeleteMultipleModal, setShowDeleteMultipleModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setItems(itemsfromcollection);
+  }, [itemsfromcollection]);
 
   const columns = useMemo(
     () => [
@@ -140,20 +145,7 @@ const ItemTable = ({ collectionId, customFields }) => {
     }
   );
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const fetchedItems = await itemService.getItemsByCollectionId(
-          collectionId
-        );
-        setItems(fetchedItems);
-      } catch (error) {
-        console.error("Failed to fetch items:", error);
-      }
-    };
-
-    fetchItems();
-  }, [collectionId]);
+  
 
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
@@ -173,7 +165,17 @@ const ItemTable = ({ collectionId, customFields }) => {
     }
   };
 
-  
+  const handleItemEdit = (updatedItem) => {
+    setItems((prevItems) => {
+      const updatedItems = prevItems.map((item) => {
+        if (item.id === updatedItem.id) {
+          return updatedItem;
+        }
+        return item;
+      });
+      return updatedItems;
+    });
+  };
 
   const handleDeleteItems = async () => {
     const selectedRows = rows.filter((row) => selectedRowIds[row.id]);
@@ -186,48 +188,50 @@ const ItemTable = ({ collectionId, customFields }) => {
     }
   };
 
-  const handleConfirmDeleteSingle = async () => {
-    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
-    const itemId = selectedRow.original.id;
 
-    try {
-      await itemService.deleteItem(itemId);
-      toast.success("Item deleted successfully");
-
-      const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
-      setItems(fetchedItems);
-    } catch (error) {
-      toast.error("Failed to delete item");
-    }
-
-    setShowDeleteSingleModal(false);
-  };
 
   const handleViewItem = () => {
     const selectedRow = rows.find((row) => selectedRowIds[row.id]);
     if (selectedRow) {
       const itemId = selectedRow.original.id;
-      dispatch(setItem(itemId)); // Dispatch the action to set the selected item in Redux state
+      dispatch(setItem(itemId));
       navigate(`/collections/${collectionId}/${itemId}`);
     }
   };
 
+  const handleConfirmDeleteSingle = async () => {
+    const selectedRow = rows.find((row) => selectedRowIds[row.id]);
+    const itemId = selectedRow.original.id;
+  
+    try {
+      await itemService.deleteItem(itemId);
+      toast.success("Item deleted successfully");
+      const updatedItems = items.filter((item) => item.id !== itemId);
+      setItems(updatedItems);
+  
+    } catch (error) {
+      toast.error("Failed to delete item");
+    }
+  
+    setShowDeleteSingleModal(false);
+  };
+  
   const handleConfirmDeleteMultiple = async () => {
     const selectedRows = rows.filter((row) => selectedRowIds[row.id]);
     const itemIds = selectedRows.map((row) => row.original.id);
-
+  
     try {
       await itemService.deleteItemsByIds(itemIds);
       toast.success("Items deleted successfully");
-
-      const fetchedItems = await itemService.getItemsByCollectionId(collectionId);
-      setItems(fetchedItems);
+      const updatedItems = items.filter((item) => !itemIds.includes(item.id));
+      setItems(updatedItems);
     } catch (error) {
       toast.error("Failed to delete items");
     }
-
+  
     setShowDeleteMultipleModal(false);
   };
+  
 
   const handleCancelDelete = () => {
     setShowDeleteSingleModal(false);
@@ -355,10 +359,9 @@ const ItemTable = ({ collectionId, customFields }) => {
           {selectedItem && (
             <ItemCreation
               collectionId={collectionId}
-              customFields={customFields}
               onClose={handleEditModalClose}
               selectedItem={selectedItem}
-              onItemEdit={handleEditItem}
+              onEditItem={handleItemEdit}
             />
           )}
         </Offcanvas.Body>

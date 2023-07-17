@@ -104,12 +104,18 @@ namespace Collecto.BE.Services
         public async Task<CollectionDto> GetCollectionById(int id)
         {
             var collection = await _dataContext.Collections
-                .Include(c => c.Topic)
-                .Include(c => c.User)
-                .Include(c => c.CustomFields)
-                .Include(c => c.Items)
-                .ThenInclude(i => i.Likes)
-                .FirstOrDefaultAsync(c => c.Id == id);
+    .Include(c => c.Topic)
+    .Include(c => c.User)
+    .Include(c => c.CustomFields)
+    .Include(c => c.Items)
+        .ThenInclude(i => i.CustomFieldValues)
+    .Include(c => c.Items)
+        .ThenInclude(i => i.ItemTags)
+            .ThenInclude(it => it.Tag)
+    .Include(c => c.Items)
+        .ThenInclude(i => i.Likes)
+    .FirstOrDefaultAsync(c => c.Id == id);
+
 
             if (collection == null)
             {
@@ -137,13 +143,20 @@ namespace Collecto.BE.Services
         public async Task<ICollection<CollectionDto>> GetAllCollections()
         {
             var collections = await _dataContext.Collections
-                .Include(c => c.User)
-                .Include(c => c.Topic)
-                .Include(c => c.CustomFields)
-                .Include(c => c.Items)
-                .ThenInclude(i => i.Likes)
+    .Include(c => c.Topic)
+    .Include(c => c.User)
+    .Include(c => c.CustomFields)
+    .Include(c => c.Items)
+        .ThenInclude(i => i.CustomFieldValues)
+    .Include(c => c.Items)
+        .ThenInclude(i => i.ItemTags)
+            .ThenInclude(it => it.Tag)
+    .Include(c => c.Items)
+        .ThenInclude(i => i.Likes)
                 .Select(i => _mapper.Map<CollectionDto>(i))
                 .ToListAsync();
+
+     
 
             return collections;
         }

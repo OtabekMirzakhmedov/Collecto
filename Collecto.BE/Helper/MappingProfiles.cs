@@ -27,6 +27,7 @@ namespace Collecto.BE.Helper
             .ForMember(dest => dest.CollectionId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.NumberOfItems, opt => opt.MapFrom(src => src.Items.Count))
             .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User.FullName))
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
             .ForMember(dest => dest.NumberOfLikes, opt => opt.MapFrom(src => src.Items.Select(i => i.Likes.Count).Sum()));
 
             CreateMap<CustomFieldDto, CustomField>()

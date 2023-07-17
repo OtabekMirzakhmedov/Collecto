@@ -11,7 +11,8 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
-  Modal, Offcanvas
+  Modal,
+  Offcanvas,
 } from "react-bootstrap";
 import ItemCreation from "./ItemCreation";
 
@@ -63,9 +64,12 @@ const Item = () => {
     setShowDeleteModal(false);
   };
 
-  const handleEdit= () => {
+  const handleEdit = () => {
     setShowEditModal(true);
-  
+  };
+
+  const handleItemEdit = (updatedItem) => {
+    setItem(updatedItem);
   };
 
   const handleLike = async () => {
@@ -89,13 +93,14 @@ const Item = () => {
       setItem((prevItem) => ({
         ...prevItem,
         numberOfLikes: prevItem.numberOfLikes - 1,
-        likedUsers: prevItem.likedUsers.filter((likedUserId) => likedUserId !== userId),
+        likedUsers: prevItem.likedUsers.filter(
+          (likedUserId) => likedUserId !== userId
+        ),
       }));
     } catch (error) {
       console.error("Failed to unlike item:", error);
     }
   };
-  
 
   const renderFieldValue = (field) => {
     switch (field.fieldType) {
@@ -114,6 +119,11 @@ const Item = () => {
     }
   };
   const isLiked = item.likedUsers.includes(userId);
+
+  const handleCloseEdit = () => {
+    setShowEditModal(false);
+  };
+
   return (
     <Container>
       <Row className="display-6 d-flex mt-2 justify-content-center">
@@ -128,7 +138,11 @@ const Item = () => {
               placement="top"
               overlay={<Tooltip>Delete Item</Tooltip>}
             >
-              <Button variant="light" className="p-0 fs-5 " onClick={handleDelete}>
+              <Button
+                variant="light"
+                className="p-0 fs-5 "
+                onClick={handleDelete}
+              >
                 <i class="bi bi-trash text-danger"></i>
               </Button>
             </OverlayTrigger>
@@ -137,7 +151,11 @@ const Item = () => {
               placement="top"
               overlay={<Tooltip>Edit item</Tooltip>}
             >
-              <Button variant="light" className="p-0 fs-5" onClick={handleEdit}>
+              <Button
+                variant="light"
+                className="p-0 fs-5"
+                onClick={handleEdit}
+              >
                 <i class="bi bi-pen"></i>
               </Button>
             </OverlayTrigger>
@@ -221,37 +239,37 @@ const Item = () => {
 
       <Row className="justify-content-center mt-2">
         <Col lg={9} className="d-flex justify-content-center">
-        <OverlayTrigger
-          key="item-view"
-          placement="top"
-          overlay={<Tooltip>{isLiked ? 'Unlike' : 'I like this'}</Tooltip>}
-        >
-          <Button
-            variant="light"
-            className={`p-0 fs-4 ${isLiked ? '' : ''}`}
-            onClick={isLiked ?  handleUnlike: handleLike}
+          <OverlayTrigger
+            key="item-view"
+            placement="top"
+            overlay={<Tooltip>{isLiked ? "Unlike" : "I like this"}</Tooltip>}
           >
-            <i className={`bi bi-hand-thumbs-${isLiked ? 'up-fill' : 'up'}`}></i>
-            <span>{item.numberOfLikes}</span>
-          </Button>
-        </OverlayTrigger>
+            <Button
+              variant="light"
+              className={`p-0 fs-4 ${isLiked ? "" : ""}`}
+              onClick={isLiked ? handleUnlike : handleLike}
+            >
+              <i
+                className={`bi bi-hand-thumbs-${
+                  isLiked ? "up-fill" : "up"
+                }`}
+              ></i>
+              <span>{item.numberOfLikes}</span>
+            </Button>
+          </OverlayTrigger>
         </Col>
       </Row>
-      <Offcanvas
-        show={showEditModal}
-        placement="end"
-      >
+      <Offcanvas show={showEditModal} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Edit Item (ID: {})</Offcanvas.Title>
+          <Offcanvas.Title>Edit Item </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-         
-            <ItemCreation
-              collectionId={collectionId}
-              selectedItem={item}
-              onItemEdit={handleEdit}
-            />
-          
+          <ItemCreation
+            collectionId={collectionId}
+            selectedItem={item}
+            onClose={handleCloseEdit}
+            onEditItem={handleItemEdit}
+          />
         </Offcanvas.Body>
       </Offcanvas>
 
