@@ -1,5 +1,6 @@
 using Collecto.BE.Data;
 using Collecto.BE.Helper;
+using Collecto.BE.Hubs;
 using Collecto.BE.Interfaces.Services;
 using Collecto.BE.Models;
 using Collecto.BE.Services;
@@ -125,5 +126,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<CommentHub>("/commentHub");
+});
 
 app.Run();
