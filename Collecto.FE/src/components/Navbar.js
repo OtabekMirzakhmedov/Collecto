@@ -1,27 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {  useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { Dropdown } from "react-bootstrap";
-import './components.css'
+import { Dropdown,Stack, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import "./components.css";
+import translations from "../translations";
 
 const Navbar = () => {
-  console.log('Navbar');
+  console.log("Navbar");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
+  const fullName = sessionStorage.getItem("fullName");
   const isLoggedIn = !!userId;
+  const [language, setLanguage] = useState(
+    sessionStorage.getItem("language") || "en"
+  );
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = (newTheme) => {
+    setTheme(newTheme);
+  };
 
   const signOut = () => {
-    console.log('Navbar sign osut');
+    console.log("Navbar sign osut");
+    sessionStorage.removeItem("userId");
     dispatch(logout());
     navigate("/");
   };
 
+  useEffect(() => {
+    sessionStorage.setItem("language", language);
+  }, [language]);
 
+  console.log(language);
+  const translation = translations[language]["Navbar"];
+  console.log(translation);
 
   const handleLoginClick = () => {
-    console.log('Navbar handle login click');
+    console.log("Navbar handle login click");
 
     navigate("/login");
   };
@@ -36,6 +53,9 @@ const Navbar = () => {
 
   const handleCollectionsClick = () => {
     navigate("/my-collections");
+  };
+  const handleLanguageChange = (selectedLanguage) => {
+    setLanguage(selectedLanguage);
   };
 
   return (
@@ -66,20 +86,42 @@ const Navbar = () => {
               </span>
             </div>
           </div>
+          <Stack direction="horizontal">
+          <ToggleButtonGroup
+        type="radio"
+        name="theme-options"
+        value={theme}
+        onChange={toggleTheme}
+      >
+        <ToggleButton value="light">Light Theme</ToggleButton>
+        <ToggleButton value="dark">Dark Theme</ToggleButton>
+      </ToggleButtonGroup>
+          <Dropdown>
+            <Dropdown.Toggle variant="">
+              <i className="bi bi-globe fs-6"></i>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleLanguageChange("en")}>
+                English
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleLanguageChange("ru")}>
+                Russian
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
           <Dropdown>
             <Dropdown.Toggle
               className="btn border border-1 rounded-pill d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center custom-toggle"
               variant=""
-              
             >
               {!isLoggedIn ? (
                 <>
-                 <i className="bi bi-list fs-4 px-2 py-0"></i>
+                  <i className="bi bi-list fs-4 px-2 py-0"></i>
                   <i className="bi bi-person-circle fs-3 px-2"></i>
                 </>
               ) : (
                 <>
-                 <i className="bi bi-list fs-4 px-2 py-0"></i>
+                  <i className="bi bi-list fs-4 px-2 py-0"></i>
                   <i className="bi bi-person-check fs-3 px-2 text-success"></i>
                 </>
               )}
@@ -87,7 +129,7 @@ const Navbar = () => {
             <Dropdown.Menu>
               {!isLoggedIn && (
                 <Dropdown.Item onClick={handleLoginClick}>
-                  Log in
+                  {translation.LogIn}
                 </Dropdown.Item>
               )}
               {!isLoggedIn && (
@@ -97,7 +139,7 @@ const Navbar = () => {
               )}
               {isLoggedIn && (
                 <Dropdown.Item onClick={handleProfileClick}>
-                  Profile
+                  {fullName}
                 </Dropdown.Item>
               )}
               {isLoggedIn && (
@@ -110,6 +152,7 @@ const Navbar = () => {
               )}
             </Dropdown.Menu>
           </Dropdown>
+          </Stack>
         </div>
       </div>
     </nav>

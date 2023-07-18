@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
@@ -12,6 +12,8 @@ import MyCollectionLayout from './layouts/MyCollectionLayout';
 import ItemLayout from './layouts/ItemLayout';
 
 function App() {
+
+
   return (
     <Router>
       <Routes>
