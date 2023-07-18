@@ -21,8 +21,11 @@ const LoginPage = () => {
     setIsLoading(true);
     console.log('I am here on submit')
     try {
-      const jwtToken  = await authService.login(data);
-      dispatch(loginSuccess({ token: jwtToken }));
+      const response  = await authService.login(data);
+      console.log('after', response);
+      sessionStorage.setItem("userId", response.data.userId);
+      sessionStorage.setItem("fullName", response.data.fullName);
+      dispatch(loginSuccess({ token: response.data.jwtToken }));
       navigate("/"); // Redirect to the home page after successful login
     } catch (error) {
       if (error.response && error.response.data) {

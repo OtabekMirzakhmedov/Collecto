@@ -5,8 +5,8 @@ const authService = {
   login: async (credentials) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/Auth/login`, credentials);
-      const jwtToken = response.data.jwtToken;
-      return jwtToken;
+     console.log(response.data);
+      return response;
     } catch (error) {
       throw error;
     }

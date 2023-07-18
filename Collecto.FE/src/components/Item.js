@@ -15,6 +15,7 @@ import {
   Offcanvas,
 } from "react-bootstrap";
 import ItemCreation from "./ItemCreation";
+import Comment from "./Comment";
 
 const Item = () => {
   const { collectionId, itemId } = useParams();
@@ -151,11 +152,7 @@ const Item = () => {
               placement="top"
               overlay={<Tooltip>Edit item</Tooltip>}
             >
-              <Button
-                variant="light"
-                className="p-0 fs-5"
-                onClick={handleEdit}
-              >
+              <Button variant="light" className="p-0 fs-5" onClick={handleEdit}>
                 <i class="bi bi-pen"></i>
               </Button>
             </OverlayTrigger>
@@ -250,13 +247,16 @@ const Item = () => {
               onClick={isLiked ? handleUnlike : handleLike}
             >
               <i
-                className={`bi bi-hand-thumbs-${
-                  isLiked ? "up-fill" : "up"
-                }`}
+                className={`bi bi-hand-thumbs-${isLiked ? "up-fill" : "up"}`}
               ></i>
               <span>{item.numberOfLikes}</span>
             </Button>
           </OverlayTrigger>
+        </Col>
+      </Row>
+      <Row className="justify-content-center mt-2">
+        <Col lg={9} className="d-flex justify-content-center">
+          <Comment userId={userId} itemId={itemId} />
         </Col>
       </Row>
       <Offcanvas show={showEditModal} placement="end">

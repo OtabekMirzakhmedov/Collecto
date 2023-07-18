@@ -1,151 +1,117 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import userService from "../services/userService";
 import UserAvatar from "./UserAvatar";
-import { Dropdown } from "bootstrap/dist/js/bootstrap.bundle";
+import { Dropdown } from "react-bootstrap";
 
 const Navbar = () => {
-  console.log("navbar");
-  const dropdownRef = useRef();
+  console.log('Navbar');
   const [userData, setUserData] = useState(null);
+  const [isInitialRender, setIsInitialRender] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userId = sessionStorage.getItem("userId");
+  const isLoggedIn = !!userId;
 
   const signOut = () => {
+    console.log('Navbar sign osut');
     localStorage.removeItem("jwtToken");
+    sessionStorage.removeItem("userId");
     dispatch(logout());
-    navigate('/');
+    navigate("/");
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      const requestId = Date.now();
-      userService
-        .getUserData()
-        .then((data) => {
-          setUserData(data);
-          console.log(`[${requestId}] User data:`, data);
-          sessionStorage.setItem('userId', data.id)
-        })
-        .catch((error) => {
-          console.error(`[${requestId}] Error fetching user data:`, error);
-        });
-    }
-  }, [isLoggedIn]);
 
-  useEffect(() => {
-    const dropdown = new Dropdown(dropdownRef.current);
 
-    return () => {
-      dropdown.dispose();
-    };
-  }, []);
+  const handleLoginClick = () => {
+    console.log('Navbar handle login click');
+
+    navigate("/login");
+  };
+
+  const handleSignupClick = () => {
+    navigate("/signup");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/");
+  };
+
+  const handleCollectionsClick = () => {
+    navigate("/my-collections");
+  };
 
   return (
-    <nav className="navbar-expand  shadow-sm d-flex">
+    <nav className="navbar-expand shadow-sm d-flex">
       <div className="container-fluid px-lg-5">
         <div className="d-flex justify-content-between align-content-center p-3">
           <span className="align-content-center d-none d-sm-inline-block me-lg-5 pe-lg-5">
             <a className="navbar-brand" href="/">
-              <i className="bi bi-flower1 fs-3  my-1 text-danger"></i>
+              <i className="bi bi-flower1 fs-3 my-1 text-danger"></i>
             </a>
             <span className="d-none d-xl-inline-block">
-              <a className="navbar-brand  " href="/">
-                <p className="fs-2 d-inline text-danger  ">collecto </p>
+              <a className="navbar-brand" href="/">
+                <p className="fs-2 d-inline text-danger">collecto </p>
               </a>
             </span>
           </span>
-          <div className="col-12 col-sm-6 col-lg-3 ">
-            <div className="input-group ">
+          <div className="col-12 col-sm-6 col-lg-3">
+            <div className="input-group">
               <input
-                className="form-control border-end-0 border rounded-start-pill  focus-ring-info shadow"
+                className="form-control border-end-0 border rounded-start-pill focus-ring-info shadow"
                 type="text"
                 placeholder="search..."
               />
-              <span className="input-group-append ">
+              <span className="input-group-append">
                 <button className="btn btn-outline-secondary bg-white border rounded-end-pill shadow">
                   <i className="bi bi-search fs-5 text-danger"></i>
                 </button>
               </span>
             </div>
           </div>
-          <div className="dropdown" ref={dropdownRef}>
-            <button
-              className="btn border border-1 rounded-pill  d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center"
-              data-bs-toggle="dropdown"
+          <Dropdown>
+            <Dropdown.Toggle
+              className="btn border border-1 rounded-pill d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center"
+              variant=""
             >
-              {!isLoggedIn && (
+              {!isLoggedIn ? (
                 <>
-                  <i className="bi bi-list fs-4 px-2 py-0"></i>
-                  <i className="bi bi-person-circle fs-3 px-2"></i>{" "}
+                  <i className="bi bi-person-circle fs-3 px-2"></i>
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-person-circle fs-3 px-2"></i>
                 </>
               )}
-
-              {isLoggedIn && (
-                <>
-                  <i className="bi bi-list fs-5 px-2 py-auto"></i>
-                  <UserAvatar userData={userData} />
-                </>
-              )}
-            </button>
-
-            <ul className="dropdown-menu">
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
               {!isLoggedIn && (
-                <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => navigate("/login")}
-                  >
-                    Log in
-                  </button>
-                </li>
+                <Dropdown.Item onClick={handleLoginClick}>
+                  Log in
+                </Dropdown.Item>
               )}
               {!isLoggedIn && (
-                <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => navigate("/signup")}
-                  >
-                    Sign up
-                  </button>
-                </li>
+                <Dropdown.Item onClick={handleSignupClick}>
+                  Sign up
+                </Dropdown.Item>
               )}
               {isLoggedIn && (
-                <li>
-                  <button
-                    className="btn btn-danger dropdown-item btn btn-danger"
-                    onClick={() => navigate("/")}
-                  >
-                    Profile
-                  </button>
-                </li>
+                <Dropdown.Item onClick={handleProfileClick}>
+                  Profile
+                </Dropdown.Item>
               )}
               {isLoggedIn && (
-                <li>
-                  <button
-                    className="btn btn-danger dropdown-item btn btn-danger"
-                    onClick={() => navigate("/my-collections")}
-                  >
-                    Collections
-                  </button>
-                </li>
+                <Dropdown.Item onClick={handleCollectionsClick}>
+                  Collections
+                </Dropdown.Item>
               )}
               {isLoggedIn && (
-                <li>
-                  <button
-                    className="btn btn-danger dropdown-item btn btn-danger"
-                    onClick={signOut}
-                  >
-                    Sign Out
-                  </button>
-                </li>
+                <Dropdown.Item onClick={signOut}>Sign Out</Dropdown.Item>
               )}
-            </ul>
-          </div>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </div>
     </nav>

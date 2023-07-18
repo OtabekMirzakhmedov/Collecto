@@ -1,6 +1,5 @@
 using Collecto.BE.Data;
 using Collecto.BE.Helper;
-using Collecto.BE.Hubs;
 using Collecto.BE.Interfaces.Services;
 using Collecto.BE.Models;
 using Collecto.BE.Services;
@@ -59,6 +58,18 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 
 builder.Services.AddDbContext<DataContext>(options =>
@@ -102,6 +113,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
         .AddEntityFrameworkStores<DataContext>()
         .AddDefaultTokenProviders();
 
+
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICollectionService, CollectionService>();
@@ -109,6 +122,7 @@ builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -118,7 +132,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+app.UseCors();
 
 
 app.UseHttpsRedirection();
@@ -126,9 +140,5 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHub<CommentHub>("/commentHub");
-});
 
 app.Run();

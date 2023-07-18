@@ -57,6 +57,8 @@ namespace Collecto.BE.Services
 
             var authData = new AuthDataDto
             {
+                UserId = user.Id,
+                FullName = user.FullName,
                 JwtToken = jwtToken
             };
 

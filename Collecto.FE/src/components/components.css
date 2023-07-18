@@ -57,33 +57,19 @@
   text-transform: uppercase;
 }
 
-.card:hover{
-  background-color: #E8F0FE;
-}
-
-
-.author:hover{
-  background-color: beige;
-}
-
 .collection-input:focus{
   outline: 2px;
   border: 1px solid gray;
   background-color: whitesmoke;
 }
 
-.card-img-top{
-  width: 100%;
-  object-fit: cover;
-  height: 225px;
-}
 
 .description-truncate {
-  height: 7em; /* Adjust the height as needed */
+  height: 7em; 
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 7; /* Number of lines to display */
+  -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
 }
 
