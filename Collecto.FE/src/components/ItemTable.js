@@ -237,6 +237,10 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
     setShowDeleteSingleModal(false);
     setShowDeleteMultipleModal(false);
   };
+
+  const token = localStorage.getItem("jwtToken");
+  const userId = sessionStorage.getItem("userId");
+  const isOwner = items.length > 0 &&  items[0].userId === userId;
   return (
     <div className="mt-3">
       <h3>Item List</h3>
@@ -260,32 +264,32 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="Search..."
         />
-        <OverlayTrigger
+        {isOwner &&  (<OverlayTrigger
           key="item-delete"
           placement="top"
           overlay={<Tooltip>Delete Item(s)</Tooltip>}
         >
-          <Button
+         <Button
             className="btn-light d-flex align-items-center mx-2 p-1"
             onClick={handleDeleteItems}
             disabled={Object.keys(selectedRowIds).length === 0}
           >
             <i className="bi bi-file-x fs-5 text-danger"></i>
           </Button>
-        </OverlayTrigger>
-        <OverlayTrigger
+        </OverlayTrigger>)}
+        {isOwner && (<OverlayTrigger
           key="item-edit"
           placement="top"
           overlay={<Tooltip> Edit Item </Tooltip>}
         >
-          <Button
+         <Button
             className="btn-light p-1 mx-2"
             onClick={handleEditItem}
             disabled={Object.keys(selectedRowIds).length !== 1}
           >
             <i className="bi bi-pencil-square fs-5 border-black"></i>
           </Button>
-        </OverlayTrigger>
+        </OverlayTrigger>)}
         <OverlayTrigger
           key="item-view"
           placement="top"

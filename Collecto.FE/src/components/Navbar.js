@@ -1,15 +1,12 @@
-import React, { useState, useEffect} from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
-import userService from "../services/userService";
-import UserAvatar from "./UserAvatar";
 import { Dropdown } from "react-bootstrap";
+import './components.css'
 
 const Navbar = () => {
   console.log('Navbar');
-  const [userData, setUserData] = useState(null);
-  const [isInitialRender, setIsInitialRender] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
@@ -17,8 +14,6 @@ const Navbar = () => {
 
   const signOut = () => {
     console.log('Navbar sign osut');
-    localStorage.removeItem("jwtToken");
-    sessionStorage.removeItem("userId");
     dispatch(logout());
     navigate("/");
   };
@@ -73,16 +68,19 @@ const Navbar = () => {
           </div>
           <Dropdown>
             <Dropdown.Toggle
-              className="btn border border-1 rounded-pill d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center"
+              className="btn border border-1 rounded-pill d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center custom-toggle"
               variant=""
+              
             >
               {!isLoggedIn ? (
                 <>
+                 <i className="bi bi-list fs-4 px-2 py-0"></i>
                   <i className="bi bi-person-circle fs-3 px-2"></i>
                 </>
               ) : (
                 <>
-                  <i className="bi bi-person-circle fs-3 px-2"></i>
+                 <i className="bi bi-list fs-4 px-2 py-0"></i>
+                  <i className="bi bi-person-check fs-3 px-2 text-success"></i>
                 </>
               )}
             </Dropdown.Toggle>

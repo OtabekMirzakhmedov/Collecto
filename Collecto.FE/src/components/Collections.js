@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Tooltip } from "bootstrap";
-import { useSelector } from "react-redux";
 import CollectionCard from "./CollectionCard";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
@@ -8,7 +7,8 @@ import collectionService from "../services/collectionService";
 
 const Collections = () => {
   const tooltipRef = useRef();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userId = sessionStorage.getItem("userId");
+  const isLoggedIn = !!userId;
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
 

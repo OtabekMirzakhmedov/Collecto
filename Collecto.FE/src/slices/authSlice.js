@@ -12,12 +12,12 @@ const authSlice = createSlice({
     loginSuccess: (state, action) => {
       state.isLoggedIn = true;
       state.token = action.payload.token;
-      localStorage.setItem("jwtToken", action.payload.token); // Store the token in localStorage
+      sessionStorage.setItem("jwtToken", action.payload.token);
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.token = null;
-      localStorage.removeItem("jwtToken"); // Remove the token from localStorage
+      sessionStorage.removeItem("jwtToken");
     },
   },
 });

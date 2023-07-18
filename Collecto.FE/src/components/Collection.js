@@ -24,7 +24,6 @@ const Collection = () => {
   const { collectionId } = useParams();
   const location = useLocation();
   const [collection, setCollection] = useState(null);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleEditCollection = () => {
@@ -52,8 +51,6 @@ const Collection = () => {
       console.error("Error deleting collection:", error);
     }
   };
-
-  const token = localStorage.getItem("jwtToken");
 
   const [show, setShow] = useState(false);
 
@@ -89,13 +86,17 @@ const Collection = () => {
     });
   };
 
+  const token = localStorage.getItem("jwtToken");
+  const userId = sessionStorage.getItem("userId");
+  const isOwner = collection && collection.userId === userId;
+
   if (!collection) {
     return <p>Loading collection...</p>;
   }
   console.log("collection in collection.js", collection);
   return (
     <Container className="mt-2">
-      <Stack direction="horizontal" className="d-flex justify-content-end">
+      {isOwner && (<Stack direction="horizontal" className="d-flex justify-content-end">
         <OverlayTrigger
           key="collection-delete"
           placement="top"
@@ -129,7 +130,7 @@ const Collection = () => {
             <i className="bi bi-plus fs-5 p-0 m-0 "></i>item
           </Button>
         </OverlayTrigger>
-      </Stack>
+      </Stack>)}
       <Row className="d-flex align-items-center border-bottom border-bottom-1  justify-content-between">
         <Col className="d-flex align-items-center">
           <h1>{collection.title}</h1>

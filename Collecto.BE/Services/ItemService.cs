@@ -161,6 +161,8 @@ namespace Collecto.BE.Services
         public async Task<ItemDto> GetItemById(int itemId)
         {
             var item = await _dataContext.Items
+                .Include(i => i.Collection)
+                .ThenInclude(c => c.User)
                 .Include(i => i.Likes)
                 .ThenInclude(l => l.User)
                 .Include(i => i.ItemTags)

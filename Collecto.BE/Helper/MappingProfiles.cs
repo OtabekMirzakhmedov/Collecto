@@ -61,7 +61,9 @@ namespace Collecto.BE.Helper
                 .ForMember(dest => dest.ItemTags, opt => opt.MapFrom(src => src.ItemTags.Select(it => it.Tag.TagName)))
                 .ForMember(dest => dest.NumberOfLikes, opt => opt.MapFrom(src => src.Likes.Count))
                 .ForMember(dest => dest.CustomFieldValues, opt => opt.MapFrom(src => src.CustomFieldValues))
-                .ForMember(dest => dest.LikedUsers, opt => opt.MapFrom(src => src.Likes.Select(l => l.User.Id).ToList()));
+                .ForMember(dest => dest.LikedUsers, opt => opt.MapFrom(src => src.Likes.Select(l => l.User.Id).ToList()))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Collection.User.FullName))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Collection.User.Id));
 
             CreateMap<Comment, CommentDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))

@@ -125,6 +125,9 @@ const Item = () => {
     setShowEditModal(false);
   };
 
+
+  const isOwner = item &&  item.userId === userId;
+
   return (
     <Container>
       <Row className="display-6 d-flex mt-2 justify-content-center">
@@ -133,7 +136,7 @@ const Item = () => {
           className="d-flex justify-content-between align-items-center"
         >
           <div className="d-flex justify-content-start">Item Information</div>
-          <Stack direction="horizontal" gap={3} className="d-flex">
+          {isOwner && (<Stack direction="horizontal" gap={3} className="d-flex">
             <OverlayTrigger
               key="item-view"
               placement="top"
@@ -156,7 +159,7 @@ const Item = () => {
                 <i class="bi bi-pen"></i>
               </Button>
             </OverlayTrigger>
-          </Stack>
+          </Stack>)}
         </Col>
       </Row>
       <Row className="justify-content-center mt-3 ">
