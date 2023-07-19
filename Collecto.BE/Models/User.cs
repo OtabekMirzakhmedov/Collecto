@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Collecto.BE.Models
@@ -16,7 +17,10 @@ namespace Collecto.BE.Models
 
         public ICollection<Like>? Likes { get; set; }
 
-       
+        [Required]
+        public bool IsActive { get; set; }
+
+
 
 
     }

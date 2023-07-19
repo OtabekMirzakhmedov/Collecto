@@ -361,7 +361,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
         placement="end"
       >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Edit Item (ID: {})</Offcanvas.Title>
+          <Offcanvas.Title>{translation.EditItemOffcanvasTitle}</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           {selectedItem && (
@@ -377,38 +377,38 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
 
       <Modal show={showDeleteSingleModal} onHide={handleCancelDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>{translation.ItemDeleteModalConfirmDelete}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            Are you sure you want to <strong>delete</strong> the selected item? This action cannot be undone.
+          {translation.ItemDeleteModalQuestion}
           </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelDelete}>
-            Cancel
+          {translation.ItemDeleteModalCancel}
           </Button>
           <Button variant="danger" onClick={handleConfirmDeleteSingle}>
-            Delete
+          {translation.ItemDeleteModalDelete}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showDeleteMultipleModal} onHide={handleCancelDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>{translation.ItemDeleteModalConfirmDelete}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            Are you sure you want to <strong>delete</strong> the selected items? This action cannot be undone.
+          {translation.ItemDeleteMultipleModalQuestion}
           </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelDelete}>
-            Cancel
+          {translation.ItemDeleteModalCancel}
           </Button>
           <Button variant="danger" onClick={handleConfirmDeleteMultiple}>
-            Delete
+          {translation.ItemDeleteModalDelete}
           </Button>
         </Modal.Footer>
       </Modal>

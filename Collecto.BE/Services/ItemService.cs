@@ -45,6 +45,8 @@ namespace Collecto.BE.Services
         public async Task<ItemDto> EditItem(int itemId, ItemDto updatedItemDto)
         {
             var item = await _dataContext.Items
+                .Include(i => i.Collection)
+                .ThenInclude(i => i.User)
                 .Include(i => i.ItemTags)
                 .ThenInclude(it => it.Tag)
                 .Include(i => i.CustomFieldValues)
@@ -86,7 +88,6 @@ namespace Collecto.BE.Services
             var currentTagNames = item.ItemTags.Select(it => it.Tag.TagName).ToList();
             var tagNamesToRemove = currentTagNames.Except(updatedTagNames).ToList();
             var tagNamesToAdd = updatedTagNames.Except(currentTagNames).ToList();
-
             var itemTagsToRemove = item.ItemTags
                 .Where(it => tagNamesToRemove.Contains(it.Tag.TagName))
                 .ToList();
@@ -114,7 +115,6 @@ namespace Collecto.BE.Services
 
         private void CreateTagsForItem(Item item, IEnumerable<string> tagNames)
         {
-
             foreach (var tagName in tagNames)
             {
                 var tag = _dataContext.Tags.FirstOrDefault(t => t.TagName == tagName);

@@ -156,7 +156,7 @@ const Collection = () => {
 
       <Offcanvas placement="end" show={show} onHide={handleClose} scroll>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Item Creation</Offcanvas.Title>
+          <Offcanvas.Title>{translation.CollectionAddItemOffcanvasTitle}</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <ItemCreation
@@ -170,15 +170,15 @@ const Collection = () => {
 
       <Modal show={showDeleteModal} onHide={hideDeleteConfirmationModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
+          <Modal.Title>{translation.CollectionDeleteModalConfirmation}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Do you want to delete the collection?</Modal.Body>
+        <Modal.Body>{translation.CollectionDeleteModalQuestion}</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={hideDeleteConfirmationModal}>
-            No
+            {translation.CollectionDeleteModalNo}
           </Button>
           <Button variant="danger" onClick={performDelete}>
-            Yes
+            {translation.CollectionDeleteModalYes}
           </Button>
         </Modal.Footer>
       </Modal>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import itemService from "../services/itemService";
 import { useNavigate } from "react-router-dom";
@@ -16,13 +16,14 @@ import {
 } from "react-bootstrap";
 import ItemCreation from "./ItemCreation";
 import Comment from "./Comment";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import translations from "../translations";
+import { setUserIdFromSession } from "../slices/userSlice";
 
 const Item = () => {
   const { collectionId, itemId } = useParams();
   const [item, setItem] = useState(null);
-  const [userId, setUserId] = useState(null);
+  const userId = useSelector((state) => state.user)
   const token = sessionStorage.getItem("jwtToken");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Item = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -46,21 +48,11 @@ const Item = () => {
     fetchItem();
   }, [itemId]);
 
-  useLayoutEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const fetchedUserId = sessionStorage.getItem("userId");
-        setUserId(fetchedUserId);
-      } catch (error) {
-        // Handle error here
-        console.error("Failed to fetch userId:", error);
-      }
-    };
+  useEffect(() => {
+    dispatch(setUserIdFromSession());
+  }, [dispatch]);
 
-    fetchUserId();
-  }, [userId]);
-
-  if (!item) {
+  if ( !item) {
     return <div>Loading...</div>;
   }
 
@@ -141,7 +133,7 @@ const Item = () => {
           className="d-flex justify-content-between align-items-center"
         >
           <div className="d-flex justify-content-start">{translation.ItemInformation}</div>
-          {item && item.userId === userId &&!show && (<Stack direction="horizontal" gap={3} className="d-flex">
+          {item && item.userId === userId && (<Stack direction="horizontal" gap={3} className="d-flex">
             <OverlayTrigger
               key="item-delete"
               placement="top"
@@ -269,7 +261,7 @@ const Item = () => {
       </Row>
       <Offcanvas show={show} onHide={handleClose} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Edit Item </Offcanvas.Title>
+          <Offcanvas.Title>{translation.EditItemOffcanvasTitle}</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <ItemCreation
@@ -283,15 +275,15 @@ const Item = () => {
 
       <Modal show={showDeleteModal} onHide={cancelDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>{translation.ItemDeleteModalConfirmDelete}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this item?</Modal.Body>
+        <Modal.Body>{translation.ItemDeleteModalQuestion}</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={cancelDelete}>
-            Cancel
+            {translation.ItemDeleteModalCancel}
           </Button>
           <Button variant="danger" onClick={confirmDelete}>
-            Delete
+            {translation.ItemDeleteModalDelete}
           </Button>
         </Modal.Footer>
       </Modal>

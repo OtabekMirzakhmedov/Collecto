@@ -66,6 +66,13 @@ const translations ={
             EditTooltip: "Edit collection",
             DeleteToolTip: "Delete Collection",
             AddItemTooltip: "Add Item",
+            ItemCreation: "Item Creation",
+            CollectionDeleteModalConfirmation: "Confirmation",
+            CollectionDeleteModalQuestion:"Do you want to delete the collection?",
+            CollectionDeleteModalYes: "Yes",
+            CollectionDeleteModalNo:"No",
+            CollectionAddItemOffcanvasTitle: "Item Creation"
+
         },
         Item:{
             ItemName: "Item Name",
@@ -87,6 +94,12 @@ const translations ={
             EditItemButton: "Edit Item",
             AddButtonSpinner: "Saving...",
             ItemSearchPlaceholder: "Search..",
+            ItemDeleteModalConfirmDelete: "Confirm Delete",
+            ItemDeleteModalQuestion: "Are you sure you want to delete this item?",
+            ItemDeleteModalDelete: "Delete",
+            ItemDeleteModalCancel: "Cancel",
+            ItemDeleteMultipleModalQuestion: "Are you sure you want to delete these items?",
+            EditItemOffcanvasTitle: "Edit item"
             
         }
     },
@@ -157,6 +170,11 @@ const translations ={
             EditTooltip: "Редактировать коллекцию",
             DeleteTooltip: "Удалить коллекцию",
             AddItemTooltip: "Добавить предмет",
+            CollectionDeleteModalConfirmation: "Подтверждение",
+            CollectionDeleteModalQuestion:"Вы хотите удалить коллекцию?",
+            CollectionDeleteModalYes: "Да",
+            CollectionDeleteModalNo:"Нет",
+            CollectionAddItemOffcanvasTitle: "Добавить предмет"
           },
 
           Item: {
@@ -178,7 +196,13 @@ const translations ={
             AddItemButton: "Добавить предмет",
             EditItemButton: "Редактировать",
             AddButtonSpinner: "Сохранение...",
-            ItemSearchPlaceholder: "искать..."
+            ItemSearchPlaceholder: "искать...",
+            ItemDeleteModalConfirmDelete: "Подтвердить удаление",
+            ItemDeleteModalQuestion: "Вы уверены, что хотите удалить этот элемент?",
+            ItemDeleteModalDelete: "Удалить",
+            ItemDeleteModalCancel: "Отмена",
+            ItemDeleteMultipleModalQuestion: "Вы уверены, что хотите удалить эти элементы?",
+            EditItemOffcanvasTitle: "Редактировать предмет"
 
           }
           

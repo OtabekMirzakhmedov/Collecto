@@ -51,6 +51,11 @@ namespace Collecto.BE.Services
                 throw new Exception("No user found for this email/password");
             }
 
+            if (!user.IsActive)
+            {
+                throw (new Exception("Your Account is blocked"));
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
 
             var jwtToken = GenerateJwtToken(user);
@@ -59,7 +64,8 @@ namespace Collecto.BE.Services
             {
                 UserId = user.Id,
                 FullName = user.FullName,
-                JwtToken = jwtToken
+                JwtToken = jwtToken,
+                UserRole = roles.FirstOrDefault()
             };
 
             _logger.LogInformation(jwtToken.ToString());
@@ -70,6 +76,7 @@ namespace Collecto.BE.Services
         public async Task Register(RegisterDto registerDto)
         {
             var user = _mapper.Map<User>(registerDto);
+            user.IsActive = true;
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (result.Succeeded)
