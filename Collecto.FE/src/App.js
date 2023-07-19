@@ -10,6 +10,7 @@ import CollectionLayout from './layouts/CollectionLayout';
 import EditCollectionLayout from './layouts/EditCollectionLayout';
 import MyCollectionLayout from './layouts/MyCollectionLayout';
 import ItemLayout from './layouts/ItemLayout';
+import AdminDashboardLayout from './layouts/AdminDashboardLayout';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/edit-collection" element={<EditCollectionLayout />} />
         <Route path="/my-collections" element={<MyCollectionLayout/>}/>
         <Route path="/collections/:collectionId/:itemId" element={<ItemLayout/>}/>
+        <Route path="/admin-dashboard" element={<AdminDashboardLayout/>}/>
       </Routes>
       <ToastContainer position="top-center" />
     </Router>

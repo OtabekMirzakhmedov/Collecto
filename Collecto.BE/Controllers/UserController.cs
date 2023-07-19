@@ -51,6 +51,14 @@ namespace Collecto.BE.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            return Ok(await _userService.GetAllUsers());
+
+        }
+
 
     }
 }

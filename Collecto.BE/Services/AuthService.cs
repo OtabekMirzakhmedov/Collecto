@@ -90,20 +90,23 @@ namespace Collecto.BE.Services
             }
         }
 
-        private string GenerateJwtToken(User user) 
+        private string GenerateJwtToken(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration.GetSection("JwtConfig:Secret").Value);
+
+            var roles = _userManager.GetRolesAsync(user).Result;
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("Id", user.Id),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
-                }),
+            new Claim("Id", user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
+            new Claim(ClaimTypes.Role, roles.FirstOrDefault())
+        }),
                 Expires = DateTime.Now.AddHours(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
@@ -113,5 +116,6 @@ namespace Collecto.BE.Services
 
             return jwtToken;
         }
+
     }
 }

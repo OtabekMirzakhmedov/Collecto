@@ -15,8 +15,7 @@ const Navbar = () => {
   const fullName = sessionStorage.getItem("fullName");
   const isLoggedIn = !!userId;
   const language = useSelector((state) => state.language.language);
-
-  
+  const isAdmin = sessionStorage.getItem("role") === "Admin";
 
   const signOut = () => {
     console.log("Navbar sign osut");
@@ -42,6 +41,10 @@ const Navbar = () => {
 
   const handleCollectionsClick = () => {
     navigate("/my-collections");
+  };
+
+  const handleAdminClick = () => {
+    navigate("/admin-dashboard");
   };
 
   const handleLanguageChange = (selectedLanguage) => {
@@ -108,6 +111,7 @@ const Navbar = () => {
               )}
             </Dropdown.Toggle>
             <Dropdown.Menu>
+            
               {!isLoggedIn && (
                 <Dropdown.Item onClick={handleLoginClick}>
                   {translation.LogIn}
@@ -121,6 +125,13 @@ const Navbar = () => {
               {isLoggedIn && (
                 <Dropdown.Item onClick={handleProfileClick}>
                   {fullName}
+                </Dropdown.Item>
+                
+              )}
+              <Dropdown.Divider/>
+              {isAdmin && (
+                <Dropdown.Item onClick={handleAdminClick}>
+                  {translation.Admin}
                 </Dropdown.Item>
               )}
               {isLoggedIn && (

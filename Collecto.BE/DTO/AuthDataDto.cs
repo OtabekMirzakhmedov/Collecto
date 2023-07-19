@@ -9,5 +9,6 @@
         public string FullName { get; set; }
 
         public string UserRole { get; set; }
+
     }
 }

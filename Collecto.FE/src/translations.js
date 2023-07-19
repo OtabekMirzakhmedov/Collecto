@@ -5,7 +5,8 @@ const translations ={
             Collections: "Collections",
             LogIn: "Log in",
             SignUp: "Sign up",
-            SignOut: "Sign Out"
+            SignOut: "Sign Out",
+            Admin: "Admin dashboard"
         },
         Collections:{
             CreateButton:"Collection",
@@ -109,7 +110,8 @@ const translations ={
             Collections: "Коллекции",
             LogIn: "Войти",
             SignUp: "Зарегистрироваться",
-            SignOut: "Выйти"
+            SignOut: "Выйти",
+            Admin: "Панель администратора"
         },
         
         Collections:{

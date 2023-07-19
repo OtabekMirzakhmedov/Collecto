@@ -61,8 +61,6 @@ namespace Collecto.BE.Data
                 .HasForeignKey(cf => cf.CollectionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            
-
             modelBuilder.Entity<IdentityRole>()
                 .HasData(new IdentityRole { Name = "User", NormalizedName = "USER" },
                         new IdentityRole { Id = Admin_Role_Id,Name = "Admin", NormalizedName = "ADMIN" });
