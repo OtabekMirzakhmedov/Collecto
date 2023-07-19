@@ -30,7 +30,10 @@ const Collection = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const language = useSelector((state) => state.language.language);
   const translation = translations[language]["Collection"];
-
+  const token = sessionStorage.getItem("jwtToken");
+  const userId = sessionStorage.getItem("userId");
+  const isOwner = collection && collection.userId === userId;
+  const isAdmin = sessionStorage.getItem("role") === "Admin";
   const handleEditCollection = () => {
     navigate("/edit-collection", { state: { collection } });
   };
@@ -90,9 +93,7 @@ const Collection = () => {
     });
   };
 
-  const token = localStorage.getItem("jwtToken");
-  const userId = sessionStorage.getItem("userId");
-  const isOwner = collection && collection.userId === userId;
+ 
 
   if (!collection) {
     return <p>Loading collection...</p>;
@@ -100,7 +101,7 @@ const Collection = () => {
   console.log("collection in collection.js", collection);
   return (
     <Container className="mt-2">
-      {isOwner && (<Stack direction="horizontal" className="d-flex justify-content-end">
+      {(isOwner || isAdmin) && (<Stack direction="horizontal" className="d-flex justify-content-end">
         <OverlayTrigger
           key="collection-delete"
           placement="top"

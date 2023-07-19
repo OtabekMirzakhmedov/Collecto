@@ -33,6 +33,8 @@ const Item = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const dispatch = useDispatch();
+  const isAdmin = sessionStorage.getItem("role") === "Admin";
+  const isOwner = item && item.userId === userId; 
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -133,7 +135,7 @@ const Item = () => {
           className="d-flex justify-content-between align-items-center"
         >
           <div className="d-flex justify-content-start">{translation.ItemInformation}</div>
-          {item && item.userId === userId && (<Stack direction="horizontal" gap={3} className="d-flex">
+          {(isAdmin || isOwner) && (<Stack direction="horizontal" gap={3} className="d-flex">
             <OverlayTrigger
               key="item-delete"
               placement="top"

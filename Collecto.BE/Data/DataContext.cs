@@ -32,6 +32,8 @@ namespace Collecto.BE.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            string Admin_User_Id = Guid.NewGuid().ToString();
+            string Admin_Role_Id = Guid.NewGuid().ToString();
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ItemTag>()
@@ -59,9 +61,11 @@ namespace Collecto.BE.Data
                 .HasForeignKey(cf => cf.CollectionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            
+
             modelBuilder.Entity<IdentityRole>()
                 .HasData(new IdentityRole { Name = "User", NormalizedName = "USER" },
-                        new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
+                        new IdentityRole { Id = Admin_Role_Id,Name = "Admin", NormalizedName = "ADMIN" });
             
             modelBuilder.Entity<Collection>()
                 .HasOne(c => c.Topic)
@@ -87,6 +91,30 @@ namespace Collecto.BE.Data
                 .HasMany(i => i.Likes)
                 .WithOne(i => i.Item)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            var AdminUser = new User
+            {
+                Id = Admin_User_Id,
+                FullName = "Otabek Mirzakmedov",
+                Email = "admin@collecto.com",
+                UserName = "admin@collecto.com",
+                IsActive = true,
+                NormalizedEmail = "ADMIN@COLLECTO.COM",
+                NormalizedUserName = "ADMIN@COLLECTO.COM",
+            };
+
+            PasswordHasher<User> ph = new PasswordHasher<User>();
+
+            AdminUser.PasswordHash = ph.HashPassword(AdminUser, "111111");
+
+            modelBuilder.Entity<User>()
+                .HasData(AdminUser);
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = Admin_Role_Id,
+                UserId = Admin_User_Id
+            });
         }  
     }
 }

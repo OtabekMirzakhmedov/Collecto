@@ -38,6 +38,8 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
   const dispatch = useDispatch();
   const language = useSelector((state) => state.language.language);
   const translation = translations[language]["Item"];
+  const isAdmin = sessionStorage.getItem("role") === "Admin";
+
 
   useEffect(() => {
     setItems(itemsfromcollection);
@@ -268,7 +270,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder={translation.ItemSearchPlaceholder}
         />
-        {isOwner &&  (<OverlayTrigger
+        {(isOwner || isAdmin) &&  (<OverlayTrigger
           key="item-delete"
           placement="top"
           overlay={<Tooltip>{translation.DeleteItemTooltip}</Tooltip>}
@@ -281,7 +283,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
             <i className="bi bi-file-x fs-5 text-danger"></i>
           </Button>
         </OverlayTrigger>)}
-        {isOwner && (<OverlayTrigger
+        {(isOwner || isAdmin)&& (<OverlayTrigger
           key="item-edit"
           placement="top"
           overlay={<Tooltip> {translation.EditItemTooltip}</Tooltip>}

@@ -25,6 +25,7 @@ const LoginPage = () => {
       const response  = await authService.login(data);
       sessionStorage.setItem("userId", response.data.userId);
       sessionStorage.setItem("fullName", response.data.fullName);
+      sessionStorage.setItem("role", response.data.userRole);
       dispatch(loginSuccess({ token: response.data.jwtToken }));
       navigate("/");
     } catch (error) {
