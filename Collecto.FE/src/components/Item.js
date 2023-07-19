@@ -16,6 +16,8 @@ import {
 } from "react-bootstrap";
 import ItemCreation from "./ItemCreation";
 import Comment from "./Comment";
+import { useSelector } from "react-redux";
+import translations from "../translations";
 
 const Item = () => {
   const { collectionId, itemId } = useParams();
@@ -24,8 +26,9 @@ const Item = () => {
   const token = sessionStorage.getItem("jwtToken");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["Item"];
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -36,7 +39,6 @@ const Item = () => {
         console.log(itemData);
         setItem(itemData);
       } catch (error) {
-        // Handle error here
         console.error("Failed to fetch item:", error);
       }
     };
@@ -73,7 +75,6 @@ const Item = () => {
       navigate(`/collections/${collectionId}`);
     } catch (error) {
       console.error("Failed to delete item:", error);
-      // Handle deletion error as needed
     }
     setShowDeleteModal(false);
   };
@@ -89,7 +90,6 @@ const Item = () => {
   const handleLike = async () => {
     try {
       await itemService.likeItem(itemId, userId, token);
-      console.log("Item liked");
       setItem((prevItem) => ({
         ...prevItem,
         numberOfLikes: prevItem.numberOfLikes + 1,
@@ -103,7 +103,6 @@ const Item = () => {
   const handleUnlike = async () => {
     try {
       await itemService.unlikeItem(itemId, userId, token);
-      console.log("Item unliked");
       setItem((prevItem) => ({
         ...prevItem,
         numberOfLikes: prevItem.numberOfLikes - 1,
@@ -141,12 +140,12 @@ const Item = () => {
           lg={9}
           className="d-flex justify-content-between align-items-center"
         >
-          <div className="d-flex justify-content-start">Item Information</div>
+          <div className="d-flex justify-content-start">{translation.ItemInformation}</div>
           {item && item.userId === userId &&!show && (<Stack direction="horizontal" gap={3} className="d-flex">
             <OverlayTrigger
               key="item-delete"
               placement="top"
-              overlay={<Tooltip>Delete Item</Tooltip>}
+              overlay={<Tooltip>{translation.DeleteItemTooltip}</Tooltip>}
             >
               <Button
                 variant="light"
@@ -159,7 +158,7 @@ const Item = () => {
            <OverlayTrigger
               key="item-edit"
               placement="top"
-              overlay={<Tooltip>Edit item</Tooltip>}
+              overlay={<Tooltip>{translation.EditItemTooltip}</Tooltip>}
             >
               <Button variant="light" className="p-0 fs-5" onClick={handleShow}>
                 <i className="bi bi-pen"></i>
@@ -176,7 +175,7 @@ const Item = () => {
           xs={3}
           className="justify-content-start border border-start-0 border-end-0 py-3"
         >
-          <span className="fw-medium">Item Name</span>
+          <span className="fw-medium">{translation.ItemName}</span>
         </Col>
         <Col
           lg={6}
@@ -196,7 +195,7 @@ const Item = () => {
           xs={3}
           className="justify-content-start border border-start-0 border-top-0 border-end-0 py-3"
         >
-          <span className="fw-medium">Tags</span>
+          <span className="fw-medium">{translation.Tags}</span>
         </Col>
         <Col
           lg={6}

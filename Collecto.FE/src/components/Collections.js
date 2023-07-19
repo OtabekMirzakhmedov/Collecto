@@ -4,6 +4,9 @@ import CollectionCard from "./CollectionCard";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import collectionService from "../services/collectionService";
+import translations from "../translations";
+import { useSelector } from "react-redux";
+
 
 const Collections = () => {
   const tooltipRef = useRef();
@@ -11,6 +14,14 @@ const Collections = () => {
   const isLoggedIn = !!userId;
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
+  const language = useSelector((state) => state.language.language);
+
+ 
+ 
+
+  console.log('collection ',language);
+  const translation = translations[language]["Collections"];
+  console.log(translation);
 
   useEffect(() => {
     const fetchCollections = async () => {
@@ -28,7 +39,7 @@ const Collections = () => {
   useEffect(() => {
     if (isLoggedIn) {
       const tooltip = new Tooltip(tooltipRef.current, {
-        title: "Create your collection!",
+        title: translation.CreateButtonTooltip,
         placement: "top",
         trigger: "hover",
       });
@@ -54,7 +65,7 @@ const Collections = () => {
           ref={tooltipRef}
           className="btn btn-success rounded-pill position-fixed z-1 start-50 bottom-0 mb-5 fs-5 shadow-lg"
         >
-          <i className="bi bi-plus-circle"></i> Collection
+          <i className="bi bi-plus-circle"></i> {translation.CreateButton}
         </button>
       )}
     </Container>

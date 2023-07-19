@@ -4,14 +4,19 @@ import CreatableSelect from "react-select/creatable";
 import itemService from "../services/itemService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import translations from "../translations";
 
 const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEditItem, onCreateItem }) => {
   const { register, handleSubmit, setValue } = useForm();
   const [tagOptions, setTagOptions] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [isAddingItem, setIsAddingItem] = useState(false);
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["Item"];
 
   const token = localStorage.getItem("jwtToken");
+  const isEditing = !!selectedItem;
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -114,11 +119,9 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEdi
 
   return (
     <div>
-      <h1>Item Creation</h1>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
-          <label className="form-label">Item Name</label>
+          <label className="form-label">{translation.ItemName}</label>
           <input
             type="text"
             className="form-control"
@@ -127,7 +130,7 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEdi
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Tags</label>
+          <label className="form-label">{translation.Tags}</label>
           <CreatableSelect
             isMulti
             options={tagOptions}
@@ -207,9 +210,11 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEdi
             )}
           </div>
         ))}
+    
         <button type="submit" className="btn btn-primary" disabled={isAddingItem}>
-          {isAddingItem ? "Saving..." : "Save Item"}
+          {isAddingItem ? translation.AddButtonSpinner : isEditing ? translation.EditItemButton : translation.AddItemButton}
         </button>
+  
       </form>
     </div>
   );

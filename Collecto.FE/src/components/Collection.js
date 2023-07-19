@@ -18,6 +18,9 @@ import ItemCreation from "./ItemCreation";
 import ItemTable from "./ItemTable";
 import { Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import translations from "../translations";
+
+
 
 const Collection = () => {
   const navigate = useNavigate();
@@ -25,6 +28,8 @@ const Collection = () => {
   const location = useLocation();
   const [collection, setCollection] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["Collection"];
 
   const handleEditCollection = () => {
     navigate("/edit-collection", { state: { collection } });
@@ -58,7 +63,6 @@ const Collection = () => {
   const handleShow = () => setShow(true);
 
   const collectionFromRedux = useSelector((state) => state.collection);
-  console.log("collection from redux ", collectionFromRedux);
 
   useEffect(() => {
     if (collectionFromRedux) {
@@ -100,7 +104,7 @@ const Collection = () => {
         <OverlayTrigger
           key="collection-delete"
           placement="top"
-          overlay={<Tooltip> Delete collection </Tooltip>}
+          overlay={<Tooltip> {translation.DeleteTooltip}</Tooltip>}
         >
           <Button
             className="btn-light d-flex align-items-center mx-2 p-1"
@@ -112,7 +116,7 @@ const Collection = () => {
         <OverlayTrigger
           key="collection-edit"
           placement="top"
-          overlay={<Tooltip> Edit collection </Tooltip>}
+          overlay={<Tooltip> {translation.EditTooltip}</Tooltip>}
         >
           <Button className="btn-light p-1" onClick={handleEditCollection}>
             <i className="bi bi-pencil fs-5 border-black"></i>
@@ -121,13 +125,13 @@ const Collection = () => {
         <OverlayTrigger
           key="item-edit"
           placement="top"
-          overlay={<Tooltip> Add Item </Tooltip>}
+          overlay={<Tooltip> {translation.AddItemTooltip}</Tooltip>}
         >
           <Button
             className="btn-primary m-0 p-0 align-center mx-2"
             onClick={handleShow}
           >
-            <i className="bi bi-plus fs-5 p-0 m-0 "></i>item
+            <i className="bi bi-plus fs-5 p-0 m-0 "></i>{translation.Item}
           </Button>
         </OverlayTrigger>
       </Stack>)}
@@ -140,7 +144,7 @@ const Collection = () => {
         </Col>
       </Row>
       <Row className="border rounded-2 mt-2 p-2">
-        <Col className="fs-6 fw-bold">Description</Col>
+        <Col className="fs-6 fw-bold">{translation.Description}</Col>
         <ReactMarkdown className="p-2">{collection.description}</ReactMarkdown>
       </Row>
 

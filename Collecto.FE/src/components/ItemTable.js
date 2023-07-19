@@ -23,7 +23,9 @@ import "react-toastify/dist/ReactToastify.css";
 import itemService from "../services/itemService";
 import ItemCreation from "./ItemCreation";
 import { useDispatch } from "react-redux";
-import {setItem} from "../slices/itemSlice"
+import {setItem} from "../slices/itemSlice";
+import { useSelector } from "react-redux";
+import translations from "../translations";
 
 const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
 
@@ -34,6 +36,8 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
   const [showDeleteMultipleModal, setShowDeleteMultipleModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["Item"];
 
   useEffect(() => {
     setItems(itemsfromcollection);
@@ -60,16 +64,16 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
         ),
       },
       {
-        Header: "Item Name",
+        Header: translation.ItemName,
         accessor: "name",
       },
       {
-        Header: "Tags",
+        Header: translation.Tags,
         accessor: "itemTags",
         Cell: ({ value }) => value.join(", "),
       },
       {
-        Header: "Created Time",
+        Header: translation.CreatedTime,
         accessor: "createdAt",
         Cell: ({ value }) => {
           const date = new Date(value);
@@ -78,7 +82,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
         },
       },
       {
-        Header: "Likes",
+        Header: translation.Likes,
         accessor: "numberOfLikes",
         Cell: ({ value }) => (
           <Badge bg="primary" pill>
@@ -243,7 +247,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
   const isOwner = items.length > 0 &&  items[0].userId === userId;
   return (
     <div className="mt-3">
-      <h3>Item List</h3>
+      <h3>{translation.ItemList}</h3>
 
       {allColumns.slice(2).map((column) => (
         <div className="form-check-inline fs-6 mb-2">
@@ -262,12 +266,12 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
           type="text"
           value={globalFilter || ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          placeholder="Search..."
+          placeholder={translation.ItemSearchPlaceholder}
         />
         {isOwner &&  (<OverlayTrigger
           key="item-delete"
           placement="top"
-          overlay={<Tooltip>Delete Item(s)</Tooltip>}
+          overlay={<Tooltip>{translation.DeleteItemTooltip}</Tooltip>}
         >
          <Button
             className="btn-light d-flex align-items-center mx-2 p-1"
@@ -280,7 +284,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
         {isOwner && (<OverlayTrigger
           key="item-edit"
           placement="top"
-          overlay={<Tooltip> Edit Item </Tooltip>}
+          overlay={<Tooltip> {translation.EditItemTooltip}</Tooltip>}
         >
          <Button
             className="btn-light p-1 mx-2"
@@ -293,7 +297,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
         <OverlayTrigger
           key="item-view"
           placement="top"
-          overlay={<Tooltip> View item</Tooltip>}
+          overlay={<Tooltip>{translation.ViewItemTooltip}</Tooltip>}
         >
           <Button
             className="btn-light p-1"

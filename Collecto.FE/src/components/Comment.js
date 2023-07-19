@@ -11,13 +11,18 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
+import { ru } from 'date-fns/locale';
 import Pusher from "pusher-js";
 import API_BASE_URL from "../apiConfig";
+import { useSelector } from "react-redux";
+import translations from "../translations";
 
 const Comment = ({ userId, itemId }) => {
   const [content, setContent] = useState("");
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["Item"];
 
   useEffect(() => {
     const pusher = new Pusher("c6ee54717f876c338b30", {
@@ -43,6 +48,13 @@ const Comment = ({ userId, itemId }) => {
       pusher.disconnect();
     };
   }, [itemId]);
+
+  const formatDistance = (date, language) => {
+    if (language === "ru") {
+      return formatDistanceToNow(new Date(date), { addSuffix: true, addPrefix: false, locale: ru });
+    }
+    return formatDistanceToNow(new Date(date), { addSuffix: true, addPrefix: false });
+  };
 
   const fetchComments = async () => {
     try {
@@ -90,21 +102,21 @@ const Comment = ({ userId, itemId }) => {
   return (
     <Container className="mt-5">
       <p>{userId}</p>
-      <Row>
-        <Col xs={9}>
+      <Row className="pe-3">
+        <Col xs={12}>
           <Form onSubmit={handleCommentSubmit}>
             <Form.Group controlId="commentTextArea">
               <Form.Control
                 as="textarea"
                 rows={1}
-                placeholder="Enter your comment"
+                placeholder={translation.CommentPlaceholder}
                 value={content}
                 onChange={handleCommentChange}
               />
             </Form.Group>
           </Form>
         </Col>
-        <Col xs={3}>
+        <Col xs={5} className="mt-1 mb-3">
           <Button
             variant="primary"
             type="submit"
@@ -120,10 +132,10 @@ const Comment = ({ userId, itemId }) => {
                   role="status"
                   aria-hidden="true"
                 />
-                <span className="sr-only">Sending...</span>
+                <span className="sr-only">{translation.CommentButtonSpinner}</span>
               </>
             ) : (
-              "Comment"
+              translation.CommentButton
             )}
           </Button>
         </Col>
@@ -133,7 +145,7 @@ const Comment = ({ userId, itemId }) => {
           <Card key={comment.commentId} className="mt-2">
             <Stack direction="horizontal" className="p-2">
               <small className="fw-bold me-2">{comment.fullName}</small>
-              <small className="text-muted">{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, addPrefix: false })}</small>
+              <small className="text-muted">{formatDistance(new Date(comment.createdAt), language)}</small>
             </Stack>
             <Card.Text className="p-2">
               {comment.content}

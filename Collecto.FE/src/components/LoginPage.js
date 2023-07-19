@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginSuccess } from "../slices/authSlice";
 import authService from "../services/authService";
+import translations from "../translations";
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["LoginSignupPage"];
   const {
     register,
     handleSubmit,
@@ -19,14 +21,12 @@ const LoginPage = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    console.log('I am here on submit')
     try {
       const response  = await authService.login(data);
-      console.log('after', response);
       sessionStorage.setItem("userId", response.data.userId);
       sessionStorage.setItem("fullName", response.data.fullName);
       dispatch(loginSuccess({ token: response.data.jwtToken }));
-      navigate("/"); // Redirect to the home page after successful login
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.data) {
         const loginError = error.response.data;
@@ -38,7 +38,6 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="container">
@@ -53,7 +52,7 @@ const LoginPage = () => {
 
       <div className="d-flex justify-content-around mt-5">
         <div className="m-auto col-lg-4 col-md-6 col-sm-8 col-11 ">
-          <h1 className="text-bold text-center mb-5">Log in</h1>
+          <h1 className="text-bold text-center mb-5">{translation.LogInHeader}</h1>
         
           <form onSubmit={handleSubmit(onSubmit)}>
           {errorMessage && (
@@ -67,16 +66,16 @@ const LoginPage = () => {
                 }`}
                 id="floatingInput"
                 type="email"
-                placeholder="Enter your Email"
+                placeholder={translation.Email}
                 {...register("email", {
-                  required: "Email is required",
+                  required: translation.EmailRequired,
                   pattern: {
                     value: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/,
-                    message: "Invalid email address",
+                    message: translation.EmailInvalid,
                   },
                 })}
               />
-              <label htmlFor="floatingInput">Email</label>
+              <label htmlFor="floatingInput">{translation.Email}</label>
               {errors.email && (
                 <div className="invalid-feedback p-0">
                   {errors.email.message}
@@ -90,54 +89,45 @@ const LoginPage = () => {
                 }`}
                 type="password"
                 id="floatingPassword"
-                placeholder="Password"
+                placeholder = {translation.Password}
                 {...register("password", {
-                  required: "Password is required",
+                  required: translation.PasswordRequired,
                   minLength: {
                     value: 6,
-                    message: "Password should be at least 6 characters long",
+                    message: translation.PasswordRequirement,
                   },
                 })}
               />
-              <label htmlFor="floatingPassword">Password</label>
+              <label htmlFor="floatingPassword">{translation.Password}</label>
               {errors.password && (
                 <div className="invalid-feedback">
                   {errors.password.message}
                 </div>
               )}
             </div>
-            <div className="form-check my-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="flexCheckChecked"
-              />
-              <label className="form-check-label" htmlFor="flexCheckChecked">
-                Remember me
-              </label>
-            </div>
+            
             <button
               type="submit"
-              className="btn btn-primary w-100 mb-2"
-              disabled={isLoading} // Disable the button when isLoading is true
+              className="btn btn-primary w-100 mb-2 mt-2"
+              disabled={isLoading} 
             >
-              {isLoading ? ( // Render the spinner when isLoading is true
+              {isLoading ? (
                 <>
                   <span
                     className="spinner-border spinner-border-sm"
                     role="status"
                     aria-hidden="true"
-                  ></span>{" "}
-                  Signing in...
+                  ></span>
+                  {translation.LoginButtonSpinner}
                 </>
               ) : (
-                "Sign In" 
+                translation.LogInButton
               )}
             </button>
 
             <div className="center">
-              <span className="m-0 p-0">No account yet?</span>
-              <button className="btn btn-link m-0" onClick={() => navigate('/signup')} >Sign Up</button>
+              <span className="m-0 p-0">{translation.NoAccount}</span>
+              <button className="btn btn-link m-0" onClick={() => navigate('/signup')} >{translation.SignUpLink}</button>
             </div>
           </form>
         </div>

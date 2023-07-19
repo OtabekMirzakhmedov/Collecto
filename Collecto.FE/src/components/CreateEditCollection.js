@@ -8,6 +8,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import makeAnimated from "react-select/animated";
 import collectionService from "../services/collectionService";
+import { useSelector } from "react-redux";
+import translations from "../translations";
+
 import "./components.css";
 
 const animatedComponents = makeAnimated();
@@ -19,6 +22,8 @@ const CreateEditCollection = ({ collection }) => {
   const [title, setTitle] = useState("");
   const [topic, setTopic] = useState(null);
   const [description, setDescription] = useState("");
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["Collection"];
 
   const navigate = useNavigate();
 
@@ -43,19 +48,19 @@ const CreateEditCollection = ({ collection }) => {
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error("Title is required");
+      toast.error(translation.TitleRequired);
       return;
     }
     if (!topic) {
-      toast.error("Topic is required");
+      toast.error(translation.TopicRequired);
       return;
     }
     if (!description.trim()) {
-      toast.error("Description is required");
+      toast.error(translation.DescriptionRequired);
       return;
     }
     if (customFields.some((field) => !field.fieldName || !field.fieldType)) {
-      toast.error("All custom fields are required");
+      toast.error(translation.CustomFieldRequired);
       return;
     }
     const fieldNames = customFields.map((field) => field.fieldName);
@@ -138,17 +143,17 @@ const CreateEditCollection = ({ collection }) => {
         onSubmit={onSubmit}
       >
         <div className="display-6 text-center mb-5 ">
-          {collection ? "Edit Collection" : "Create Collection"}
+          {collection ? translation.EditCollection : translation.CreateCollection}
         </div>
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1 mt-2">
-            Title
+            {translation.Title}
           </div>
           <div className="col-8 p-0">
             <input
               type="text"
               className="border-0 w-100 p-1  collection-input"
-              placeholder="Empty"
+              placeholder={translation.Empty}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -157,7 +162,7 @@ const CreateEditCollection = ({ collection }) => {
 
         <div className="row border-top">
           <div className="col-4 text-secondary border-end fs-6 fw-medium p-1">
-            Topic
+            {translation.Topic}
           </div>
           <div className="col-8 p-0">
             <CreatableSelect
@@ -166,7 +171,7 @@ const CreateEditCollection = ({ collection }) => {
               isSearchable
               value={topic}
               onChange={(selectedOption) => setTopic(selectedOption)}
-              placeholder="Empty"
+              placeholder={translation.Empty}
               components={animatedComponents}
               options={options}
             />
@@ -175,20 +180,20 @@ const CreateEditCollection = ({ collection }) => {
 
         <div className="row border-top">
           <div className="col-12 text-secondary  fs-6 fw-medium p-1">
-            Description
+            {translation.Description}
           </div>
         </div>
         <div className="col-12">
           <Tabs>
             <TabList>
-              <Tab>Edit</Tab>
-              <Tab>md Preview</Tab>
+              <Tab>{translation.EditTab}</Tab>
+              <Tab>{translation.PreviewTab}</Tab>
             </TabList>
 
             <TabPanel>
               <textarea
                 className="border-0 w-100 p-1 collection-input"
-                placeholder="Supports Markdown"
+                placeholder={translation.SupportsMarkdown}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -206,7 +211,7 @@ const CreateEditCollection = ({ collection }) => {
               <input
                 type="text"
                 className="w-100 border-0 p-2 collection-input"
-                placeholder="Property Name..."
+                placeholder={translation.PropertyName}
                 value={field.fieldName}
                 onChange={(e) => {
                   const updatedFields = [...customFields];
@@ -226,12 +231,12 @@ const CreateEditCollection = ({ collection }) => {
                   setCustomFields(updatedFields);
                 }}
               >
-                <option value="">Select property type</option>
-                <option value="Number">Number</option>
-                <option value="Date">Date</option>
-                <option value="SingleLineText">Single line Text</option>
-                <option value="MultiLineText">Multi line Text</option>
-                <option value="Checkbox">Checkbox</option>
+                <option value="">{translation.SelectPropertyType}</option>
+                <option value="Number">{translation.NumberType}</option>
+                <option value="Date">{translation.DateType}</option>
+                <option value="SingleLineText">{translation.SingleLineText}</option>
+                <option value="MultiLineText">{translation.MultiLineText}</option>
+                <option value="Checkbox">{translation.Checkbox}</option>
               </select>
 
               <i
@@ -249,7 +254,7 @@ const CreateEditCollection = ({ collection }) => {
             onClick={handleAddProperty}
           >
             <i className="bi bi-plus-lg me-1"></i>
-            Add Property
+            {translation.AddProperty}
           </button>
         </div>
 
@@ -267,13 +272,13 @@ const CreateEditCollection = ({ collection }) => {
                   aria-hidden="true"
                 ></span>
                 <span className="ms-2">
-                  {collection ? "Updating..." : "Creating..."}
+                  {collection ? translation.UpdateButtonSpinner : translation.CreateButtonSpinner}
                 </span>
               </>
             ) : collection ? (
-              "Update"
+              translation.UpdateButton
             ) : (
-              "Create"
+              translation.CreateButton
             )}
           </button>
         </div>

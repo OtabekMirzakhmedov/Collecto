@@ -3,11 +3,18 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import authService from "../services/authService";
 import {  ToastContainer, toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import translations from "../translations";
+
 import "react-toastify/dist/ReactToastify.css";
 import './components.css'
 
+
 const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const language = useSelector((state) => state.language.language);
+  const translation = translations[language]["LoginSignupPage"];
+
   const {
     register,
     handleSubmit,
@@ -24,7 +31,7 @@ const SignupPage = () => {
       const { confirmPassword, ...signupData } = data;
       const response = await authService.signup(signupData);
       console.log(response);
-      toast.success(`Registration successful!You may now login`);
+      toast.success(`${translation.RegistrationSuccess}`);
       reset();
       navigate("/login");
     } catch (error) {
@@ -62,7 +69,7 @@ const SignupPage = () => {
 
         <div className="d-flex justify-content-around mt-5">
           <div className="m-auto col-lg-4 col-md-6 col-sm-8 col-11 mb-5">
-            <h1 className="text-bold text-center">Sign Up</h1>
+            <h1 className="text-bold text-center mb-5">{translation.SignUpHeader}</h1>
            
             {isLoading && (
               <div className="card border-0 position-absolute start-50 top-50 z-2">
@@ -80,12 +87,12 @@ const SignupPage = () => {
                   }`}
                   id="fullName"
                   type="text"
-                  placeholder="Enter your Full Name"
+                  placeholder={translation.FullName}
                   {...register("fullName", {
-                    required: "Full Name is required",
+                    required: translation.FullNameRequired,
                   })}
                 />
-                <label htmlFor="fullName">Full Name</label>
+                <label htmlFor="fullName">{translation.FullName}</label>
                 {errors.fullName && (
                   <div className="invalid-feedback">
                     {errors.fullName.message}
@@ -100,16 +107,16 @@ const SignupPage = () => {
                   }`}
                   id="email"
                   type="email"
-                  placeholder="Enter your Email"
+                  placeholder= {translation.Email}
                   {...register("email", {
-                    required: "Email is required",
+                    required: translation.EmailRequired,
                     pattern: {
                       value: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/,
-                      message: "Invalid email address",
+                      message: translation.EmailInvalid,
                     },
                   })}
                 />
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">{translation.Email}</label>
                 {errors.email && (
                   <div className="invalid-feedback">{errors.email.message}</div>
                 )}
@@ -122,16 +129,16 @@ const SignupPage = () => {
                   }`}
                   type="password"
                   id="password"
-                  placeholder="Password"
+                  placeholder={translation.Password}
                   {...register("password", {
-                    required: "Password is required",
+                    required: translation.PasswordRequired,
                     minLength: {
                       value: 6,
-                      message: "Password should be at least 6 characters long",
+                      message: translation.PasswordRequirement,
                     },
                   })}
                 />
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">{translation.Password}</label>
                 {errors.password && (
                   <div className="invalid-feedback">
                     {errors.password.message}
@@ -146,15 +153,15 @@ const SignupPage = () => {
                   }`}
                   type="password"
                   id="confirmPassword"
-                  placeholder="Confirm Password"
+                  placeholder={translation.ConfirmPassword}
                   {...register("confirmPassword", {
-                    required: "Confirm Password is required",
+                    required: translation.ConfirmPasswordRequired,
                     validate: (value) =>
                       value === getValues("password") ||
-                      "Passwords do not match",
+                      translation.PasswordNoMatch,
                   })}
                 />
-                <label htmlFor="confirmPassword">Confirm Password</label>
+                <label htmlFor="confirmPassword">{translation.ConfirmPassword}</label>
                 {errors.confirmPassword && (
                   <div className="invalid-feedback">
                     {errors.confirmPassword.message}
@@ -163,12 +170,12 @@ const SignupPage = () => {
               </div>
 
               <button type="submit" className="btn btn-success rounded-0 w-100 mb-3">
-                Sign up
+                {translation.SignUpButton}
               </button>
 
               <div className="align-content-baseline" >
-              <span className="m-0 p-0">Already have an account?</span>
-              <button className="btn btn-link m-0 p-1" onClick={() => navigate('/login')}>Log In</button>
+              <span className="m-0 p-0">{translation.YesAccount}</span>
+              <button className="btn btn-link m-0 p-1" onClick={() => navigate('/login')}>{translation.LogInButton}</button>
             </div>
 
             </form>

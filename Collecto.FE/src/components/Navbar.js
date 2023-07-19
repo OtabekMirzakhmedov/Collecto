@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { Dropdown,Stack} from "react-bootstrap";
+import { Dropdown ,Stack} from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { setLanguage } from "../slices/languageSlice";
 import "./components.css";
 import translations from "../translations";
 
@@ -13,9 +14,10 @@ const Navbar = () => {
   const userId = sessionStorage.getItem("userId");
   const fullName = sessionStorage.getItem("fullName");
   const isLoggedIn = !!userId;
-  const [language, setLanguage] = useState(
-    sessionStorage.getItem("language") || "en"
-  );
+  const language = useSelector((state) => state.language.language);
+
+  
+
   const signOut = () => {
     console.log("Navbar sign osut");
     sessionStorage.removeItem("userId");
@@ -23,17 +25,10 @@ const Navbar = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    sessionStorage.setItem("language", language);
-  }, [language]);
-
-  console.log(language);
   const translation = translations[language]["Navbar"];
-  console.log(translation);
 
   const handleLoginClick = () => {
     console.log("Navbar handle login click");
-
     navigate("/login");
   };
 
@@ -48,10 +43,11 @@ const Navbar = () => {
   const handleCollectionsClick = () => {
     navigate("/my-collections");
   };
-  const handleLanguageChange = (selectedLanguage) => {
-    setLanguage(selectedLanguage);
-  };
 
+  const handleLanguageChange = (selectedLanguage) => {
+    dispatch(setLanguage(selectedLanguage));
+  };
+  
   return (
     <nav className="navbar-expand shadow-sm d-flex">
       <div className="container-fluid px-lg-5">
@@ -71,7 +67,7 @@ const Navbar = () => {
               <input
                 className="form-control border-end-0 border rounded-start-pill focus-ring-info shadow"
                 type="text"
-                placeholder="search..."
+                placeholder={translation.SearchPlaceholder}
               />
               <span className="input-group-append">
                 <button className="btn btn-outline-secondary bg-white border rounded-end-pill shadow">
@@ -119,7 +115,7 @@ const Navbar = () => {
               )}
               {!isLoggedIn && (
                 <Dropdown.Item onClick={handleSignupClick}>
-                  Sign up
+                  {translation.SignUp}
                 </Dropdown.Item>
               )}
               {isLoggedIn && (
@@ -129,11 +125,11 @@ const Navbar = () => {
               )}
               {isLoggedIn && (
                 <Dropdown.Item onClick={handleCollectionsClick}>
-                  Collections
+                  {translation.Collections}
                 </Dropdown.Item>
               )}
               {isLoggedIn && (
-                <Dropdown.Item onClick={signOut}>Sign Out</Dropdown.Item>
+                <Dropdown.Item onClick={signOut}>{translation.SignOut}</Dropdown.Item>
               )}
             </Dropdown.Menu>
           </Dropdown>
