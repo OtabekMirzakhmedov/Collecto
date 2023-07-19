@@ -70,6 +70,8 @@ namespace Collecto.BE.Helper
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.Item.Id))
                 .ForMember(dest => dest.CommentId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName));
+
+          
         }
     }
 }

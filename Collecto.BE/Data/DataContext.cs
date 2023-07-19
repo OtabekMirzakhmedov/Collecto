@@ -77,6 +77,16 @@ namespace Collecto.BE.Data
                 .HasMany(i => i.ItemTags)
                 .WithOne(it => it.Item)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Item>()
+                .HasMany(i => i.Comments)
+                .WithOne(it => it.Item)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Item>()
+                .HasMany(i => i.Likes)
+                .WithOne(i => i.Item)
+                .OnDelete(DeleteBehavior.Cascade);
         }  
     }
 }

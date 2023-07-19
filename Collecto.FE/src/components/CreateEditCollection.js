@@ -79,7 +79,7 @@ const CreateEditCollection = ({ collection }) => {
         })),
       };
 
-      const token = localStorage.getItem("jwtToken");
+      const token = sessionStorage.getItem("jwtToken");
       console.log("transformedData", transformedData);
 
       if (collection) {

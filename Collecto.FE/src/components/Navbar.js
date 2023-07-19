@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { Dropdown,Stack, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Dropdown,Stack} from "react-bootstrap";
 import "./components.css";
 import translations from "../translations";
 
@@ -16,12 +16,6 @@ const Navbar = () => {
   const [language, setLanguage] = useState(
     sessionStorage.getItem("language") || "en"
   );
-  const [theme, setTheme] = useState("light");
-
-  const toggleTheme = (newTheme) => {
-    setTheme(newTheme);
-  };
-
   const signOut = () => {
     console.log("Navbar sign osut");
     sessionStorage.removeItem("userId");
@@ -87,15 +81,6 @@ const Navbar = () => {
             </div>
           </div>
           <Stack direction="horizontal">
-          <ToggleButtonGroup
-        type="radio"
-        name="theme-options"
-        value={theme}
-        onChange={toggleTheme}
-      >
-        <ToggleButton value="light">Light Theme</ToggleButton>
-        <ToggleButton value="dark">Dark Theme</ToggleButton>
-      </ToggleButtonGroup>
           <Dropdown>
             <Dropdown.Toggle variant="">
               <i className="bi bi-globe fs-6"></i>

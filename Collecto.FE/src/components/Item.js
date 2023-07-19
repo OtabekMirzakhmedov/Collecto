@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { useParams } from "react-router-dom";
 import itemService from "../services/itemService";
 import { useNavigate } from "react-router-dom";
@@ -20,11 +20,14 @@ import Comment from "./Comment";
 const Item = () => {
   const { collectionId, itemId } = useParams();
   const [item, setItem] = useState(null);
-  const userId = sessionStorage.getItem("userId");
-  const token = localStorage.getItem("jwtToken");
+  const [userId, setUserId] = useState(null);
+  const token = sessionStorage.getItem("jwtToken");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -40,6 +43,20 @@ const Item = () => {
 
     fetchItem();
   }, [itemId]);
+
+  useLayoutEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const fetchedUserId = sessionStorage.getItem("userId");
+        setUserId(fetchedUserId);
+      } catch (error) {
+        // Handle error here
+        console.error("Failed to fetch userId:", error);
+      }
+    };
+
+    fetchUserId();
+  }, [userId]);
 
   if (!item) {
     return <div>Loading...</div>;
@@ -63,10 +80,6 @@ const Item = () => {
 
   const cancelDelete = () => {
     setShowDeleteModal(false);
-  };
-
-  const handleEdit = () => {
-    setShowEditModal(true);
   };
 
   const handleItemEdit = (updatedItem) => {
@@ -121,13 +134,6 @@ const Item = () => {
   };
   const isLiked = item.likedUsers.includes(userId);
 
-  const handleCloseEdit = () => {
-    setShowEditModal(false);
-  };
-
-
-  const isOwner = item &&  item.userId === userId;
-
   return (
     <Container>
       <Row className="display-6 d-flex mt-2 justify-content-center">
@@ -136,9 +142,9 @@ const Item = () => {
           className="d-flex justify-content-between align-items-center"
         >
           <div className="d-flex justify-content-start">Item Information</div>
-          {isOwner && (<Stack direction="horizontal" gap={3} className="d-flex">
+          {item && item.userId === userId &&!show && (<Stack direction="horizontal" gap={3} className="d-flex">
             <OverlayTrigger
-              key="item-view"
+              key="item-delete"
               placement="top"
               overlay={<Tooltip>Delete Item</Tooltip>}
             >
@@ -147,16 +153,16 @@ const Item = () => {
                 className="p-0 fs-5 "
                 onClick={handleDelete}
               >
-                <i class="bi bi-trash text-danger"></i>
+                <i className="bi bi-trash text-danger"></i>
               </Button>
-            </OverlayTrigger>
-            <OverlayTrigger
-              key="item-view"
+            </OverlayTrigger> 
+           <OverlayTrigger
+              key="item-edit"
               placement="top"
               overlay={<Tooltip>Edit item</Tooltip>}
             >
-              <Button variant="light" className="p-0 fs-5" onClick={handleEdit}>
-                <i class="bi bi-pen"></i>
+              <Button variant="light" className="p-0 fs-5" onClick={handleShow}>
+                <i className="bi bi-pen"></i>
               </Button>
             </OverlayTrigger>
           </Stack>)}
@@ -262,7 +268,7 @@ const Item = () => {
           <Comment userId={userId} itemId={itemId} />
         </Col>
       </Row>
-      <Offcanvas show={showEditModal} placement="end">
+      <Offcanvas show={show} onHide={handleClose} placement="end">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Edit Item </Offcanvas.Title>
         </Offcanvas.Header>
@@ -270,7 +276,7 @@ const Item = () => {
           <ItemCreation
             collectionId={collectionId}
             selectedItem={item}
-            onClose={handleCloseEdit}
+            onClose={handleClose}
             onEditItem={handleItemEdit}
           />
         </Offcanvas.Body>

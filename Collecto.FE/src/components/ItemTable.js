@@ -204,7 +204,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
     const itemId = selectedRow.original.id;
   
     try {
-      await itemService.deleteItem(itemId);
+      await itemService.deleteItem(itemId, token);
       toast.success("Item deleted successfully");
       const updatedItems = items.filter((item) => item.id !== itemId);
       setItems(updatedItems);
@@ -221,7 +221,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
     const itemIds = selectedRows.map((row) => row.original.id);
   
     try {
-      await itemService.deleteItemsByIds(itemIds);
+      await itemService.deleteItemsByIds(itemIds, token);
       toast.success("Items deleted successfully");
       const updatedItems = items.filter((item) => !itemIds.includes(item.id));
       setItems(updatedItems);

@@ -9,7 +9,7 @@ const MyCollections = () => {
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const token = localStorage.getItem("jwtToken");
+        const token = sessionStorage.getItem("jwtToken");
         const fetchedCollections =
           await collectionService.getCollectionsByUserId(token);
         setCollections(fetchedCollections);

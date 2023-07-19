@@ -27,8 +27,7 @@ namespace Collecto.BE.Services
             CreateTagsForItem(item, itemDto.ItemTags);
             await _dataContext.SaveChangesAsync();
             await HandleCustomFieldValues(item.Id, itemDto.CustomFieldValues);
-
-            return _mapper.Map<ItemDto>(item);
+            return await GetItemById(item.Id);
         }
 
         public async Task DeleteItemById(int id)
@@ -36,6 +35,8 @@ namespace Collecto.BE.Services
             var item = _dataContext.Items
                 .Include(i => i.CustomFieldValues)
                 .Include(i => i.ItemTags)
+                .Include(i => i.Comments)
+                .Include(i => i.Likes)
                 .FirstOrDefault(i => i.Id == id);
             _dataContext.Items.Remove(item);
             await _dataContext.SaveChangesAsync();
@@ -151,6 +152,8 @@ namespace Collecto.BE.Services
             var items = _dataContext.Items
                 .Include(i => i.CustomFieldValues)
                 .Include(i => i.ItemTags)
+                .Include(i => i.Comments)
+                .Include(i => i.Likes)
                 .Where(i => itemIds.Contains(i.Id))
                 .ToList();
 
