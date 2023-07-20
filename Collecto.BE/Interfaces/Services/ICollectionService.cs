@@ -10,5 +10,6 @@ namespace Collecto.BE.Interfaces.Services
         Task EditCollection(int collectionId, CollectionDto updatedCollectionDto);
         Task<ICollection<CollectionDto>> GetCollectionsByUserId(string userId);
         Task<ICollection<CollectionDto>> GetAllCollections();
+        Task<ICollection<CollectionDto>> GetLargestCollections(int numberOfCollections);
     }
 }

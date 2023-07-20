@@ -22,6 +22,7 @@ const Navbar = () => {
     sessionStorage.removeItem("userId");
     sessionStorage.removeItem("role");
     sessionStorage.removeItem("fullName");
+    sessionStorage.removeItem("jwtToken");
     dispatch(logout());
     navigate("/");
   };

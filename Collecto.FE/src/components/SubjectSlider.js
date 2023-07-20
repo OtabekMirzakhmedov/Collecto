@@ -4,12 +4,15 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./components.css";
 import itemService from "../services/itemService";
+import { useDispatch } from "react-redux";
+import { setTag } from "../slices/tagSlice"; 
 
 const SubjectSlider = () => {
   const [slidesToShow, setSlidesToShow] = useState(4);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
 
   const ArrowLeft = (props) => (
     <button {...props} className="prev">
@@ -53,8 +56,9 @@ const SubjectSlider = () => {
     };
   }, []);
 
-  const handleTagNameClick = (id) => {
-    console.log("Clicked tag ID:", id);
+  const handleTagNameClick = (category) => {
+    console.log("Clicked tag ID:", category);
+    dispatch(setTag(category))
   };
 
   const settings = {
@@ -90,7 +94,7 @@ const SubjectSlider = () => {
             <button
               key={category.id}
               className="btn btn-light rounded-pill mx-3"
-              onClick={() => handleTagNameClick(category.id)}
+              onClick={() => handleTagNameClick(category)}
             >
               {category.tagName}
             </button>

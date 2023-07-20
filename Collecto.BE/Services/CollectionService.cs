@@ -25,7 +25,7 @@ namespace Collecto.BE.Services
         {
             var collection = _mapper.Map<Collection>(collectionDto);
             collection.UserId = userId;
-            collection.CreatedAt =  DateTime.Now;
+            collection.CreatedAt = DateTime.Now;
             _dataContext.Collections.Add(collection);
             await _dataContext.SaveChangesAsync();
             return collection.Id;
@@ -156,9 +156,31 @@ namespace Collecto.BE.Services
                 .Select(i => _mapper.Map<CollectionDto>(i))
                 .ToListAsync();
 
-     
+
 
             return collections;
+        }
+
+        public async Task<ICollection<CollectionDto>> GetLargestCollections(int numberOfCollections)
+        {
+            var collections = await _dataContext.Collections
+                .Include(c => c.Topic)
+                .Include(c => c.User)
+                .Include(c => c.CustomFields)
+                .Include(c => c.Items)
+                    .ThenInclude(i => i.CustomFieldValues)
+                .Include(c => c.Items)
+                .ThenInclude(i => i.ItemTags)
+                .ThenInclude(it => it.Tag)
+                .Include(c => c.Items)
+                .ThenInclude(i => i.Likes)
+                .OrderByDescending(c => c.Items.Count)
+                .Take(numberOfCollections)
+                .ToListAsync();
+
+            var collectionDtos = _mapper.Map<ICollection<CollectionDto>>(collections);
+
+            return collectionDtos;
         }
     }
 }

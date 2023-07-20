@@ -83,5 +83,12 @@ namespace Collecto.BE.Controllers
             return Ok(collections);
         }
 
+        [HttpGet("get-largest-collections")]
+        public async Task<IActionResult> GetLargestCollections()
+        {
+            var collections = await _collectionService.GetLargestCollections(5);
+            return Ok(collections);
+        }
+
     }
 }
