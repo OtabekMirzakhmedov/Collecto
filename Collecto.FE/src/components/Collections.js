@@ -73,7 +73,7 @@ const Collections = () => {
         tooltip.dispose();
       };
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, translation]);
 
   const handleRowClick = (item) => {
     navigate(`/collections/${item.collectionId}/${item.id}`);

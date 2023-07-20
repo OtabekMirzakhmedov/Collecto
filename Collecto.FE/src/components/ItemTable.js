@@ -102,7 +102,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
         },
       })),
     ],
-    [customFields]
+    [customFields, translation]
   );
 
   const {
