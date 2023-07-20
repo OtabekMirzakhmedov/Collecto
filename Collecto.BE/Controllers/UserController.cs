@@ -56,8 +56,68 @@ namespace Collecto.BE.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _userService.GetAllUsers());
-
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut("block-users")]
+        public async Task<IActionResult> BlockUsers([FromBody] string[] userIds)
+        {
+            try
+            {
+                var blockedUsers = await _userService.BlockUsers(userIds);
+                return Ok(blockedUsers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut("unblock-users")]
+        public async Task<IActionResult> UnblockUsers([FromBody] string[] userIds)
+        {
+            try
+            {
+                var unblockedUsers = await _userService.UnblockUsers(userIds);
+                return Ok(unblockedUsers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut("make-admin")]
+        public async Task<IActionResult> MakeAdmin([FromBody] string[] userIds)
+        {
+            try
+            {
+                var admins = await _userService.MakeAdmin(userIds);
+                return Ok(admins);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPut("make-user")]
+        public async Task<IActionResult> MakeUser([FromBody] string[] userIds)
+        {
+            try
+            {
+                var users = await _userService.MakeUser(userIds);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
 
     }
