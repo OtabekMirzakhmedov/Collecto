@@ -69,7 +69,7 @@ const Comment = ({ userId, itemId }) => {
 
   useEffect(() => {
     fetchComments();
-  }, [itemId]);
+  }, );
 
   const sendComment = async () => {
     try {
