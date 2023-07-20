@@ -25,11 +25,5 @@ namespace Collecto.BE.Models
 
         public ICollection<CustomFieldValue>? CustomFieldValues { get; set; }
 
-        public bool ContainsSearchTerm(string searchTerm)
-        {
-            return (Name != null && Name.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0)
-                || (Comments != null && Comments.Any(comment => comment.Content.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0))
-                || (CustomFieldValues != null && CustomFieldValues.Any(fieldValue => fieldValue.Value.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0));
-        }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Collecto.BE.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,6 +30,7 @@ namespace Collecto.BE.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -217,7 +218,7 @@ namespace Collecto.BE.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CollectionId = table.Column<int>(type: "int", nullable: true),
+                    CollectionId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
@@ -238,6 +239,7 @@ namespace Collecto.BE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CollectionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -247,7 +249,8 @@ namespace Collecto.BE.Migrations
                         name: "FK_Items_Collections_CollectionId",
                         column: x => x.CollectionId,
                         principalTable: "Collections",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,10 +259,10 @@ namespace Collecto.BE.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ItemId = table.Column<int>(type: "int", nullable: true)
+                    ItemId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,7 +276,8 @@ namespace Collecto.BE.Migrations
                         name: "FK_Comments_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -283,7 +287,7 @@ namespace Collecto.BE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CustomFieldId = table.Column<int>(type: "int", nullable: false),
-                    ItemId = table.Column<int>(type: "int", nullable: true),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
                 },
                 constraints: table =>
@@ -299,7 +303,8 @@ namespace Collecto.BE.Migrations
                         name: "FK_CustomFieldValues_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -333,7 +338,7 @@ namespace Collecto.BE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ItemId = table.Column<int>(type: "int", nullable: true)
+                    ItemId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -347,18 +352,29 @@ namespace Collecto.BE.Migrations
                         name: "FK_Likes_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "222b1c55-89c6-4ae7-af08-1f6cfe89e9b8", "8a63ba27-c408-46eb-b3ad-f15ad064dc13", "Admin", "ADMIN" });
+                values: new object[] { "46659e62-a9a4-4f1a-ab60-46262acea13e", "d8bd7a45-3557-49ff-8bd5-77a73722c59f", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "d20138fc-6b5e-4add-92a1-74f489027bba", "d1f0ec82-77bf-4f80-8d96-ae5ba13ae0dc", "User", "USER" });
+                values: new object[] { "6faf310c-c170-4d28-a4fa-470d04c462b8", "6663d186-7648-4fa6-97ff-fc0be9a156af", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FullName", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "92a1a73f-7ee0-4013-b6dc-235c2bc544d3", 0, "44f947a9-7eb3-4d46-a2fa-5e6a43bbdcf3", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@collecto.com", false, "Otabek Mirzakmedov", true, false, null, "ADMIN@COLLECTO.COM", "ADMIN@COLLECTO.COM", "AQAAAAEAACcQAAAAEHs6PozTl22AsxKgvVPWlukG5cdMMAB0o6OMxt9R3vhV9Kq/uSJ4lWWz3BpJbBrmQw==", null, false, "94c1afd8-0e7d-48f5-8fc2-390a8d70bb70", false, "admin@collecto.com" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "6faf310c-c170-4d28-a4fa-470d04c462b8", "92a1a73f-7ee0-4013-b6dc-235c2bc544d3" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -427,8 +443,7 @@ namespace Collecto.BE.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldValues_CustomFieldId",
                 table: "CustomFieldValues",
-                column: "CustomFieldId",
-                unique: true);
+                column: "CustomFieldId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldValues_ItemId",

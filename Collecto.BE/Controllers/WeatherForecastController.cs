@@ -24,7 +24,6 @@ namespace Collecto.BE.Controllers
         }
 
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {

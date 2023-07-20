@@ -317,9 +317,9 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "75553dd4-7a76-4814-b534-a6d079d9b5ef",
+                            Id = "92a1a73f-7ee0-4013-b6dc-235c2bc544d3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f0cf67c4-2db6-48a9-80c5-fd985a8fe4c8",
+                            ConcurrencyStamp = "44f947a9-7eb3-4d46-a2fa-5e6a43bbdcf3",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@collecto.com",
                             EmailConfirmed = false,
@@ -328,9 +328,9 @@ namespace Collecto.BE.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTO.COM",
                             NormalizedUserName = "ADMIN@COLLECTO.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBHRNZDOxgxI1gI9clH9XEOGuYVZxBsy8bMi3+kZQx+ExxP0jzrPqAGCGcwlDMWZbQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHs6PozTl22AsxKgvVPWlukG5cdMMAB0o6OMxt9R3vhV9Kq/uSJ4lWWz3BpJbBrmQw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "83f46f17-779d-45ff-b531-36cb0b018200",
+                            SecurityStamp = "94c1afd8-0e7d-48f5-8fc2-390a8d70bb70",
                             TwoFactorEnabled = false,
                             UserName = "admin@collecto.com"
                         });
@@ -365,15 +365,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f76255b5-f193-4efa-aed6-9941a10879e7",
-                            ConcurrencyStamp = "5e87c172-4459-4e1b-88c1-822c7ee9934a",
+                            Id = "46659e62-a9a4-4f1a-ab60-46262acea13e",
+                            ConcurrencyStamp = "d8bd7a45-3557-49ff-8bd5-77a73722c59f",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "820415be-6190-400b-b3f3-7c8048bc7b3f",
-                            ConcurrencyStamp = "205acc16-e097-47bf-95f8-f77acd061115",
+                            Id = "6faf310c-c170-4d28-a4fa-470d04c462b8",
+                            ConcurrencyStamp = "6663d186-7648-4fa6-97ff-fc0be9a156af",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -468,8 +468,8 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "75553dd4-7a76-4814-b534-a6d079d9b5ef",
-                            RoleId = "820415be-6190-400b-b3f3-7c8048bc7b3f"
+                            UserId = "92a1a73f-7ee0-4013-b6dc-235c2bc544d3",
+                            RoleId = "6faf310c-c170-4d28-a4fa-470d04c462b8"
                         });
                 });
 

@@ -136,6 +136,11 @@ builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 var app = builder.Build();
 
+using (var db = app.Services.CreateScope().ServiceProvider.GetService<DataContext>())
+{
+    db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

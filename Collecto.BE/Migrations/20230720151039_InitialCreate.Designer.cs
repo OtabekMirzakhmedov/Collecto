@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collecto.BE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230708084746_initialcreate")]
-    partial class initialcreate
+    [Migration("20230720151039_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -70,13 +70,14 @@ namespace Collecto.BE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasMaxLength(600)
                         .HasColumnType("nvarchar(600)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ItemId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -99,7 +100,7 @@ namespace Collecto.BE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CollectionId")
+                    b.Property<int>("CollectionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -130,7 +131,7 @@ namespace Collecto.BE.Migrations
                     b.Property<int>("CustomFieldId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ItemId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -139,8 +140,7 @@ namespace Collecto.BE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomFieldId")
-                        .IsUnique();
+                    b.HasIndex("CustomFieldId");
 
                     b.HasIndex("ItemId");
 
@@ -157,6 +157,9 @@ namespace Collecto.BE.Migrations
 
                     b.Property<int?>("CollectionId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -192,7 +195,7 @@ namespace Collecto.BE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("ItemId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -265,6 +268,9 @@ namespace Collecto.BE.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -309,6 +315,27 @@ namespace Collecto.BE.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "92a1a73f-7ee0-4013-b6dc-235c2bc544d3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44f947a9-7eb3-4d46-a2fa-5e6a43bbdcf3",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@collecto.com",
+                            EmailConfirmed = false,
+                            FullName = "Otabek Mirzakmedov",
+                            IsActive = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@COLLECTO.COM",
+                            NormalizedUserName = "ADMIN@COLLECTO.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHs6PozTl22AsxKgvVPWlukG5cdMMAB0o6OMxt9R3vhV9Kq/uSJ4lWWz3BpJbBrmQw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "94c1afd8-0e7d-48f5-8fc2-390a8d70bb70",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@collecto.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -340,15 +367,15 @@ namespace Collecto.BE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d20138fc-6b5e-4add-92a1-74f489027bba",
-                            ConcurrencyStamp = "d1f0ec82-77bf-4f80-8d96-ae5ba13ae0dc",
+                            Id = "46659e62-a9a4-4f1a-ab60-46262acea13e",
+                            ConcurrencyStamp = "d8bd7a45-3557-49ff-8bd5-77a73722c59f",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "222b1c55-89c6-4ae7-af08-1f6cfe89e9b8",
-                            ConcurrencyStamp = "8a63ba27-c408-46eb-b3ad-f15ad064dc13",
+                            Id = "6faf310c-c170-4d28-a4fa-470d04c462b8",
+                            ConcurrencyStamp = "6663d186-7648-4fa6-97ff-fc0be9a156af",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -439,6 +466,13 @@ namespace Collecto.BE.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "92a1a73f-7ee0-4013-b6dc-235c2bc544d3",
+                            RoleId = "6faf310c-c170-4d28-a4fa-470d04c462b8"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -483,7 +517,9 @@ namespace Collecto.BE.Migrations
                 {
                     b.HasOne("Collecto.BE.Models.Item", "Item")
                         .WithMany("Comments")
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Collecto.BE.Models.User", "User")
                         .WithMany("Comments")
@@ -498,7 +534,9 @@ namespace Collecto.BE.Migrations
                 {
                     b.HasOne("Collecto.BE.Models.Collection", "Collection")
                         .WithMany("CustomFields")
-                        .HasForeignKey("CollectionId");
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Collection");
                 });
@@ -506,14 +544,16 @@ namespace Collecto.BE.Migrations
             modelBuilder.Entity("Collecto.BE.Models.CustomFieldValue", b =>
                 {
                     b.HasOne("Collecto.BE.Models.CustomField", "CustomField")
-                        .WithOne("CustomFieldValue")
-                        .HasForeignKey("Collecto.BE.Models.CustomFieldValue", "CustomFieldId")
+                        .WithMany("CustomFieldValues")
+                        .HasForeignKey("CustomFieldId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Collecto.BE.Models.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId");
+                        .WithMany("CustomFieldValues")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CustomField");
 
@@ -524,7 +564,8 @@ namespace Collecto.BE.Migrations
                 {
                     b.HasOne("Collecto.BE.Models.Collection", "Collection")
                         .WithMany("Items")
-                        .HasForeignKey("CollectionId");
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Collection");
                 });
@@ -552,7 +593,9 @@ namespace Collecto.BE.Migrations
                 {
                     b.HasOne("Collecto.BE.Models.Item", "Item")
                         .WithMany("Likes")
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Collecto.BE.Models.User", "User")
                         .WithMany("Likes")
@@ -623,13 +666,14 @@ namespace Collecto.BE.Migrations
 
             modelBuilder.Entity("Collecto.BE.Models.CustomField", b =>
                 {
-                    b.Navigation("CustomFieldValue")
-                        .IsRequired();
+                    b.Navigation("CustomFieldValues");
                 });
 
             modelBuilder.Entity("Collecto.BE.Models.Item", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("CustomFieldValues");
 
                     b.Navigation("ItemTags");
 
