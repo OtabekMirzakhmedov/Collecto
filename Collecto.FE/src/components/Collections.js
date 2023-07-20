@@ -27,7 +27,6 @@ const Collections = () => {
     const fetchItems = async () => {
       try {
         if (searchQuery) {
-          // Fetch items and collections using the search service
           const searchResults = await searchService.searchItemsAndCollections(searchQuery);
           console.log('searchResults', searchResults);
 

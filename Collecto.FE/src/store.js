@@ -6,7 +6,7 @@ import languageReducer from "./slices/languageSlice";
 import userReducer from './slices/userSlice';
 import tagReducer from './slices/tagSlice';
 import searchReducer from './slices/searchSlice';
-
+import themeReducer from './slices/themeSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,7 +16,8 @@ const store = configureStore({
     language: languageReducer,
     user: userReducer, 
     tag: tagReducer,
-    search: searchReducer
+    search: searchReducer,
+    theme: themeReducer
   },
 });
 
