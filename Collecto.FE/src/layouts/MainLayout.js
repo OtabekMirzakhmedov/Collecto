@@ -5,7 +5,6 @@ import SubjectSlider from '../components/SubjectSlider';
 import Collections from '../components/Collections';
 
 const MainLayout = () => {
-  // Get the searchQuery from Redux store
   const searchQuery = useSelector((state) => state.search);
 
   return (

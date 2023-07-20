@@ -5,6 +5,7 @@ import { Dropdown ,Stack} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "../slices/languageSlice";
 import { setSearchQuery } from "../slices/searchSlice"; 
+import {clearTag} from "../slices/tagSlice";
 import "./components.css";
 import translations from "../translations";
 
@@ -37,7 +38,9 @@ const Navbar = () => {
 
   // Event handler to handle the search button click
   const handleSearchButtonClick = () => {
-    dispatch(setSearchQuery(searchInput)); // Dispatch the search input value to Redux
+    dispatch(setSearchQuery(searchInput)); 
+    dispatch(clearTag());
+    navigate('/');
   };
 
   const handleLoginClick = () => {

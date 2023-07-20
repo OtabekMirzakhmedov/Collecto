@@ -5,6 +5,7 @@ import { Container, Row, Col, Badge } from "react-bootstrap";
 import itemService from "../services/itemService";
 import collectionService from "../services/collectionService";
 import translations from "../translations";
+import searchService from "../services/searchService";
 import { useSelector } from "react-redux";
 
 const Collections = () => {
@@ -23,37 +24,43 @@ const Collections = () => {
   const searchQuery = useSelector((state) => state.search);
 
   useEffect(() => {
-    const fetchItems= async () => {
+    const fetchItems = async () => {
       try {
-        if (selectedTag) {
+        if (searchQuery) {
+          // Fetch items and collections using the search service
+          const searchResults = await searchService.searchItemsAndCollections(searchQuery);
+          console.log('searchResults', searchResults);
+
+          setItems(searchResults.items);
+          setCollections(searchResults.collections);
+        } else if (selectedTag) {
           const itemsWithSelectedTag = await itemService.getItemsByTagId(selectedTag.id);
-          setTableCaption(`${selectedTag.tagName}`)
+          setTableCaption(`${selectedTag.tagName}`);
           setItems(itemsWithSelectedTag);
+          setCollections([]); // Clear the collections
         } else {
           const fetchedItems = await itemService.getLastAddedItems();
-          setTableCaption('last added items');
+          setTableCaption("last added items");
           setItems(fetchedItems);
+          fetchLargestCollections(); // Fetch largest collections separately
         }
       } catch (error) {
-        console.error("Failed to fetch items:", error);
+        console.error("Failed to fetch items and collections:", error);
       }
     };
-  
+
     fetchItems();
-  }, [selectedTag]);
+  }, [searchQuery, selectedTag]);
 
-  useEffect(() => {
-    const fetchLargestCollections = async () => {
-      try {
-        const largestCollections = await collectionService.getLargestCollections();
-        setCollections(largestCollections);
-      } catch (error) {
-        console.error("Failed to fetch largest collections:", error);
-      }
-    };
-
-    fetchLargestCollections();
-  }, []);
+  // Fetch largest collections
+  const fetchLargestCollections = async () => {
+    try {
+      const largestCollections = await collectionService.getLargestCollections();
+      setCollections(largestCollections);
+    } catch (error) {
+      console.error("Failed to fetch largest collections:", error);
+    }
+  };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -91,7 +98,7 @@ const Collections = () => {
             <thead>
               <tr>
                 <th scope="col">Item name</th>
-                <th scope="col">Tags</th>
+               {!searchQuery && (<th scope="col">Tags</th>)}
                 <th scope="col">Author</th>
                 <th scope="col">Collection name</th>
               </tr>
@@ -104,7 +111,7 @@ const Collections = () => {
                   className="clickable-row"
                 >
                   <td>{item.name}</td>
-                  <td>{renderTagsAsBadges(item.itemTags)}</td>
+                  {!searchQuery &&(  <td>{renderTagsAsBadges(item.itemTags)}</td>)}
                   <td>{item.author}</td>
                   <td>{item.collectionName}</td>
                 </tr>

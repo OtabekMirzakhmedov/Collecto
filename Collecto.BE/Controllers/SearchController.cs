@@ -33,6 +33,7 @@ namespace Collecto.BE.Controllers
                     Id = item.Id,
                     Name = item.Name,
                     Author = item.Collection.User.FullName,
+                    CollectionName = item.Collection.Title,
                     CollectionId = item.Collection.Id,
                 })
                 .ToList();
@@ -50,7 +51,8 @@ namespace Collecto.BE.Controllers
                     Id = collection.Id,
                     Title = collection.Title,
                     Author = collection.User.FullName,
-                    TopicName = collection.Topic.TopicName
+                    TopicName = collection.Topic.TopicName,
+                    NumberOfItems = collection.Items.Count
                 })
                 .ToList();
 
