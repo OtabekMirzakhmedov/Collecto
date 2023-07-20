@@ -20,6 +20,7 @@ const Collections = () => {
   const translation = translations[language]["Collections"];
   console.log(translation);
   const [tableCaption, setTableCaption] = useState('');
+  const searchQuery = useSelector((state) => state.search);
 
   useEffect(() => {
     const fetchItems= async () => {
@@ -82,6 +83,7 @@ const Collections = () => {
 
   return (
     <Container>
+      <p>{searchQuery}</p>
       <Row className="d-flex mt-2 justify-content-center">
         <Col sm={11} md={10} lg={10} xl={10}>
           <table className="table table-hover  caption-top">

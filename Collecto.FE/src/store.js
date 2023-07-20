@@ -4,7 +4,8 @@ import collectionReducer from "./slices/collectionSlice"
 import itemReducer from "./slices/itemSlice"
 import languageReducer from "./slices/languageSlice";
 import userReducer from './slices/userSlice';
-import tagReducer from './slices/tagSlice'
+import tagReducer from './slices/tagSlice';
+import searchReducer from './slices/searchSlice';
 
 
 const store = configureStore({
@@ -14,7 +15,8 @@ const store = configureStore({
     item: itemReducer,
     language: languageReducer,
     user: userReducer, 
-    tag: tagReducer
+    tag: tagReducer,
+    search: searchReducer
   },
 });
 

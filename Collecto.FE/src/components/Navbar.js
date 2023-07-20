@@ -4,6 +4,7 @@ import { logout } from "../slices/authSlice";
 import { Dropdown ,Stack} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "../slices/languageSlice";
+import { setSearchQuery } from "../slices/searchSlice"; 
 import "./components.css";
 import translations from "../translations";
 
@@ -16,6 +17,7 @@ const Navbar = () => {
   const isLoggedIn = !!userId;
   const language = useSelector((state) => state.language.language);
   const isAdmin = sessionStorage.getItem("role") === "Admin";
+  const [searchInput, setSearchInput] = useState("");
 
   const signOut = () => {
     console.log("Navbar sign osut");
@@ -28,6 +30,15 @@ const Navbar = () => {
   };
 
   const translation = translations[language]["Navbar"];
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  // Event handler to handle the search button click
+  const handleSearchButtonClick = () => {
+    dispatch(setSearchQuery(searchInput)); // Dispatch the search input value to Redux
+  };
 
   const handleLoginClick = () => {
     console.log("Navbar handle login click");
@@ -74,9 +85,12 @@ const Navbar = () => {
                 className="form-control border-end-0 border rounded-start-pill focus-ring-info shadow"
                 type="text"
                 placeholder={translation.SearchPlaceholder}
+                value={searchInput} 
+                onChange={handleSearchInputChange}
               />
               <span className="input-group-append">
-                <button className="btn btn-outline-secondary bg-white border rounded-end-pill shadow">
+                <button className="btn btn-outline-secondary bg-white border rounded-end-pill shadow"
+                onClick={handleSearchButtonClick}>
                   <i className="bi bi-search fs-5 text-danger"></i>
                 </button>
               </span>
