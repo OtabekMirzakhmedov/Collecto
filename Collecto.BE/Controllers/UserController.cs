@@ -103,7 +103,7 @@ namespace Collecto.BE.Controllers
             }
         }
 
-
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("make-user")]
         public async Task<IActionResult> MakeUser([FromBody] string[] userIds)
         {

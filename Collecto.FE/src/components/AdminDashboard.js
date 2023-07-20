@@ -2,9 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useTable, useRowSelect, useGlobalFilter } from 'react-table';
 import { Container, Badge, Button, Form, Stack, Row, Col } from 'react-bootstrap';
 import userService from '../services/userService';
+import { logout} from "../slices/authSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
 
   useEffect(() => {
@@ -108,6 +116,13 @@ const AdminDashboard = () => {
       console.error('Error blocking users:', error);
       // Handle the error (e.g., show an error message)
     }
+
+    const loggedInAdminId = sessionStorage.getItem('userId');
+  if (selectedUserIds.includes(loggedInAdminId)) {
+    dispatch(logout());
+    navigate("/");
+    toast.error("You are blocked");
+  }
   };
   
   const handleUnblockUser = async () => {
@@ -166,7 +181,14 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error making users regular users:', error);
     }
+    const loggedInAdminId = sessionStorage.getItem('userId');
+  if (selectedUserIds.includes(loggedInAdminId)) {
+    dispatch(logout());
+    navigate("/");
+    toast.error("You are not admin, please login");
+  }
   };
+
 
   return (
     <Container className="d-flex flex-column mt-3">

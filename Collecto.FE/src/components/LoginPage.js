@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginSuccess } from "../slices/authSlice";
+import {setIsAdmin} from "../slices/userSlice"
 import authService from "../services/authService";
 import translations from "../translations";
+
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -27,6 +29,7 @@ const LoginPage = () => {
       sessionStorage.setItem("fullName", response.data.fullName);
       sessionStorage.setItem("role", response.data.userRole);
       dispatch(loginSuccess({ token: response.data.jwtToken }));
+      dispatch(setIsAdmin(response.data.userRole === 'Admin'));
       navigate("/");
     } catch (error) {
       if (error.response && error.response.data) {

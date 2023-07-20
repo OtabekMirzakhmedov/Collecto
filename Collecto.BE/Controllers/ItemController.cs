@@ -68,7 +68,31 @@ namespace Collecto.BE.Controllers
             }
             return Ok(item);
         }
-        
+
+        [HttpGet("get-items-by-tag-id/{id}")]
+        public async Task<IActionResult> GetItemsByTagId(int id)
+        {
+            var item = await _itemService.GetItemsByTagId(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpGet("get-last-added-items")]
+        public async Task<IActionResult> GetLastFiveItem()
+        {
+            var item = await _itemService.GetLastItems(10);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+
+
     }
 
 }

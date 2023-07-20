@@ -296,6 +296,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
             <i className="bi bi-pencil-square fs-5 border-black"></i>
           </Button>
         </OverlayTrigger>)}
+        
         <OverlayTrigger
           key="item-view"
           placement="top"

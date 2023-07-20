@@ -11,5 +11,7 @@
         public ICollection<CustomFieldValueDto>? CustomFieldValues { get; set; }
         public string? UserId { get; init; }
         public string? Author { get; init; }
+        public string? CollectionName { get; init; }
+        public int? CollectionId { get; init; }
     }
 }

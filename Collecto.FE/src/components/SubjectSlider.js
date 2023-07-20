@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./components.css"
-
+import "./components.css";
+import itemService from "../services/itemService";
 
 const SubjectSlider = () => {
   const [slidesToShow, setSlidesToShow] = useState(4);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const ArrowLeft = (props) => (
     <button {...props} className="prev">
@@ -21,12 +22,25 @@ const SubjectSlider = () => {
       <i className="bi bi-chevron-right fs-5"></i>
     </button>
   );
-  
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tags = await itemService.fetchTags();
+        console.log(tags);
+        setCategories(tags);
+      } catch (error) {
+        console.error("Failed to fetch tags:", error);
+      }
+    };
+
+    fetchTags();
+  }, []);
 
   useEffect(() => {
     const updateSlidesToShow = () => {
       const containerWidth = document.getElementById("subjectSliderContainer").offsetWidth;
-      const itemWidth = 125; // Adjust this value based on the desired width of each item
+      const itemWidth = 125;
       const newSlidesToShow = Math.floor(containerWidth / itemWidth);
       setSlidesToShow(newSlidesToShow);
     };
@@ -39,7 +53,10 @@ const SubjectSlider = () => {
     };
   }, []);
 
-  const categories = ["coins", "football", "cars", "sneakers"];
+  const handleTagNameClick = (id) => {
+    console.log("Clicked tag ID:", id);
+  };
+
   const settings = {
     dots: false,
     arrows: true,
@@ -69,9 +86,13 @@ const SubjectSlider = () => {
     <div className="container" id="subjectSliderContainer">
       <div className="p-2">
         <Slider {...settings}>
-          {categories.map((category, index) => (
-            <button key={index} className="btn btn-light rounded-pill mx-3">
-              {category}
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              className="btn btn-light rounded-pill mx-3"
+              onClick={() => handleTagNameClick(category.id)}
+            >
+              {category.tagName}
             </button>
           ))}
         </Slider>

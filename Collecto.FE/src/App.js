@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
@@ -11,9 +11,9 @@ import EditCollectionLayout from './layouts/EditCollectionLayout';
 import MyCollectionLayout from './layouts/MyCollectionLayout';
 import ItemLayout from './layouts/ItemLayout';
 import AdminDashboardLayout from './layouts/AdminDashboardLayout';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
-
 
   return (
     <Router>
@@ -26,7 +26,10 @@ function App() {
         <Route path="/edit-collection" element={<EditCollectionLayout />} />
         <Route path="/my-collections" element={<MyCollectionLayout/>}/>
         <Route path="/collections/:collectionId/:itemId" element={<ItemLayout/>}/>
-        <Route path="/admin-dashboard" element={<AdminDashboardLayout/>}/>
+        <Route path="/admin-dashboard" element={ <PrivateRoute >
+          <AdminDashboardLayout/>
+        </PrivateRoute>
+        }/>
       </Routes>
       <ToastContainer position="top-center" />
     </Router>

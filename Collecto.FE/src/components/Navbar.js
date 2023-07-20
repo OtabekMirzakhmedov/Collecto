@@ -20,6 +20,8 @@ const Navbar = () => {
   const signOut = () => {
     console.log("Navbar sign osut");
     sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("fullName");
     dispatch(logout());
     navigate("/");
   };

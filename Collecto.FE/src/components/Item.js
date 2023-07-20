@@ -16,14 +16,13 @@ import {
 } from "react-bootstrap";
 import ItemCreation from "./ItemCreation";
 import Comment from "./Comment";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import translations from "../translations";
-import { setUserIdFromSession } from "../slices/userSlice";
 
 const Item = () => {
   const { collectionId, itemId } = useParams();
   const [item, setItem] = useState(null);
-  const userId = useSelector((state) => state.user)
+  const userId = useSelector((state) => state.user.userId)
   const token = sessionStorage.getItem("jwtToken");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
@@ -32,9 +31,7 @@ const Item = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const dispatch = useDispatch();
-  const isAdmin = sessionStorage.getItem("role") === "Admin";
-  const isOwner = item && item.userId === userId; 
+  const isAdmin = useSelector((state) => state.user.isAdmin);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -50,9 +47,7 @@ const Item = () => {
     fetchItem();
   }, [itemId]);
 
-  useEffect(() => {
-    dispatch(setUserIdFromSession());
-  }, [dispatch]);
+ 
 
   if ( !item) {
     return <div>Loading...</div>;
@@ -72,7 +67,7 @@ const Item = () => {
     }
     setShowDeleteModal(false);
   };
-
+  
   const cancelDelete = () => {
     setShowDeleteModal(false);
   };
@@ -108,6 +103,9 @@ const Item = () => {
       console.error("Failed to unlike item:", error);
     }
   };
+
+  const isOwner = item && item.userId === userId; 
+  console.log('isowner', isOwner)
 
   const renderFieldValue = (field) => {
     switch (field.fieldType) {

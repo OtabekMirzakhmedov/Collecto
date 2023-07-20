@@ -61,6 +61,16 @@ const itemService = {
       const response = await axios.get(`${API_BASE_URL}/Tag/tags`);
       console.log(response.data);
       return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  fetchTagNames: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Tag/tagNames`);
+      console.log(response.data);
+      return response.data;
 
     } catch (error) {
       throw error;
@@ -92,6 +102,16 @@ const itemService = {
     }
   },
 
+  getItemsByTagId: async (tagId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Item/get-items-by-tag-id/${tagId}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   likeItem: async (itemId, userId, token) => {
     try {
       const likeData = { itemId, userId };
@@ -116,6 +136,16 @@ const itemService = {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getLastAddedItems: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/Item/get-last-added-items`);
       console.log(response.data);
       return response.data;
     } catch (error) {

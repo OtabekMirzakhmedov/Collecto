@@ -18,6 +18,9 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.token = null;
       sessionStorage.removeItem("jwtToken");
+      sessionStorage.removeItem("role");
+      sessionStorage.removeItem("userId");
+      sessionStorage.removeItem("fullName");
     },
   },
 });

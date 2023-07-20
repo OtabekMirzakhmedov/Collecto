@@ -51,7 +51,7 @@ namespace Collecto.BE.Services
                 .ThenInclude(it => it.Tag)
                 .Include(i => i.CustomFieldValues)
                 .ThenInclude(cf => cf.CustomField)
-                .FirstOrDefaultAsync(i => i.Id == itemId );
+                .FirstOrDefaultAsync(i => i.Id == itemId);
 
             if (item == null)
             {
@@ -60,7 +60,7 @@ namespace Collecto.BE.Services
 
             item.Name = updatedItemDto.Name;
             UpdateTagsForItem(item, updatedItemDto.ItemTags);
-            item.CustomFieldValues =  updatedItemDto.CustomFieldValues.Select(i => _mapper.Map<CustomFieldValue>(i)).ToList();
+            item.CustomFieldValues = updatedItemDto.CustomFieldValues.Select(i => _mapper.Map<CustomFieldValue>(i)).ToList();
 
             await _dataContext.SaveChangesAsync();
 
@@ -141,7 +141,7 @@ namespace Collecto.BE.Services
                 };
 
                 _dataContext.CustomFieldValues.Add(customFieldValue);
-                
+
             }
             await _dataContext.SaveChangesAsync();
 
@@ -178,5 +178,47 @@ namespace Collecto.BE.Services
 
             return itemDto;
         }
+
+
+
+
+        public async Task<ICollection<ItemDto>> GetItemsByTagId(int tagId)
+        {
+            var items = await _dataContext.Items
+            .Include(i => i.Collection)
+            .ThenInclude(c => c.User)
+            .Include(i => i.Likes)
+            .ThenInclude(l => l.User)
+            .Include(i => i.ItemTags)
+            .ThenInclude(it => it.Tag)
+            .Include(i => i.CustomFieldValues)
+            .ThenInclude(cfv => cfv.CustomField)
+            .Where(i => i.ItemTags.Any(it => it.TagId == tagId)) // Filter items with the given tagId
+            .ToListAsync();
+
+            var itemDtos = _mapper.Map<ICollection<ItemDto>>(items);
+            return itemDtos;
+
+        }
+
+        public async Task<ICollection<ItemDto>> GetLastItems(int numberOfItemsNeeded)
+        {
+            var items = await _dataContext.Items
+                .Include(i => i.Collection)
+                .ThenInclude(c => c.User)
+                .Include(i => i.Likes)
+                .ThenInclude(l => l.User)
+                .Include(i => i.ItemTags)
+                .ThenInclude(it => it.Tag)
+                .Include(i => i.CustomFieldValues)
+                .ThenInclude(cfv => cfv.CustomField)
+                .OrderByDescending(i => i.CreatedAt)
+                .Take(numberOfItemsNeeded)
+                .ToListAsync();
+
+            var itemDtos = _mapper.Map<ICollection<ItemDto>>(items);
+            return itemDtos;
+        }
+
     }
 }

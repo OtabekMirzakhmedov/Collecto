@@ -2,16 +2,26 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: null,
+  initialState: {
+    userId: sessionStorage.getItem("userId"),
+    isAdmin: sessionStorage.getItem('role') === 'Admin',
+  },
   reducers: {
     setUserIdFromSession: (state) => {
       const userId = sessionStorage.getItem("userId");
-      return userId;
+      return { ...state, userId };
     },
-    clearUserId: () => null,
+    setIsAdmin: (state, action) => {
+      state.isAdmin = action.payload;
+    },
+    clearUserId: (state) => {
+      state.userId = null;
+      state.isAdmin = false;
+    },
   },
 });
 
-export const { setUserIdFromSession, clearUserId } = userSlice.actions;
+export const { setUserIdFromSession, setIsAdmin, clearUserId } = userSlice.actions;
+
 
 export default userSlice.reducer;

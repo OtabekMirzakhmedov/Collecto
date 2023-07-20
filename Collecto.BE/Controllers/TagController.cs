@@ -17,6 +17,9 @@ namespace Collecto.BE.Controllers
         }
 
         [HttpGet("tags")]
-        public async Task<IActionResult> GetAllTopics() => Ok(await _tagService.GetAllTags());
+        public async Task<IActionResult> GetAllTags() => Ok(await _tagService.GetAllTags());
+
+        [HttpGet("tagNames")]
+        public async Task<IActionResult> GetAllTagNames() => Ok(await _tagService.GetAllTagNames());
     }
 }

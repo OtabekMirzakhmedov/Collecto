@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Collecto.BE.Data;
 using Collecto.BE.Interfaces.Services;
+using Collecto.BE.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Collecto.BE.Services
@@ -15,11 +16,18 @@ namespace Collecto.BE.Services
             _dataContext = dataContext;
             _mapper = mapper;
         }
-        public async Task<IList<string>> GetAllTags()
+        public async Task<IList<string>> GetAllTagNames()
         {
-            var tags = await _dataContext.Tags
+            var tagNames = await _dataContext.Tags
                 .Select(tag => tag.TagName)
                 .ToListAsync();
+
+            return tagNames;
+        }
+
+        public async Task<IList<Tag>> GetAllTags()
+        {
+            var tags = await _dataContext.Tags.ToListAsync();
 
             return tags;
         }

@@ -14,14 +14,13 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEdi
   const [isAddingItem, setIsAddingItem] = useState(false);
   const language = useSelector((state) => state.language.language);
   const translation = translations[language]["Item"];
-
   const token = localStorage.getItem("jwtToken");
   const isEditing = !!selectedItem;
 
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const tags = await itemService.fetchTags();
+        const tags = await itemService.fetchTagNames();
         const options = tags.map((tag) => ({
           value: tag,
           label: tag,
