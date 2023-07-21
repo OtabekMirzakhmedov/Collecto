@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 const Collections = () => {
   const tooltipRef = useRef();
   const userId = useSelector((state) => state.user.userId)
-  const isLoggedIn = !!userId;
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
   const language = useSelector((state) => state.language.language);
