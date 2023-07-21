@@ -11,7 +11,6 @@ import "./components.css";
 import translations from "../translations";
 
 const Navbar = () => {
-  console.log("Navbar");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
@@ -23,11 +22,6 @@ const Navbar = () => {
   const theme = useSelector((state) => state.theme);
 
   const signOut = () => {
-    console.log("Navbar sign osut");
-    sessionStorage.removeItem("userId");
-    sessionStorage.removeItem("role");
-    sessionStorage.removeItem("fullName");
-    sessionStorage.removeItem("jwtToken");
     dispatch(logout());
     navigate("/");
   };
@@ -38,7 +32,6 @@ const Navbar = () => {
     setSearchInput(event.target.value);
   };
 
-  // Event handler to handle the search button click
   const handleSearchButtonClick = () => {
     dispatch(setSearchQuery(searchInput));
     dispatch(clearTag());
@@ -84,7 +77,7 @@ const Navbar = () => {
               </a>
             </span>
           </span>
-          <div className="col-12 col-sm-6 col-lg-3">
+          <div className="col-10 col-sm-8 col-lg-6 col-md-6 col-xl-3">
             <div className="input-group">
               <input
                 className="form-control border-end-0 border rounded-start-pill focus-ring-info shadow"
@@ -104,7 +97,7 @@ const Navbar = () => {
             </div>
           </div>
           <Stack direction="horizontal">
-            <Dropdown onClick={() => dispatch(toggleTheme())} >
+            <Dropdown onClick={() => dispatch(toggleTheme())} className="d-none d-sm-inline-block" >
               <Dropdown.Toggle variant="">
                 {theme === "light" ? (
                   <i className="bi bi-moon-stars"></i>
@@ -114,7 +107,7 @@ const Navbar = () => {
               </Dropdown.Toggle>
             </Dropdown>
 
-            <Dropdown>
+            <Dropdown className="d-none d-sm-inline-block">
               <Dropdown.Toggle variant="">
                 <i className="bi bi-globe fs-6"></i>
               </Dropdown.Toggle>
@@ -129,12 +122,12 @@ const Navbar = () => {
             </Dropdown>
             <Dropdown>
               <Dropdown.Toggle
-                className="btn border border-1 rounded-pill d-none d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center custom-toggle"
+                className="btn border border-1 rounded-pill  d-sm-inline-block p-0 focus-ring focus-ring-light shadow-sm align-content-center custom-toggle"
                 variant=""
               >
                 {!isLoggedIn ? (
                   <>
-                    <i className="bi bi-list fs-4 px-2 py-0"></i>
+                    <i className="bi bi-list fs-4 px-1 py-0"></i>
                     <i className="bi bi-person-circle fs-3 px-2"></i>
                   </>
                 ) : (
