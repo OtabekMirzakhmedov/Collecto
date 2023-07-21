@@ -1,0 +1,10 @@
+/*    /index.html   200
+/login    /index.html   200
+/signup    /index.html   200
+/create-collection    /index.html   200
+/collections/*    /index.html   200
+/edit-collection    /index.html   200
+/my-collections    /index.html   200
+/admin-dashboard    /index.html   200
+/collections/*/    /index.html   200
+/collections/*/*/    /index.html   200
