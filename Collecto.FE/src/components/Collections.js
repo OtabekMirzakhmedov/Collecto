@@ -10,14 +10,13 @@ import { useSelector } from "react-redux";
 
 const Collections = () => {
   const tooltipRef = useRef();
-  const userId = sessionStorage.getItem("userId");
+  const userId = useSelector((state) => state.user.userId)
   const isLoggedIn = !!userId;
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
   const language = useSelector((state) => state.language.language);
   const [items, setItems] = useState([]);
   const selectedTag = useSelector((state) => state.tag);
-  console.log("collection ", language);
   const translation = translations[language]["Collections"];
   console.log(translation);
   const [tableCaption, setTableCaption] = useState('');
@@ -51,7 +50,6 @@ const Collections = () => {
     fetchItems();
   }, [searchQuery, selectedTag]);
 
-  // Fetch largest collections
   const fetchLargestCollections = async () => {
     try {
       const largestCollections = await collectionService.getLargestCollections();
@@ -77,6 +75,11 @@ const Collections = () => {
 
   const handleRowClick = (item) => {
     navigate(`/collections/${item.collectionId}/${item.id}`);
+  };
+
+  const handleCollectionRowClick = (collection) => {
+    console.log(collection);
+    navigate(`/collections/${collection.collectionId}`);
   };
 
   const renderTagsAsBadges = (tags) => {
@@ -129,12 +132,13 @@ const Collections = () => {
                   <th scope="col">Title</th>
                   <th scope="col">Subject</th>
                   <th scope="col">Number of items</th>
-                  {/* Add additional columns as needed */}
                 </tr>
               </thead>
               <tbody>
                 {collections.map((collection) => (
-                  <tr key={collection.id}>
+               
+                  <tr key={collection.collectionId} onClick={() => handleCollectionRowClick(collection)}
+                  className="clickable-row">
                     <td>{collection.title}</td>
                     <td><Badge pill>{collection.topicName}</Badge></td>
                     <td>{collection.numberOfItems}</td>

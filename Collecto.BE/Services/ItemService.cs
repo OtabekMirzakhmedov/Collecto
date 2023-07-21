@@ -185,16 +185,16 @@ namespace Collecto.BE.Services
         public async Task<ICollection<ItemDto>> GetItemsByTagId(int tagId)
         {
             var items = await _dataContext.Items
-            .Include(i => i.Collection)
-            .ThenInclude(c => c.User)
-            .Include(i => i.Likes)
-            .ThenInclude(l => l.User)
-            .Include(i => i.ItemTags)
-            .ThenInclude(it => it.Tag)
-            .Include(i => i.CustomFieldValues)
-            .ThenInclude(cfv => cfv.CustomField)
-            .Where(i => i.ItemTags.Any(it => it.TagId == tagId)) // Filter items with the given tagId
-            .ToListAsync();
+                .Include(i => i.Collection)
+                    .ThenInclude(c => c.User)
+                .Include(i => i.Likes)
+                    .ThenInclude(l => l.User)
+                .Include(i => i.ItemTags)
+                    .ThenInclude(it => it.Tag)
+                .Include(i => i.CustomFieldValues)
+                    .ThenInclude(cfv => cfv.CustomField)
+                .Where(i => i.ItemTags.Any(it => it.TagId == tagId))
+                .ToListAsync();
 
             var itemDtos = _mapper.Map<ICollection<ItemDto>>(items);
             return itemDtos;
@@ -205,13 +205,13 @@ namespace Collecto.BE.Services
         {
             var items = await _dataContext.Items
                 .Include(i => i.Collection)
-                .ThenInclude(c => c.User)
+                    .ThenInclude(c => c.User)
                 .Include(i => i.Likes)
-                .ThenInclude(l => l.User)
+                    .ThenInclude(l => l.User)
                 .Include(i => i.ItemTags)
-                .ThenInclude(it => it.Tag)
+                    .ThenInclude(it => it.Tag)
                 .Include(i => i.CustomFieldValues)
-                .ThenInclude(cfv => cfv.CustomField)
+                    .ThenInclude(cfv => cfv.CustomField)
                 .OrderByDescending(i => i.CreatedAt)
                 .Take(numberOfItemsNeeded)
                 .ToListAsync();

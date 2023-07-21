@@ -5,6 +5,7 @@ import { Dropdown, Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "../slices/languageSlice";
 import { setSearchQuery } from "../slices/searchSlice";
+import { clearUserId } from "../slices/userSlice";
 import { toggleTheme } from "../slices/themeSlice";
 import { clearTag } from "../slices/tagSlice";
 import "./components.css";
@@ -23,6 +24,7 @@ const Navbar = () => {
 
   const signOut = () => {
     dispatch(logout());
+    dispatch(clearUserId());
     navigate("/");
   };
 
@@ -39,7 +41,6 @@ const Navbar = () => {
   };
 
   const handleLoginClick = () => {
-    console.log("Navbar handle login click");
     navigate("/login");
   };
 

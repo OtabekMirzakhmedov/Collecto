@@ -60,7 +60,6 @@ const Item = () => {
   const confirmDelete = async () => {
     try {
       await itemService.deleteItem(itemId, token);
-      console.log("Item deleted");
       navigate(`/collections/${collectionId}`);
     } catch (error) {
       console.error("Failed to delete item:", error);

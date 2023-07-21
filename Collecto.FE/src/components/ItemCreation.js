@@ -77,8 +77,6 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEdi
       customFieldValues,
     };
 
-    console.log('itemdata ', itemData);
-
     setIsAddingItem(true);
 
     try {
@@ -88,10 +86,8 @@ const ItemCreation = ({ collectionId, customFields, onClose, selectedItem, onEdi
           itemData,
           token
         );
-
         onEditItem(updatedItem);
 
-        console.log(updatedItem);
         toast.success("Item updated successfully");
       } else {
         const createdItem = await itemService.createItem(

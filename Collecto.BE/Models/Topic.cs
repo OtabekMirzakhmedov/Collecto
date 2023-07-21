@@ -8,7 +8,6 @@ namespace Collecto.BE.Models
 
         [MaxLength(100)]
         public string? TopicName { get; set; }
-
         public ICollection<Collection> Collections { get; set; }
     }
 }

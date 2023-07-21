@@ -4,9 +4,6 @@
     {
         public int Id { get; set; }
         public string? TagName { get; set; }
-
         public ICollection<ItemTag>? ItemTags { get; set; }
-
-
     }
 }

@@ -86,7 +86,6 @@ const Collection = () => {
   }, [collectionFromRedux, collectionId, location]);
 
   const handleItemCreate = (newItem) => {
-    console.log("New Item:", newItem);
     setCollection((prevCollection) => {
       const updatedItems = [...prevCollection.items, newItem];
       return { ...prevCollection, items: updatedItems };
@@ -98,7 +97,6 @@ const Collection = () => {
   if (!collection) {
     return <p>Loading collection...</p>;
   }
-  console.log("collection in collection.js", collection);
   return (
     <Container className="mt-2">
       {(isOwner || isAdmin) && (<Stack direction="horizontal" className="d-flex justify-content-end">

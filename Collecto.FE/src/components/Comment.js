@@ -23,6 +23,7 @@ const Comment = ({ userId, itemId }) => {
   const [loading, setLoading] = useState(false);
   const language = useSelector((state) => state.language.language);
   const translation = translations[language]["Item"];
+  
 
   useEffect(() => {
     const pusher = new Pusher("c6ee54717f876c338b30", {
@@ -101,8 +102,7 @@ const Comment = ({ userId, itemId }) => {
 
   return (
     <Container className="mt-5">
-      <p>{userId}</p>
-      <Row className="pe-3">
+      {userId && (<Row className="pe-3">
         <Col xs={12}>
           <Form onSubmit={handleCommentSubmit}>
             <Form.Group controlId="commentTextArea">
@@ -139,7 +139,7 @@ const Comment = ({ userId, itemId }) => {
             )}
           </Button>
         </Col>
-      </Row>
+      </Row>)}
       <div>
         {comments.map((comment) => (
           <Card key={comment.commentId} className="mt-2">

@@ -15,7 +15,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var logger = new LoggerConfiguration()
   .ReadFrom.Configuration(builder.Configuration)
   .Enrich.FromLogContext()
@@ -29,7 +28,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Collecto", Version = "v1" });
 
-    // Add the JWT bearer token authentication definition
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Jwt Authorization",
@@ -40,7 +38,6 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT"
     });
 
-    // Add the requirement to include the JWT bearer token in the requests
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -140,7 +137,6 @@ using (var db = app.Services.CreateScope().ServiceProvider.GetService<DataContex
     db.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

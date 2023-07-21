@@ -92,15 +92,36 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
           </Badge>
         ),
       },
-      ...customFields.map((field) => ({
-        Header: field.fieldName,
-        accessor: (row) => {
-          const customFieldValue = row.customFieldValues.find(
-            (value) => value.fieldName === field.fieldName
-          );
-          return customFieldValue ? customFieldValue.value : "";
-        },
-      })),
+      ...customFields.map((field) => {
+        if (field.fieldType === "Checkbox") {
+          return {
+            Header: field.fieldName,
+            accessor: (row) => {
+              const customFieldValue = row.customFieldValues.find(
+                (value) => value.fieldName === field.fieldName
+              );
+              return customFieldValue ? customFieldValue.value : false; // Assuming the default value is false for a checkbox
+            },
+            Cell: ({ value, row }) => (
+              <input
+                type="checkbox"
+                checked={value}
+              />
+            ),
+          };
+        }
+  
+        // For other non-checkbox fields, use your existing mapping logic
+        return {
+          Header: field.fieldName,
+          accessor: (row) => {
+            const customFieldValue = row.customFieldValues.find(
+              (value) => value.fieldName === field.fieldName
+            );
+            return customFieldValue ? customFieldValue.value : "";
+          },
+        };
+      }),
     ],
     [customFields, translation]
   );
@@ -166,7 +187,7 @@ const ItemTable = ({itemsfromcollection, collectionId, customFields }) => {
     const selectedRow = rows.find((row) => selectedRowIds[row.id]);
     if (selectedRow) {
       setSelectedItem(selectedRow.original);
-      console.log("Selected Item:", selectedRow.original); // Console log the selected item
+      console.log("Selected Item:", selectedRow.original);
       setShowEditModal(true);
     }
   };

@@ -33,7 +33,7 @@ namespace Collecto.BE.Services
             commentDto.CommentId = comment.Id;
             commentDto.CreatedAt = comment.CreatedAt;
             commentDto.FullName = comment.User.FullName;
-
+             
             return commentDto;
         }
 

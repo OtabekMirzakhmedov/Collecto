@@ -10,7 +10,6 @@ import makeAnimated from "react-select/animated";
 import collectionService from "../services/collectionService";
 import { useSelector } from "react-redux";
 import translations from "../translations";
-
 import "./components.css";
 
 const animatedComponents = makeAnimated();

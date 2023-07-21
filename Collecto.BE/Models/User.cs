@@ -8,13 +8,9 @@ namespace Collecto.BE.Models
     public class User : IdentityUser
     {
         public string? FullName { get; set; }
-
         public DateTime CreatedAt { get; set; }
-
         public ICollection<Collection>? Collections { get; set; }
-
         public ICollection<Comment>? Comments { get; set; }
-
         public ICollection<Like>? Likes { get; set; }
 
         [Required]

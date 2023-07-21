@@ -165,7 +165,6 @@ namespace Collecto.BE.Services
 
                 if (!result.Succeeded)
                 {
-                    // Handle the scenario if updating the isActive status fails.
                     throw new Exception($"Failed to block the user with ID '{userId}'.");
                 }
                 var roles = await _userManager.GetRolesAsync(user);

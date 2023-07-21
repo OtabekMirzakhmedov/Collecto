@@ -14,21 +14,16 @@ namespace Collecto.BE.Models
         [Required]
         [MaxLength(2000)]
         public string? Description { get; set; }
-
         public DateTime CreatedAt { get; set; }
-
         public int TopicId { get; set; }
 
         [Required]
         public Topic Topic { get; set; }
-
         public string UserId { get; set; }
-
+        
         [Required]
         public User User { get; set; }
-
         public ICollection<Item> Items { get; set; }
-
         public ICollection<CustomField> CustomFields { get; set; }
     }
 }
