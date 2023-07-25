@@ -10,7 +10,14 @@ const translations ={
         },
         Collections:{
             CreateButton:"Collection",
-            CreateButtonTooltip: "Create your collection"
+            CreateButtonTooltip: "Create your collection",
+            ItemName: "Item Name",
+            Tags: "Tags",
+            Author: "Author",
+            CollectionName: "Collection Name",
+            Title: "Title",
+            Subject: "Subject",
+            NumberOfItems: "Number of items"
         },
         LoginSignupPage:{
             LogInHeader: "Log in",
@@ -116,7 +123,14 @@ const translations ={
         
         Collections:{
             CreateButton:"Коллекция",
-            CreateButtonTooltip: "Создайте свою коллекцию"
+            CreateButtonTooltip: "Создайте свою коллекцию",
+            ItemName: "Имя предмета",
+            Tags: "Теги",
+            Author: "Автор",
+            CollectionName: "Имя коллекции",
+            Title: "Название",
+            Subject: "Тема",
+            NumberOfItems: "Количество предметов"
         },
         LoginSignupPage:{
             LogInHeader: "Войти",

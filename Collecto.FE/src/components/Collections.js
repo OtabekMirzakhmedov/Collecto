@@ -99,10 +99,10 @@ const Collections = () => {
             <caption>{tableCaption}</caption>
             <thead>
               <tr>
-                <th scope="col">Item name</th>
-               {!searchQuery && (<th scope="col">Tags</th>)}
-                <th scope="col">Author</th>
-                <th scope="col">Collection name</th>
+                <th scope="col">{translation.ItemName}</th>
+               {!searchQuery && (<th scope="col">{translation.Tags}</th>)}
+                <th scope="col">{translation.Author}</th>
+                <th scope="col">{translation.CollectionName}</th>
               </tr>
             </thead>
             <tbody>
@@ -129,9 +129,9 @@ const Collections = () => {
               <caption>Largest collections</caption>
               <thead>
                 <tr>
-                  <th scope="col">Title</th>
-                  <th scope="col">Subject</th>
-                  <th scope="col">Number of items</th>
+                  <th scope="col">{translation.Title}</th>
+                  <th scope="col">{translation.Subject}</th>
+                  <th scope="col">{translation.NumberOfItems}</th>
                 </tr>
               </thead>
               <tbody>
