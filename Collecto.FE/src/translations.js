@@ -17,7 +17,10 @@ const translations ={
             CollectionName: "Collection Name",
             Title: "Title",
             Subject: "Subject",
-            NumberOfItems: "Number of items"
+            NumberOfItems: "Number of items",
+            LastAddedItems: "Last Added Items",
+            LargestCollections: "Largest collections"
+
         },
         LoginSignupPage:{
             LogInHeader: "Log in",
@@ -130,7 +133,9 @@ const translations ={
             CollectionName: "Имя коллекции",
             Title: "Название",
             Subject: "Тема",
-            NumberOfItems: "Количество предметов"
+            NumberOfItems: "Количество предметов",
+            LastAddedItems: "Последние добавленные элементы",
+            LargestCollections: "Крупнейшие коллекции"
         },
         LoginSignupPage:{
             LogInHeader: "Войти",

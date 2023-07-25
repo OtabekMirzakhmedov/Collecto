@@ -17,7 +17,6 @@ const Collections = () => {
   const [items, setItems] = useState([]);
   const selectedTag = useSelector((state) => state.tag);
   const translation = translations[language]["Collections"];
-  console.log(translation);
   const [tableCaption, setTableCaption] = useState('');
   const searchQuery = useSelector((state) => state.search);
 
@@ -34,12 +33,12 @@ const Collections = () => {
           const itemsWithSelectedTag = await itemService.getItemsByTagId(selectedTag.id);
           setTableCaption(`${selectedTag.tagName}`);
           setItems(itemsWithSelectedTag);
-          setCollections([]); // Clear the collections
+          setCollections([]);
         } else {
           const fetchedItems = await itemService.getLastAddedItems();
-          setTableCaption("last added items");
+          setTableCaption(translation.LastAddedItems);
           setItems(fetchedItems);
-          fetchLargestCollections(); // Fetch largest collections separately
+          fetchLargestCollections();
         }
       } catch (error) {
         console.error("Failed to fetch items and collections:", error);
@@ -125,7 +124,7 @@ const Collections = () => {
       <Row className="d-flex mt-2 justify-content-center">
           <Col sm={11} md={10} lg={10} xl={10}>
             <table className="table table-hover caption-top">
-              <caption>Largest collections</caption>
+              <caption>{translation.LargestCollections}</caption>
               <thead>
                 <tr>
                   <th scope="col">{translation.Title}</th>
