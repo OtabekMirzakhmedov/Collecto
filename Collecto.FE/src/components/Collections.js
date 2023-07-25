@@ -46,7 +46,7 @@ const Collections = () => {
     };
 
     fetchItems();
-  }, [searchQuery, selectedTag]);
+  }, [searchQuery, selectedTag, translation]);
 
   const fetchLargestCollections = async () => {
     try {
