@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 
 const Collections = () => {
   const tooltipRef = useRef();
-  const userId = useSelector((state) => state.user.userId)
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
